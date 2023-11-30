@@ -8,7 +8,7 @@
 </head>
 
 <body>
-    @if(isset(Auth::user()->email))
+    @if(isset(Auth::user()->email) && Auth::user()->role_id == 1)
     <form action="{{ route('user.create') }}" method="POST">
         @csrf
         <label for="first_name">First Name</label>
@@ -28,7 +28,9 @@
 
         <button type="submit">Submit</button>
     </form>
+        @else <script>window.location="/"</script>
     @endif
+
 
 
 
