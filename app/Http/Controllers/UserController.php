@@ -39,4 +39,15 @@ class UserController extends Controller
         return redirect('/mng/edit')->with('success', 'User deleted!');
     }
 
+    public function editUser(Request $request)
+    {
+        $user = UserModel::query()->find($request->input('id'));
+        $user->update([
+            'first_name' => $request->input('first_name'),
+            'last_name' => $request->input('last_name'),
+            'email' => $request->input('email'),
+            'phone_number' => $request->input('phone_number'),
+        ]);
+    }
+
 }
