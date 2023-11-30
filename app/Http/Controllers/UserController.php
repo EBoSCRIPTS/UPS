@@ -15,17 +15,18 @@ class UserController extends Controller
             'last_name' => $request->input('last_name'),
             'email' => $request->input('email'),
             'phone_number' => $request->input('phone_number'),
-            'password' => $request->input('password'),
+            'password' => bcrypt($request->input('password')),
         ]);
 
         $user->save();
 
-        return redirect('/home')->with('success', 'User created!');
+        return redirect('/mng/register')->with('success', 'User created!');
     }
 
     public function showAll()
-{
-    $users = UserModel::all();
-    return view('user_all', ['users' => $users]);
-}
+    {
+        $users = UserModel::all();
+        return view('user_all', ['users' => $users]);
+    }
+
 }

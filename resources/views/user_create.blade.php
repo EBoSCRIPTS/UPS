@@ -8,9 +8,9 @@
 </head>
 
 <body>
-
+    @if(isset(Auth::user()->email))
     <form action="{{ route('user.create') }}" method="POST">
-        @csrf 
+        @csrf
         <label for="first_name">First Name</label>
         <input type="text" name="first_name" id="first_name" required>
 
@@ -28,6 +28,8 @@
 
         <button type="submit">Submit</button>
     </form>
+    @endif
+
 
 
 </body>
