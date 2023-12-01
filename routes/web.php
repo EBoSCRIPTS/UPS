@@ -5,7 +5,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\AuthController;
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('home');
 });
 
 Route::get('/mng/register', function () {
@@ -22,9 +22,6 @@ Route::get('/profile', function () {
 });
 Route::get('/mng/edit', [UserController::class, 'showAll'])->name('users');
 
-Route::get('/home', function () {
-    return view('home');
-});
 
 
 Route::post('/logging_in', [AuthController::class, 'auth'])->name('logging_in');

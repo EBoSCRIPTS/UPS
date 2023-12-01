@@ -11,7 +11,9 @@
 </head>
 
 <body>
-
+    @if(!isset(Auth::user()->email))
+        <script>window.location="/login"</script>
+        @endif
     @include('components.sidebar')
         <h1> home page </h1>
 </body>
