@@ -13,6 +13,12 @@
                 Home
             </a>
         </li>
+        <li class="nav-item">
+            <a href="/absence" class="nav-link" aria-current="page">
+                <svg class="bi me-2" width="16" height="16"><use xlink:href="#home"></use></svg>
+                Request Absence
+            </a>
+        </li>
         @if(Auth::user()->role_id == 1)
         <li>
             <a href="/mng/register" class="nav-link link-dark">

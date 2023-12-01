@@ -21,6 +21,9 @@ Route::get('/profile', function () {
     return view('profile');
 });
 Route::get('/mng/edit', [UserController::class, 'showAll'])->name('users');
+Route::get('/absence/', function(){
+    return view('absence');
+});
 
 
 
