@@ -12,10 +12,13 @@
 <div class="row">
     @include('components.sidebar')
     <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-        <form>
+        <form action="{{ route('absence.create') }}" method="POST">
+            @csrf
             <div class="form-group">
+                <input type="hidden" name="user_id" id="user_id" value="{{ Auth::user()->id }}">
             <label for="reason" class="form-label">Reason</label>
             <select name="reason" id="reason" class="form-control">
+                <option value="Disabled" disabled selected>SELECT HERE</option>
                 <option value="Sick">Sick</option>
                 <option value="Vacation">Vacation</option>
                 <option value="Personal">Personal</option>
@@ -31,11 +34,26 @@
             <label for="end_date" class="form-label">End Date</label>
             <input type="date" name="end_date" id="end_date" class="form-control">
 
+                <label for="Attachment" class="form-label">Attachment</label>
+                <input type="file" name="attachment" id="attachment" class="form-control">
+
             <button type="submit" class="btn btn-primary">Submit</button>
             </div>
         </form>
+        <p class="h2">My Requests</p>
+        @foreach($absences as $absence)
+            <div class="card mt-3">
+                <div class="card-box">
+                    <h5 class="card-header">Created at: {{ $absence->created_at }}  </h5>
+                    <p>Type: {{$absence->type}}</p>
+                    <p>Comment: {{ $absence->reason }}</p>
+                    <p>Duration: {{ $absence->duration }} </p>
+                </div>
+                <button class="btn btn-danger">REMOVE</button>
+            </div>
+        @endforeach
 </div>
 
-
+</div>
 
 </body>

@@ -11,6 +11,7 @@ class AbsenceModel extends Model
 
     protected $table = 'req_absence';
 
+    public $timestamps = false;
     protected $fillable = [
         'user_id',
         'start_date',
@@ -19,9 +20,7 @@ class AbsenceModel extends Model
         'type',
         'reason',
         'status',
-        'comment',
         'sent_by',
-        'created_at',
         'attachment',
         'approver_id',
         'date_approved'
