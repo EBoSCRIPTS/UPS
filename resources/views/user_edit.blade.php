@@ -13,26 +13,27 @@
 
 </head>
 
-<body>
-@if(Auth::user()->role_id ==1)
-
+<body class="row">
+@include('components.sidebar')
+@if(isset(Auth::user()->email) && Auth::user()->role_id == 1)
     @foreach ($users as $user)
-
-        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+        <div class="modal fade" id="exampleModal{{$user->id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                        <h5 class="modal-title" id="exampleModalLabel{{$user->id}}">Modal title</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <form action="{{ route('user.edit') }}" method="POST">
                             @csrf
                             <input type="hidden" name="id" value="{{ $user->id }}">
-                        <input type="text" name="first_name" placeholder="{{$user->first_name}}">
-                        <input type="text" name="last_name" placeholder="{{$user->last_name}}">
-                        <input type="text" name="email" placeholder="{{$user->email}}">
-                        <input type="text" name="phone_number" placeholder="{{$user->phone_number}}">
+                            <input type="text" name="first_name" placeholder="{{$user->first_name}}">
+                            <input type="text" name="last_name" placeholder="{{$user->last_name}}">
+                            <input type="text" name="email" placeholder="{{$user->email}}">
+                            <input type="text" name="phone_number" placeholder="{{$user->phone_number}}">
+                            <input type="file" name="profile_picture">
 
                             <button type="submit" class="btn btn-primary">Submit</button>
                         </form>
@@ -45,24 +46,30 @@
         </div>
         <ul class="list-group" style="padding: 10px">
             <li class="list-group-item">{{ $user->id }}
-                ) {{ $user->first_name }} {{ $user->last_name }} {{ $user->email }}</li>
-            @if(Auth::user()->id != $user->id)
-                <form action="{{ route('user.delete') }}" method="POST" style="display: inline">
-                    @csrf
-                    <input type="hidden" name="id" value="{{ $user->id }}">
-                    <button type="submit" class="btn btn-danger">Delete</button>
-                </form>
+                ) {{ $user->first_name }} {{ $user->last_name }} {{ $user->email }}
+                @if(Auth::user()->id != $user->id)
+                    <form action="{{ route('user.delete') }}" method="POST" style="display: inline">
+                        @csrf
+                        <input type="hidden" name="id" value="{{ $user->id }}">
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
 
-                <form style="display: inline">
-                    @csrf
-                    <input type="hidden" name="id" value="{{ $user->id }}">
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                        Edit
-                    </button>
-                </form>
-            @endif
+                    <form style="display: inline">
+                        @csrf
+                        <input type="hidden" name="id" value="{{ $user->id }}">
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                data-bs-target="#exampleModal{{$user->id}}">
+                            Edit
+                        </button>
+                    </form>
+                @endif
+            </li>
+
         </ul>
+        </div>
     @endforeach
-
+@else
+    <noscript>You are not supposed to be here :(, go back!</noscript>
+    <script>window.location = "/"</script>
 @endif
 </body>

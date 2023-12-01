@@ -20,8 +20,10 @@ Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::get('/profile', function () {
     return view('profile');
 });
-Route::get('/mng/edit', [UserController::class, 'showAll'], function(){
-    return view('user_edit');
+Route::get('/mng/edit', [UserController::class, 'showAll'])->name('users');
+
+Route::get('/home', function () {
+    return view('home');
 });
 
 
