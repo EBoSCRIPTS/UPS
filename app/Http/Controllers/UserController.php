@@ -13,24 +13,35 @@ class UserController extends Controller
     public function register(Request $request): RedirectResponse
     {
         if ($request->input('profile_picture') == null) {
-            $request->merge(['profile_picture' => storage_path('app/public/default_pfp.png')]);
+            $img = $request->merge(['profile_picture' => storage_path('app\public\default_pfp.png')]);
         }
-
-        $request->validate([
-            'first_name' => ['required', 'string', 'max:50'],
-            'last_name' => ['required', 'string', 'max:50'],
-            'email' => ['required', 'string', 'max:255'],
-            'phone_number' => ['required', 'string', 'max:15'],
-            'profile_picture' => ['required', 'mimes:png,jpg'],
-        ]);
+        else{
+            $img = $request->input('profile_picture');
+        }
+        $role = $request->input('role_id');
+        switch($role) {
+            case 'Superadmin':
+                $role = 1;
+                break;
+            case 'Manager':
+                $role = 3;
+                break;
+            case 'Employee':
+                $role = 2;
+                break;
+            default:
+                $role = 2;
+        }
+        $request->merge(['role_id' => $role]);
 
         $user = new UserModel([
             'first_name' => $request->input('first_name'),
             'last_name' => $request->input('last_name'),
             'email' => $request->input('email'),
             'phone_number' => $request->input('phone_number'),
-            'profile_picture' => $request->input('profile_picture'),
+            'profile_picture' => $img,
             'password' => bcrypt($request->input('password')),
+            'role_id' => $request->input('role_id'),
         ]);
 
         $user->save();

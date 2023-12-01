@@ -10,11 +10,10 @@
 
 </head>
 
-<body class="row mt-2">
+<body class="row" style="height: 100%">
 @include('components.sidebar')
     <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
     @if(isset(Auth::user()->email) && Auth::user()->role_id == 1)
-        <h1 class="display-6">Logged in as {{Auth::user()->first_name }} {{Auth::user()->last_name}}</h1>
         <h1 class="display-2">Add new user </h1>
     <form action="{{ route('user.create') }}" method="POST">
         <div class="form-group">
@@ -37,11 +36,11 @@
         <label for="password">Password</label>
         <input type="password" name="password" id="password" class="form-control width" required>
 
-            <label for="role">Role</label>
-            <select name="role" id="role" class="form-control">
-                <option value="1">Superadmin</option>
-                <option value="2">Manager</option>
-                <option value="3">Employee</option>
+            <label for="role_id">Role</label>
+            <select name="role_id" id="role_id" class="form-control">
+                <option value="Superadmin">Superadmin</option>
+                <option value="Manager">Manager</option>
+                <option value="Employee">Employee</option>
             </select>
 
         <button type="submit" class="btn btn-primary" style="margin-top: 10px">Submit</button>

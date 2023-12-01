@@ -1,6 +1,6 @@
 
 @if(isset(Auth::user()->email))
-<div class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse" style="width: 280px; margin-right: 15px">
+<div class="col-md-3 col-lg-2 d-md-block bg-light sidebar" style="width: 280px; margin-right: 15px">
     <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none">
         <svg class="bi me-2" width="40" height="32"><use xlink:href="#bootstrap"></use></svg>
         <span class="fs-4">UPS</span>

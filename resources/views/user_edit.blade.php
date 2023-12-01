@@ -45,8 +45,8 @@
             </div>
         </div>
         <ul class="list-group" style="padding: 10px">
-            <li class="list-group-item">{{ $user->id }}
-                ) {{ $user->first_name }} {{ $user->last_name }} {{ $user->email }}
+            <li class="list-group-item">
+                {{ $user->id }}) {{ $user->first_name }} {{ $user->last_name }} {{ $user->email }} {{ $user->role_id }}
                 @if(Auth::user()->id != $user->id)
                     <form action="{{ route('user.delete') }}" method="POST" style="display: inline">
                         @csrf
