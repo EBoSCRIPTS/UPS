@@ -44,10 +44,10 @@
         @foreach($absences as $absence)
             <div class="card mt-3">
                 <div class="card-box">
-                    <h5 class="card-header">Created at: {{ $absence->created_at }}  </h5>
+                    <h5 class="card-header">Created at: {{ $absence->created_at }} | Status: {{ $absence->status }} </h5>
                     <p>Type: {{$absence->type}}</p>
                     <p>Comment: {{ $absence->reason }}</p>
-                    <p>Duration: {{ $absence->duration }} </p>
+                    <p>Duration: {{ $absence->duration }} days </p>
                 </div>
                 <button class="btn btn-danger">REMOVE</button>
             </div>

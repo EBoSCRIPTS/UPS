@@ -13,6 +13,15 @@ class AbsenceController extends Controller
     {
         $this->middleware('auth');
     }
+
+    public function showAbsenceReview(Request $request)
+    {
+        $absences = $this->reviewAbsence($request);
+        $reviewedAbsences = $this->getReviewedAbsence($request);
+
+        return view('absence_review', ['absences' => $absences, 'reviewedAbsences' => $reviewedAbsences]);
+    }
+
     public function addAbsence(Request $request)
     {
         if($request->input('status') == null) {
@@ -43,9 +52,33 @@ class AbsenceController extends Controller
         return redirect('/absence')->with('success', 'Absence added!');
     }
 
+    /* users own requests */
     public function getUserAbsence(Request $request)
     {
-        $absences = AbsenceModel::query()->where('user_id', Auth::id())->get();
+        $absences = AbsenceModel::query()->where('user_id', Auth::id())->orderBy('created_at', 'desc')->get();
         return view('absence', ['absences' => $absences]);
+    }
+
+    /* absence review page */
+    public function reviewAbsence(Request $request)
+    {
+        return AbsenceModel::query()->where('status', 'Sent')->orderBy('created_at', 'desc')->get();
+    }
+
+    public function getReviewedAbsence(Request $request)
+    {
+        return AbsenceModel::query()->where('status', 'Approve')->orWhere('status', 'Deny')->orderBy('created_at', 'desc')->get();
+    }
+
+    public function updateAbsence(Request $request)
+    {
+        $absence = AbsenceModel::query()->find($request->input('id'));
+        $absence->update([
+            'status' => $request->input('status'),
+            'approver_id' => $request->input('approver_id'),
+            'date_approved' => Carbon::now(),
+        ]);
+
+        return redirect('/absence/review')->with('success', 'Absence updated!');
     }
 }

@@ -33,6 +33,14 @@
             </a>
         </li>
             @endif
+        @if(Auth::user()->role_id == 1 || Auth::user()->role_id == 3)
+            <li>
+                <a href="/absence/review" class="nav-link link-dark">
+                    <svg class="bi me-2" width="16" height="16"><use xlink:href="#table"></use></svg>
+                    Absence Review
+                </a>
+            </li>
+            @endif
     </ul>
     <hr>
     <div class="dropdown">

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class AbsenceModel extends Model
 {
@@ -25,4 +26,14 @@ class AbsenceModel extends Model
         'approver_id',
         'date_approved'
     ];
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(UserModel::class, 'user_id', 'id');
+    }
+
+    public function approver(): BelongsTo
+    {
+        return $this->belongsTo(UserModel::class, 'approver_id', 'id');
+    }
 }
