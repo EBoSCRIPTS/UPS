@@ -22,6 +22,14 @@ class AbsenceController extends Controller
         return view('absence_review', ['absences' => $absences, 'reviewedAbsences' => $reviewedAbsences]);
     }
 
+    public function userAbsences()
+    {
+        $showSent = $this->getUserAbsence();
+        $showReviewed = $this->getUserAbsenceReviewed();
+
+        return view('absence', ['showSent' => $showSent, 'showReviewed' => $showReviewed]);
+    }
+
     public function addAbsence(Request $request)
     {
         if($request->input('status') == null) {
@@ -53,19 +61,23 @@ class AbsenceController extends Controller
     }
 
     /* users own requests */
-    public function getUserAbsence(Request $request)
+    public function getUserAbsence()
     {
-        $absences = AbsenceModel::query()->where('user_id', Auth::id())->orderBy('created_at', 'desc')->get();
-        return view('absence', ['absences' => $absences]);
+        return AbsenceModel::query()->where('user_id', Auth::id())->where('status', 'Sent')->orderBy('created_at', 'desc')->get();
+    }
+
+    public function getUserAbsenceReviewed()
+    {
+        return AbsenceModel::query()->where('user_id', Auth::id())->where('status', 'Approve')->orWhere('status', 'Deny')->orderBy('created_at', 'desc')->get();
     }
 
     /* absence review page */
-    public function reviewAbsence(Request $request)
+    public function reviewAbsence()
     {
         return AbsenceModel::query()->where('status', 'Sent')->orderBy('created_at', 'desc')->get();
     }
 
-    public function getReviewedAbsence(Request $request)
+    public function getReviewedAbsence()
     {
         return AbsenceModel::query()->where('status', 'Approve')->orWhere('status', 'Deny')->orderBy('created_at', 'desc')->get();
     }
@@ -80,5 +92,12 @@ class AbsenceController extends Controller
         ]);
 
         return redirect('/absence/review')->with('success', 'Absence updated!');
+    }
+
+    public function deleteAbsence(Request $request)
+    {
+        $absence = AbsenceModel::query()->find($request->id);
+        $absence->delete();
+        return redirect('/absence/review')->with('success', 'Absence deleted!');
     }
 }

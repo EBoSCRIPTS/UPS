@@ -28,10 +28,11 @@ Route::get('/profile', function () {
 Route::post('/logging_in', [AuthController::class, 'auth'])->name('logging_in');
 
 /* Absence views */
-Route::get('/absence', [AbsenceController::class, 'getUserAbsence'])->name('absence');
+Route::get('/absence', [AbsenceController::class, 'userAbsences'])->name('absence');
 Route::get('/absence/review', [AbsenceController::class, 'showAbsenceReview'])->name('absence.review');
 Route::post('/absence/create', [AbsenceController::class, 'addAbsence'])->name('absence.create');
 Route::post('/absence/update', [AbsenceController::class, 'updateAbsence'])->name('absence.update');
+Route::post('/absence/delete', [AbsenceController::class, 'deleteAbsence'])->name('absence.delete');
 
 /* User create views */
 Route::post('/user/create', [UserController::class, 'register'])->name('user.create');

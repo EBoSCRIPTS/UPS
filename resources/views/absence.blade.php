@@ -40,8 +40,8 @@
             <button type="submit" class="btn btn-primary">Submit</button>
             </div>
         </form>
-        <p class="h2">My Requests</p>
-        @foreach($absences as $absence)
+        <p class="h2 text-center">My Requests</p>
+        @foreach($showSent as $absence)
             <div class="card mt-3">
                 <div class="card-box">
                     <h5 class="card-header">Created at: {{ $absence->created_at }} | Status: {{ $absence->status }} </h5>
@@ -49,7 +49,24 @@
                     <p>Comment: {{ $absence->reason }}</p>
                     <p>Duration: {{ $absence->duration }} days </p>
                 </div>
-                <button class="btn btn-danger">REMOVE</button>
+                <form action="{{ route('absence.delete', $absence->id) }}" method="POST">
+                    @csrf
+                    <input type="hidden" name="id" id="id" value="{{ $absence->id }}">
+                <input type="submit" class="btn btn-danger" value="DELETE">
+                </form>
+            </div>
+        @endforeach
+
+        <hr class="hr" />
+        <p class="h2 text-center">Reviewed Requests</p>
+        @foreach($showReviewed as $absence)
+            <div class="card mt-3">
+                <div class="card-box">
+                    <h5 class="card-header">Created at: {{ $absence->created_at }} | Status: {{ $absence->status }} </h5>
+                    <p>Type: {{$absence->type}}</p>
+                    <p>Comment: {{ $absence->reason }}</p>
+                    <p>Duration: {{ $absence->duration }} days </p>
+                </div>
             </div>
         @endforeach
 </div>
