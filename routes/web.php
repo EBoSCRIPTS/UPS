@@ -39,3 +39,8 @@ Route::post('/user/create', [UserController::class, 'register'])->name('user.cre
 Route::post('/user/delete', [UserController::class, 'deleteUser'])->name('user.delete');
 Route::post('/user/edit', [UserController::class, 'editUser'])->name('user.edit');
 
+/* Log hours */
+Route::get('/loghours', function () {
+    return view('log_worked_hours');
+});
+

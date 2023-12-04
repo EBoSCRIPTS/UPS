@@ -40,7 +40,11 @@
             <button type="submit" class="btn btn-primary">Submit</button>
             </div>
         </form>
+        <hr class="hr" />
         <p class="h2 text-center">My Requests</p>
+        @if($showSent->count() == 0)
+            <p class="h6 text-center">You haven't made any new requests</p>
+        @endif
         @foreach($showSent as $absence)
             <div class="card mt-3">
                 <div class="card-box">

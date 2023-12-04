@@ -17,7 +17,7 @@
 @include('components.sidebar')
 @if(isset(Auth::user()->email) && Auth::user()->role_id == 1)
     @foreach ($users as $user)
-        <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+        <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-3">
         <div class="modal fade" id="exampleModal{{$user->id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -47,11 +47,10 @@
         <ul class="list-group" style="padding: 10px">
             <li class="list-group-item">
                 {{ $user->id }}) {{ $user->first_name }} {{ $user->last_name }} {{ $user->email }} {{ $user->role_id }}
-                @if(Auth::user()->id != $user->id && $user->role_id != 1)
                     <form action="{{ route('user.delete') }}" method="POST" style="display: inline">
                         @csrf
                         <input type="hidden" name="id" value="{{ $user->id }}">
-                        <button type="submit" class="btn btn-danger">Delete</button>
+                        <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
                     </form>
 
                     <form style="display: inline">
@@ -62,7 +61,6 @@
                             Edit
                         </button>
                     </form>
-                @endif
             </li>
 
         </ul>
