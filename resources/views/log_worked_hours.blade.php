@@ -64,6 +64,26 @@
 
         <hr class="hr"/>
         <p class="h3">My logs this month</p>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">Date</th>
+                    <th scope="col">Start</th>
+                    <th scope="col">Finish</th>
+                    <th scope="col">Hours</th>
+                </tr>
+
+                <tbody>
+                @foreach($userLogs as $userLog)
+                    <tr>
+                        <td>{{$userLog->date}}</td>
+                        <td>{{$userLog->start_time}}</td>
+                        <td>{{$userLog->end_time}}</td>
+                        <td>{{$userLog->total_hours}}</td>
+                    </tr>
+                @endforeach
+                </tbody>
+            </table>
     </div>
 </div>
 
@@ -74,7 +94,6 @@
         let breakTime = parseFloat(document.getElementById('break_time' + date).value) * 60 * 1000; // Convert break time to milliseconds
 
         if (!startTime || !endTime) {
-            // Handle invalid input
             return;
         }
 
@@ -86,6 +105,17 @@
 
         document.getElementById('result' + date).innerText = "Worked Hourrs: " + hours + " hours " + minutes + " minutes";
         document.getElementById('total_hours' + date).value = hours + ":" + minutes;
+    }
+
+    function validateTime(date)
+    {
+        let startTime = document.getElementById('start_time' + date).valueAsDate;
+        let endTime = document.getElementById('end_time' + date).valueAsDate;
+
+        if(startTime > endTime){
+            alert("Start time cannot be greater than end time");
+            document.getElementById('end_time' + date).valueAsDate = "";
+        }
     }
 </script>
 

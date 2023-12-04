@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\LogHoursModel;
 use App\Models\UserModel;
+use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 
 class LogHoursController extends Controller
@@ -18,13 +19,14 @@ class LogHoursController extends Controller
            $dates[] = Carbon::now()->startOfMonth()->addDays($i)->format('Y-m-d');
        }
 
-        return view('log_worked_hours', ['dates' => $dates, 'month' => $month]);
+       $userLogs = LogHoursModel::query()->where('user_id', Auth::user()->id)->get();
+       return view('log_worked_hours', ['dates' => $dates, 'month' => $month, 'userLogs' => $userLogs]);
     }
 
     public function insertLoggedHours(Request $request)
     {
-        for($i = 0; $i < 7; $i++) {
-            $dates[] = Carbon::now()->startOfWeek()->addDays($i)->format('Y-m-d');
+        for($i = 0; $i < Carbon::now()->day; $i++) {
+            $dates[] = Carbon::now()->startOfMonth()->addDays($i)->format('Y-m-d');
         }
 
         foreach ($dates as $date)
