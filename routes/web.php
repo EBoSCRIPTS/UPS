@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AbsenceController;
+use App\Http\Controllers\LogHoursController;
+use App\Http\Controllers\ViewLoggedHoursController;
 
 /* Home view */
 Route::get('/', function () {
@@ -40,7 +42,8 @@ Route::post('/user/delete', [UserController::class, 'deleteUser'])->name('user.d
 Route::post('/user/edit', [UserController::class, 'editUser'])->name('user.edit');
 
 /* Log hours */
-Route::get('/loghours', function () {
-    return view('log_worked_hours');
-});
+Route::get('/loghours', [LogHoursController::class, 'getCurrentMonth'])->name('loghours');
+Route::post('/loghours/create', [LogHoursController::class, 'insertLoggedHours'])->name('loghours.create');
 
+Route::get('/loghours/view', [ViewLoggedHoursController::class, 'ViewLogged'])->name('loghours.view');
+Route::post('/loghours/view/user', [ViewLoggedHoursController::class, 'showUserLoggedHours'])->name('loghours.view.user');

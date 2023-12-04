@@ -1,0 +1,48 @@
+<!Doctype HTML>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+            crossorigin="anonymous"></script>
+</head>
+
+<body>
+<div class="row">
+    @include('components.sidebar')
+    <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-3">
+        <form action="{{route('loghours.view.user')}}" method="POST">
+            @csrf
+        <select name="user_id">
+            @foreach($users as $user)
+                <option value="{{$user->id}}">{{($user->first_name)}} {{$user->last_name}}</option>
+            @endforeach
+        </select>
+        <input type="submit" value="Submit" class="btn btn-primary"/>
+        </form>
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">Date</th>
+                <th scope="col">User</th>
+                <th scope="col">Hours</th>
+            </tr>
+            </thead>
+            <tbody>
+        @foreach($loggedHours as $loggedHour)
+            <tr>
+                    <td>{{$loggedHour->date}}</td>
+                    <td>{{$loggedHour->user->first_name}} {{$loggedHour->user->last_name}}</td>
+                    <td>{{$loggedHour->total_hours}}</td>
+            </tr>
+        @endforeach
+            </tbody>
+        </table>
+    </div>
+
+</div>
+</body>
