@@ -19,8 +19,13 @@ class LogHoursController extends Controller
            $dates[] = Carbon::now()->startOfMonth()->addDays($i)->format('Y-m-d');
        }
 
+        //display logged hours
+        $getDates = $this->getUserAlreadyLoggedHours();
+
+       $datesToFill = array_diff($dates, $getDates);
+
        $userLogs = LogHoursModel::query()->where('user_id', Auth::user()->id)->get();
-       return view('log_worked_hours', ['dates' => $dates, 'month' => $month, 'userLogs' => $userLogs]);
+       return view('log_worked_hours', ['dates' => $datesToFill, 'month' => $month, 'userLogs' => $userLogs]);
     }
 
     public function insertLoggedHours(Request $request)
@@ -44,5 +49,18 @@ class LogHoursController extends Controller
         }
 
         return redirect('/loghours')->with('success', 'User created!');
+    }
+
+    public function deleteLoggedHours(Request $request)
+    {
+        $loggedHours = LogHoursModel::query()->find($request->input('id'));
+        $loggedHours->delete();
+
+        return redirect('/loghours')->with('success', 'User deleted!');
+    }
+
+    private function getUserAlreadyLoggedHours()
+    {
+        return LogHoursModel::query()->where('user_id', Auth::user()->id)->pluck('date')->toArray();
     }
 }

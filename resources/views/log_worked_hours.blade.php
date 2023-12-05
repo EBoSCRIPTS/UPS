@@ -71,16 +71,25 @@
                     <th scope="col">Start</th>
                     <th scope="col">Finish</th>
                     <th scope="col">Hours</th>
+                    <th scope="col">Delete</th>
                 </tr>
 
                 <tbody>
                 @foreach($userLogs as $userLog)
-                    <tr>
-                        <td>{{$userLog->date}}</td>
-                        <td>{{$userLog->start_time}}</td>
-                        <td>{{$userLog->end_time}}</td>
-                        <td>{{$userLog->total_hours}}</td>
-                    </tr>
+                    <form action="{{route('loghours.view.delete')}}" method="POST">
+                        @csrf
+                        <tr>
+                            <td>{{$userLog->date}}</td>
+                            <td>{{$userLog->start_time}}</td>
+                            <td>{{$userLog->end_time}}</td>
+                            <td>{{$userLog->total_hours}}</td>
+                            <td>
+                                <button class="btn btn-danger">Delete</button>
+                                <input type="hidden" name="id" value="{{$userLog->id}}"/>
+                            </td>
+
+                        </tr>
+                    </form>
                 @endforeach
                 </tbody>
             </table>
@@ -108,6 +117,10 @@
 
         let hours = Math.floor(totalSeconds / 3600);
         let minutes = Math.floor((totalSeconds % 3600) / 60);
+
+        if(minutes < 10){
+            minutes = "0" + minutes;
+        }
 
         document.getElementById('result' + date).innerText = "Worked Hours: " + hours + " hours " + minutes + " minutes";
         document.getElementById('total_hours' + date).value = hours + ":" + minutes;
