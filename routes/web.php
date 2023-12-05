@@ -6,6 +6,8 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AbsenceController;
 use App\Http\Controllers\LogHoursController;
 use App\Http\Controllers\ViewLoggedHoursController;
+use App\Http\Controllers\DepartmentsController;
+use App\Http\Controllers\EmployeeInformationController;
 
 /* Home view */
 Route::get('/', function () {
@@ -48,3 +50,15 @@ Route::post('/loghours/create', [LogHoursController::class, 'insertLoggedHours']
 Route::get('/loghours/view', [ViewLoggedHoursController::class, 'ViewLogged'])->name('loghours.view');
 Route::post('/loghours/view/user', [ViewLoggedHoursController::class, 'showUserLoggedHours'])->name('loghours.view.user');
 Route::post('/loghours/view/delete', [LogHoursController::class, 'deleteLoggedHours'])->name('loghours.view.delete');
+
+/* Departaments */
+Route::get('/departaments', function () {
+    return view('departaments');
+});
+Route::post('/departaments/create', [DepartmentsController::class, 'addDepartment'])->name('departments.create');
+
+
+/* Employee information  */
+Route::get('/employee_information', [EmployeeInformationController::class, 'getData'])->name('employee_information');
+Route::post('/employee_information/create', [EmployeeInformationController::class, 'insertEmployeeInformation'])->name('employee_information.create');
+Route::post('/employee_information/delete', [EmployeeInformationController::class, 'deleteEmployee'])->name('employee_information.delete');
