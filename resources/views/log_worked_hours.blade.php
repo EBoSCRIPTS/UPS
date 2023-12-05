@@ -98,14 +98,21 @@
         }
 
         let totalMilliseconds = endTime - startTime - breakTime;
+
+        //if employee is on a nightshift
+        if (totalMilliseconds < 0) {
+            totalMilliseconds = (24 * 60 * 60 * 1000) - (startTime - endTime) - breakTime;
+        }
+
         let totalSeconds = totalMilliseconds / 1000;
 
         let hours = Math.floor(totalSeconds / 3600);
         let minutes = Math.floor((totalSeconds % 3600) / 60);
 
-        document.getElementById('result' + date).innerText = "Worked Hourrs: " + hours + " hours " + minutes + " minutes";
+        document.getElementById('result' + date).innerText = "Worked Hours: " + hours + " hours " + minutes + " minutes";
         document.getElementById('total_hours' + date).value = hours + ":" + minutes;
     }
+
 
     function validateTime(date)
     {
