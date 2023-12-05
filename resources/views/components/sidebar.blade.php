@@ -45,10 +45,23 @@
                     Absence Review
                 </a>
             </li>
-            </li><li class="nav-item">
+            <li class="nav-item">
                 <a href="/loghours/view" class="nav-link" aria-current="page">
                     <svg class="bi me-2" width="16" height="16"><use xlink:href="#home"></use></svg>
                     View Logged Hours
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="/departaments" class="nav-link" aria-current="page">
+                    <svg class="bi me-2" width="16" height="16"><use xlink:href="#home"></use></svg>
+                    Departaments
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a href="/employee_information" class="nav-link" aria-current="page">
+                    <svg class="bi me-2" width="16" height="16"><use xlink:href="#home"></use></svg>
+                    Employee Information
                 </a>
             </li>
             @endif
