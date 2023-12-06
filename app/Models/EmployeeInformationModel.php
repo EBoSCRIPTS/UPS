@@ -18,7 +18,8 @@ class EmployeeInformationModel extends Model
         'department_id',
         'hour_pay',
         'salary',
-        'position'
+        'position',
+        'monthly_hours',
     ];
 
     public function user(): BelongsTo
