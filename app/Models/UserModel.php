@@ -39,4 +39,14 @@ class UserModel extends Authenticatable
         'remember_token',
     ];
 
+    public function isAdmin()
+    {
+        return $this->role_id == 1;
+    }
+
+    public function isManager()
+    {
+        return $this->role_id == 3;
+    }
+
 }
