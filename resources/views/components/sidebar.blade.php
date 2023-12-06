@@ -43,6 +43,17 @@
                         </ul>
                     </li>
                     @endif
+                    @if(Auth::user()->role_id == 1 || Auth::user()->role_id == 3)
+                        <li>
+                            <a href="#submenu4" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
+                                <i class="fs-4 bi-grid"></i> <span class="ms-1 d-none d-sm-inline">ACCOUNTANT VIEWS</span> </a>
+                            <ul class="collapse nav flex-column ms-1" id="submenu4" data-bs-parent="#menu">
+                                <li class="w-100">
+                                    <a href="/accountant" class="nav-link px-0"> <span class="d-none d-sm-inline">Accountant Panel</span></a>
+                                </li>
+                            </ul>
+                        </li>
+                    @endif
 
                     @if(Auth::user()->role_id == 1)
                     <li>

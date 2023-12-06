@@ -8,6 +8,7 @@ use App\Http\Controllers\LogHoursController;
 use App\Http\Controllers\ViewLoggedHoursController;
 use App\Http\Controllers\DepartmentsController;
 use App\Http\Controllers\EmployeeInformationController;
+use App\Http\Controllers\AccountantController;
 
 /* Home view */
 Route::get('/', function () {
@@ -61,3 +62,8 @@ Route::post('/departments/delete', [DepartmentsController::class, 'deleteDeparta
 Route::get('/employee_information', [EmployeeInformationController::class, 'getData'])->name('employee_information')->middleware('manager');
 Route::post('/employee_information/create', [EmployeeInformationController::class, 'insertEmployeeInformation'])->name('employee_information.create')->middleware('manager');
 Route::post('/employee_information/delete', [EmployeeInformationController::class, 'deleteEmployee'])->name('employee_information.delete')->middleware('manager');
+
+/* Accountant views */
+Route::get('/accountant', [AccountantController::class, 'showAll'])->name('accountant');
+Route::get('/accountant/{id}', [AccountantController::class, 'showDept'])->name('accountant_view_department');
+Route::post('/accountant/user', [AccountantController::class, 'loadEmployeeInformation'])->name('accountant_view_department');
