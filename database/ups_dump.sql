@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 04, 2023 at 12:28 PM
+-- Generation Time: Dec 06, 2023 at 05:12 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -20,6 +20,55 @@ SET time_zone = "+00:00";
 --
 -- Database: `ups`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `departaments`
+--
+
+CREATE TABLE `departaments` (
+  `id` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `description` text DEFAULT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime DEFAULT NULL ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `employee_information`
+--
+
+CREATE TABLE `employee_information` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL COMMENT 'refers to user table',
+  `department_id` int(11) NOT NULL COMMENT 'refers to departments table',
+  `hour_pay` decimal(10,2) DEFAULT NULL,
+  `salary` decimal(10,2) DEFAULT NULL,
+  `monthly_hours` int(11) NOT NULL,
+  `position` text NOT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `logged_hours`
+--
+
+CREATE TABLE `logged_hours` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL COMMENT 'goes to user table',
+  `start_time` time NOT NULL,
+  `end_time` time NOT NULL,
+  `total_hours` text NOT NULL,
+  `date` date NOT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime DEFAULT NULL ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -44,6 +93,7 @@ CREATE TABLE `req_absence` (
   `date_approved` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+-- --------------------------------------------------------
 
 --
 -- Table structure for table `roles`
@@ -53,16 +103,6 @@ CREATE TABLE `roles` (
   `id` int(10) UNSIGNED NOT NULL,
   `name` varchar(255) NOT NULL COMMENT 'name of the role'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `roles`
---
-
-INSERT INTO `roles` (`id`, `name`) VALUES
-(1, 'Superadmin'),
-(2, 'Employee'),
-(4, 'Manager'),
-(5, 'Manager');
 
 -- --------------------------------------------------------
 
@@ -84,12 +124,27 @@ CREATE TABLE `users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `users`
+-- Indexes for dumped tables
 --
 
 --
--- Indexes for dumped tables
+-- Indexes for table `departaments`
 --
+ALTER TABLE `departaments`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `employee_information`
+--
+ALTER TABLE `employee_information`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_dept_id` (`department_id`);
+
+--
+-- Indexes for table `logged_hours`
+--
+ALTER TABLE `logged_hours`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `req_absence`
@@ -117,26 +172,50 @@ ALTER TABLE `users`
 --
 
 --
+-- AUTO_INCREMENT for table `departaments`
+--
+ALTER TABLE `departaments`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `employee_information`
+--
+ALTER TABLE `employee_information`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `logged_hours`
+--
+ALTER TABLE `logged_hours`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `req_absence`
 --
 ALTER TABLE `req_absence`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `roles`
 --
 ALTER TABLE `roles`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- Constraints for dumped tables
 --
+
+--
+-- Constraints for table `employee_information`
+--
+ALTER TABLE `employee_information`
+  ADD CONSTRAINT `fk_dept_id` FOREIGN KEY (`department_id`) REFERENCES `departaments` (`id`);
 
 --
 -- Constraints for table `req_absence`
