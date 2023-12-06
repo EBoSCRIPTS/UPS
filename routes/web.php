@@ -52,9 +52,9 @@ Route::post('/loghours/view/user', [ViewLoggedHoursController::class, 'showUserL
 Route::post('/loghours/view/delete', [LogHoursController::class, 'deleteLoggedHours'])->name('loghours.view.delete');
 
 /* Departaments */
-Route::get('/departaments', [DepartmentsController::class, 'showAllDepartments'])->name('showAllDepartments');
-Route::post('/departaments/create', [DepartmentsController::class, 'addDepartment'])->name('departments.create');
-Route::post('/departaments/delete', [DepartmentsController::class, 'deleteDepartament'])->name('departments.delete');
+Route::get('/departments', [DepartmentsController::class, 'showAllDepartments'])->name('showAllDepartments');
+Route::post('/departments/create', [DepartmentsController::class, 'addDepartment'])->name('departments.create');
+Route::post('/departments/delete', [DepartmentsController::class, 'deleteDepartament'])->name('departments.delete');
 
 
 /* Employee information  */

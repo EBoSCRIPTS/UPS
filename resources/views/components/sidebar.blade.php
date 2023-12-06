@@ -1,82 +1,77 @@
+<div class="container-fluid">
+    <div class="row flex-nowrap">
+        <div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-dark">
+            <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100">
+                <a href="/" class="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+                    <span class="fs-5 d-none d-sm-inline">UPS</span>
+                </a>
+                <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
+                    <li class="nav-item">
+                        <a href="/" class="nav-link align-middle px-0">
+                            <i class="fs-4 bi-house"></i> <span class="ms-1 d-none d-sm-inline">Home</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#submenu1" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
+                            <i class="fs-4 bi-speedometer2"></i> <span class="ms-1 d-none d-sm-inline">Dashboard</span> </a>
+                        <ul class="collapse show nav flex-column ms-1" id="submenu1" data-bs-parent="#menu">
+                            <li class="w-100">
+                                <a href="/absence" class="nav-link px-0"> <span class="d-none d-sm-inline">Request Absence</span> </a>
+                            </li>
+                            <li>
+                                <a href="/loghours" class="nav-link px-0"> <span class="d-none d-sm-inline">Log Hours</span> </a>
+                            </li>
+                        </ul>
+                    </li>
+                    @if(Auth::user()->role_id == 1 || Auth::user()->role_id == 3)
+                    <li>
+                        <a href="#submenu2" data-bs-toggle="collapse" class="nav-link px-0 align-middle ">
+                            <i class="fs-4 bi-bootstrap"></i> <span class="ms-1 d-none d-sm-inline">MANAGER VIEWS</span></a>
+                        <ul class="collapse nav flex-column ms-1" id="submenu2" data-bs-parent="#menu">
+                            <li class="w-100">
+                                <a href="/absence/review" class="nav-link px-0"> <span class="d-none d-sm-inline">Absence Review </span></a>
+                            </li>
+                            <li>
+                                <a href="/loghours/view" class="nav-link px-0"> <span class="d-none d-sm-inline">View Logged Hours</span></a>
+                            </li>
+                            <li>
+                                <a href="/departments" class="nav-link px-0"> <span class="d-none d-sm-inline">Departments</span></a>
+                            </li>
+                            <li>
+                                <a href="/employee_information" class="nav-link px-0"> <span class="d-none d-sm-inline">Employee Information</span></a>
+                            </li>
+                        </ul>
+                    </li>
+                    @endif
 
-@if(isset(Auth::user()->email))
-<div class="col-md-3 col-lg-2 d-md-block bg-light sidebar" style="width: 280px; margin-right: 15px">
-    <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none">
-        <svg class="bi me-2" width="40" height="32"><use xlink:href="#bootstrap"></use></svg>
-        <span class="fs-4">UPS</span>
-    </a>
-    <hr>
-    <ul class="nav nav-pills flex-column mb-auto">
-        <li class="nav-item">
-            <a href="/" class="nav-link active" aria-current="page">
-                <svg class="bi me-2" width="16" height="16"><use xlink:href="#home"></use></svg>
-                Home
-            </a>
-        </li>
-        <li class="nav-item">
-            <a href="/absence" class="nav-link" aria-current="page">
-                <svg class="bi me-2" width="16" height="16"><use xlink:href="#home"></use></svg>
-                Request Absence
-            </a>
-        </li>
-        <li class="nav-item">
-            <a href="/loghours" class="nav-link" aria-current="page">
-                <svg class="bi me-2" width="16" height="16"><use xlink:href="#home"></use></svg>
-                Log Hours
-            </a>
-        @if(Auth::user()->role_id == 1)
-        <li>
-            <a href="/mng/register" class="nav-link link-dark">
-                <svg class="bi me-2" width="16" height="16"><use xlink:href="#speedometer2"></use></svg>
-                Register User
-            </a>
-        </li>
-        <li>
-            <a href="/mng/edit" class="nav-link link-dark">
-                <svg class="bi me-2" width="16" height="16"><use xlink:href="#table"></use></svg>
-                Edit Users
-            </a>
-        </li>
-            @endif
-        @if(Auth::user()->role_id == 1 || Auth::user()->role_id == 3)
-            <li>
-                <a href="/absence/review" class="nav-link link-dark">
-                    <svg class="bi me-2" width="16" height="16"><use xlink:href="#table"></use></svg>
-                    Absence Review
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="/loghours/view" class="nav-link" aria-current="page">
-                    <svg class="bi me-2" width="16" height="16"><use xlink:href="#home"></use></svg>
-                    View Logged Hours
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="/departaments" class="nav-link" aria-current="page">
-                    <svg class="bi me-2" width="16" height="16"><use xlink:href="#home"></use></svg>
-                    Departaments
-                </a>
-            </li>
-
-            <li class="nav-item">
-                <a href="/employee_information" class="nav-link" aria-current="page">
-                    <svg class="bi me-2" width="16" height="16"><use xlink:href="#home"></use></svg>
-                    Employee Information
-                </a>
-            </li>
-            @endif
-    </ul>
-    <hr>
-    <div class="dropdown">
-        <a href="#" class="d-flex align-items-center link-dark text-decoration-none dropdown-toggle" id="dropdownUser2" data-bs-toggle="dropdown" aria-expanded="false">
-            <img src="data:image/png;base64,{{ base64_encode(Auth::user()->profile_picture) }}" alt="" width="32" height="32" class="rounded-circle me-2">
-            <strong>{{Auth::user()->first_name}} {{Auth::user()->last_name}}</strong>
-        </a>
-        <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownUser2" style="">
-            <li><a class="dropdown-item" href="/profile">Profile</a></li>
-            <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="/logout">Sign out</a></li>
-        </ul>
-    </div>
-</div>
-    @endif
+                    @if(Auth::user()->role_id == 1)
+                    <li>
+                        <a href="#submenu3" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
+                            <i class="fs-4 bi-grid"></i> <span class="ms-1 d-none d-sm-inline">ADMIN VIEWS</span> </a>
+                        <ul class="collapse nav flex-column ms-1" id="submenu3" data-bs-parent="#menu">
+                            <li class="w-100">
+                                <a href="/mng/register" class="nav-link px-0"> <span class="d-none d-sm-inline">Register New User</span></a>
+                            </li>
+                            <li>
+                                <a href="/mng/edit" class="nav-link px-0"> <span class="d-none d-sm-inline">Edit Users</span></a>
+                            </li>
+                        </ul>
+                    </li>
+                    @endif
+                </ul>
+                <hr>
+                <div class="dropdown pb-4">
+                    <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+                        <img src="data:image/png;base64,{{ base64_encode(Auth::user()->profile_picture) }}" width="30" height="30" class="rounded-circle">
+                        <span class="d-none d-sm-inline mx-1">{{Auth::user()->first_name}} {{Auth::user()->last_name}}</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
+                        <li><a class="dropdown-item" href="/profile">Profile</a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item" href="/logout">Sign out</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
