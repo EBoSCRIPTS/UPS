@@ -9,6 +9,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
             crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 </home>
 
 <body>
@@ -18,7 +19,7 @@
     <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-3">
         <form action="{{route('employee_information.create')}}" method="POST">
             @csrf
-            <label for="employee_name" class="form-label">Employee Name</label>
+            <label for="employee_name" class="form-label">Unassigned Employee Name</label>
             <select class="form-select" name="employee_id">
                 @foreach($users as $employee)
                 <option name="employee_id" value="{{ $employee->id }}">{{$employee->first_name}} {{$employee->last_name}}</option>
@@ -32,14 +33,19 @@
                 @endforeach
             </select>
 
-            <label name="hour_pay" for="hour_play" class="form-label">Hour Pay</label>
-            <input type="text" class="form-control" id="hour_pay" name="hour_pay"/>
+            <label for="typeOfPay" class="form-label">Salary type</label>
+            <select class="form-select" name="typeOfPay" id="typeOfPay">
+                <option value="disabled" disabled selected>---</option>
+                <option value="hour">Hour pay</option>
+                <option value="fixed">Set salary</option>
+            </select>
 
-            <label name="salary" for="salary" class="form-label">Salary</label>
-            <input type="text" class="form-control" id="salary" name="salary"/>
+            <input type="text" class="form-control" id="hour_pay" name="hour_pay" placeholder="Hourly"/>
+
+            <input type="text" class="form-control" id="salary" name="salary" placeholder="Fixed"/>
 
 
-            <label name="position" for="position" class="form-label">Position</label>
+            <label for="position" class="form-label">Position</label>
             <input type="text" class="form-control" id="position" name="position"/>
 
             <button type="submit" class="btn btn-primary mt-3">Add</button>
@@ -78,4 +84,23 @@
 
     </div>
 </div>
+
+<script>
+    $('#hour_pay').hide();
+    $('#salary').hide();
+$('#typeOfPay').change(function(){
+    selection = $(this).val();
+
+    switch (selection){
+        case 'hour':
+            $('#hour_pay').show();
+            $('#salary').hide();
+            break;
+        case 'fixed':
+            $('#hour_pay').hide();
+            $('#salary').show();
+            break;
+    }
+})
+</script>
 </body>
