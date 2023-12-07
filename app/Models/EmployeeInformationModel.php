@@ -26,4 +26,9 @@ class EmployeeInformationModel extends Model
     {
         return $this->belongsTo(UserModel::class, 'user_id', 'id');
     }
+
+    public function department(): BelongsTo
+    {
+        return $this->belongsTo(DepartamentsModel::class, 'department_id', 'id');
+    }
 }

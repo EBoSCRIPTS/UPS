@@ -12,13 +12,19 @@ class UserController extends Controller
 {
     public function register(Request $request): RedirectResponse
     {
-        if ($request->input('profile_picture') == null) {
-            $img = $request->merge(['profile_picture' => storage_path('app\public\default_pfp.png')]);
+        if ($request->hasFile('profile_picture')) {
+            $image = $request->file('profile_picture');
+            $imageName = time().'.'.$image->getClientOriginalExtension();
+            $image->move(public_path('uploads'), $imageName);
+
+            $imageName = public_path('uploads/'.$imageName);
         }
         else{
-            $img = $request->input('profile_picture');
+            $imageName = public_path('default.png');
         }
+
         $role = $request->input('role_id');
+
         switch($role) {
             case 'Superadmin':
                 $role = 1;
@@ -39,7 +45,7 @@ class UserController extends Controller
             'last_name' => $request->input('last_name'),
             'email' => $request->input('email'),
             'phone_number' => $request->input('phone_number'),
-            'profile_picture' => $img,
+            'profile_picture' => $imageName,
             'password' => bcrypt($request->input('password')),
             'role_id' => $request->input('role_id'),
         ]);
@@ -65,30 +71,27 @@ class UserController extends Controller
     public function editUser(Request $request)
     {
         $user = UserModel::query()->find($request->input('id'));
-        if($request->input('first_name') == null) {
-            $request->merge(['first_name' => $user->first_name]);
-        }
-        if($request->input('last_name') == null) {
-            $request->merge(['last_name' => $user->last_name]);
-        }
-        if($request->input('email') == null) {
-            $request->merge(['email' => $user->email]);
-        }
-        if($request->input('phone_number') == null) {
-            $request->merge(['phone_number' => $user->phone_number]);
-        }
-        if($request->input('profile_picture') == null) {
-            $request->merge(['profile_picture' => $user->profile_picture]);
-        }
+
         $user->update([
-            'first_name' => $request->input('first_name'),
-            'last_name' => $request->input('last_name'),
-            'email' => $request->input('email'),
-            'phone_number' => $request->input('phone_number'),
-            'profile_picture' => $request->input('profile_picture'),
+            'first_name' => $request->input('first_name') ?? $user->first_name,
+            'last_name' => $request->input('last_name') ?? $user->last_name,
+            'email' => $request->input('email') ?? $user->email,
+            'phone_number' => $request->input('phone_number') ?? $user->phone_number,
+            'profile_picture' => $request->input('profile_picture') ?? $user->profile_picture,
         ]);
 
         return redirect('/mng/edit')->with('success', 'User edited!');
+    }
+
+    public function getUserInfo(Request $request)
+    {
+        $user = UserModel::query()->where('id', $request->id)->first();
+
+        if($user == null) {
+            abort(404);
+        }
+
+        return view('profile', ['user' => $user]);
     }
 
 }

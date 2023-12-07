@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -49,4 +50,8 @@ class UserModel extends Authenticatable
         return $this->role_id == 3;
     }
 
+    public function employee(): BelongsTo
+    {
+        return $this->belongsTo(EmployeeInformationModel::class, 'id', 'user_id');
+    }
 }

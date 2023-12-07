@@ -26,7 +26,7 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <form action="{{ route('user.edit') }}" method="POST">
+                        <form action="{{ route('user.edit') }}" method="POST" enctype="multipart/form-data">
                             @csrf
                             <input type="hidden" name="id" value="{{ $user->id }}">
                             <input type="text" name="first_name" placeholder="{{$user->first_name}}">

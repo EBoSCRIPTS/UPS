@@ -36,7 +36,7 @@ class EmployeeInformationController extends Controller
             'hour_pay' => $request->input('hour_pay'),
             'salary' => $request->input('salary'),
             'position' => $request->input('position'),
-            'monthly_hours' => $request->input('monthly_hours'),
+            'monthly_hours' => $request->input('hours'),
         ]);
         $information->save();
 

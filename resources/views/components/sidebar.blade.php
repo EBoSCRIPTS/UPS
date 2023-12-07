@@ -1,3 +1,4 @@
+@if(isset(Auth::user()->id))
 <div class="container-fluid">
     <div class="row flex-nowrap">
         <div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-dark">
@@ -23,7 +24,7 @@
                             </li>
                         </ul>
                     </li>
-                    @if(Auth::user()->role_id == 1 || Auth::user()->role_id == 3)
+                    @if(isset(Auth::user()->role_id) && Auth::user()->role_id == 1 || Auth::user()->role_id == 3)
                     <li>
                         <a href="#submenu2" data-bs-toggle="collapse" class="nav-link px-0 align-middle ">
                             <i class="fs-4 bi-bootstrap"></i> <span class="ms-1 d-none d-sm-inline">MANAGER VIEWS</span></a>
@@ -73,11 +74,11 @@
                 <hr>
                 <div class="dropdown pb-4">
                     <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
-                        <img src="data:image/png;base64,{{ base64_encode(Auth::user()->profile_picture) }}" width="30" height="30" class="rounded-circle">
+                        <img src="{{ asset($user->profile_picture) }}" alt="Profile Picture" class="rounded-circle" width="30" height="30">
                         <span class="d-none d-sm-inline mx-1">{{Auth::user()->first_name}} {{Auth::user()->last_name}}</span>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
-                        <li><a class="dropdown-item" href="/profile">Profile</a></li>
+                        <li><a class="dropdown-item" href="/profile/{{Auth::user()->id}}">Profile</a></li>
                         <li>
                             <hr class="dropdown-divider">
                         </li>
@@ -86,3 +87,6 @@
                 </div>
             </div>
         </div>
+@else
+    {{redirect('/login')}}
+@endif

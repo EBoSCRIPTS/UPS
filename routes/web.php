@@ -27,9 +27,7 @@ Route::get('/login', function () {
     return view('login');
 });
 Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
-Route::get('/profile', function () {
-    return view('profile');
-});
+Route::get('/profile/{id}', [UserController::class, 'getUserInfo'])->name('profile');
 Route::post('/logging_in', [AuthController::class, 'auth'])->name('logging_in');
 
 /* Absence views */
