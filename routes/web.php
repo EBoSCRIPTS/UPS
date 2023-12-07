@@ -9,6 +9,7 @@ use App\Http\Controllers\ViewLoggedHoursController;
 use App\Http\Controllers\DepartmentsController;
 use App\Http\Controllers\EmployeeInformationController;
 use App\Http\Controllers\AccountantController;
+use App\Http\Controllers\UserSearchController;
 
 /* Home view */
 Route::get('/', function () {
@@ -65,3 +66,8 @@ Route::post('/employee_information/delete', [EmployeeInformationController::clas
 Route::get('/accountant', [AccountantController::class, 'showAll'])->name('accountant');
 Route::get('/accountant/{id}', [AccountantController::class, 'showDept'])->name('accountant_view_department');
 Route::post('/accountant/user', [AccountantController::class, 'loadEmployeeInformation'])->name('accountant_view_department');
+
+
+/* REST API routes */
+Route::get('/api/all_users_json/{first_name}', [UserSearchController::class, 'index'])->middleware('admin');
+
