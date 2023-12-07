@@ -74,7 +74,7 @@
                 <hr>
                 <div class="dropdown pb-4">
                     <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
-                        <img src="{{ asset($user->profile_picture) }}" alt="Profile Picture" class="rounded-circle" width="30" height="30">
+                        <img src="{{ asset(Auth::user()->profile_picture) }}" alt="Profile Picture" class="rounded-circle" width="30" height="30">
                         <span class="d-none d-sm-inline mx-1">{{Auth::user()->first_name}} {{Auth::user()->last_name}}</span>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
