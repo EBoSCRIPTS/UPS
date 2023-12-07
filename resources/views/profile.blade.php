@@ -13,7 +13,7 @@
     @include('components.sidebar')
 
         @if(isset(Auth::user()->email))
-            <div class="col-lg-4">
+        <div class="col-lg-4 mt-5">
                 <div class="card bg-light">
                     <div class="card-body text-center">
                         <img src="{{ asset($user->profile_picture) }}" alt="Profile Picture" class="rounded-circle mb-3" width="150" height="150">
@@ -28,12 +28,12 @@
                 </div>
             </div>
 
-            <div class="col-lg-8">
-                <div class="card bg-light">
+            <div class="col-lg-4 mt-5">
+                <div class="card bg-light" style="width: 500px">
                     <div class="card-body">
                         <div class="row">
                             <div class="col-sm-3">
-                                <p class="mb-0">Full name:</p>
+                                <p class="mb-0"><strong>Full name:</strong></p>
                             </div>
                             <div class="col-sm-9">
                                 <p class="text-muted mb-0">{{$user->first_name}} {{$user->last_name}}</p>
