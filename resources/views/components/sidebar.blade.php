@@ -7,7 +7,7 @@
                     <span class="fs-5 d-none d-sm-inline">UPS</span>
                 </a>
                 <div class="searchbar">
-                    <input id="searchBarInput" name="first_name" type="text" class="form-control" placeholder="Search for user" oninput="debounceAddressSearch()">
+                    <input id="searchBarInput" name="first_name" type="text" class="form-control" placeholder="Search for user" oninput="userSearchDebounced()">
                 </div>
                 <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
                     <li class="nav-item">
@@ -17,13 +17,25 @@
                     </li>
                     <li>
                         <a href="#submenu1" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
-                            <i class="fs-4 bi-speedometer2"></i> <span class="ms-1 d-none d-sm-inline">Dashboard</span> </a>
+                            <i class="fs-4 bi-speedometer2"></i> <span class="ms-1 d-none d-sm-inline">DASHBOARD</span> </a>
                         <ul class="collapse show nav flex-column ms-1" id="submenu1" data-bs-parent="#menu">
                             <li class="w-100">
                                 <a href="/absence" class="nav-link px-0"> <span class="d-none d-sm-inline">Request Absence</span> </a>
                             </li>
                             <li>
                                 <a href="/loghours" class="nav-link px-0"> <span class="d-none d-sm-inline">Log Hours</span> </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#submenu5" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
+                            <i class="fs-4 bi-speedometer2"></i> <span class="ms-1 d-none d-sm-inline">TASKS</span> </a>
+                        <ul class="collapse show nav flex-column ms-1" id="submenu5" data-bs-parent="#menu">
+                            <li>
+                                <a href="/tasks" class="nav-link px-0"> <span class="d-none d-sm-inline">See Tasks</span> </a>
+                            </li>
+                            <li>
+                                <a href="/tasks/create_new_project" class="nav-link px-0"> <span class="d-none d-sm-inline">Create</span> </a>
                             </li>
                         </ul>
                     </li>

@@ -10,6 +10,7 @@ use App\Http\Controllers\DepartmentsController;
 use App\Http\Controllers\EmployeeInformationController;
 use App\Http\Controllers\AccountantController;
 use App\Http\Controllers\UserSearchController;
+use App\Http\Controllers\TasksController;
 
 /* Home view */
 Route::get('/', function () {
@@ -67,7 +68,20 @@ Route::get('/accountant', [AccountantController::class, 'showAll'])->name('accou
 Route::get('/accountant/{id}', [AccountantController::class, 'showDept'])->name('accountant_view_department');
 Route::post('/accountant/user', [AccountantController::class, 'loadEmployeeInformation'])->name('accountant_view_department');
 
+/* Tasks view */
+Route::get('/tasks', function(){
+   return view('tasks_landing');
+});
+Route::get('/tasks/create_new_project', function(){
+   return view('tasks_create_project');
+});
+Route::get('/tasks/project_settings', [TasksController::class, 'loadAvailableProjects']);
+Route::get('/tasks/project_settings/{project_id}', [TasksController::class, 'getProjectSettings'])->name('project_settings');
+
+Route::post('/tasks/create_new_project/insert', [TasksController::class, 'createNewProject'])->name('create_new_project');
+
 
 /* REST API routes */
 Route::get('/api/all_users_json/{first_name}', [UserSearchController::class, 'index'])->middleware('admin');
-
+Route::get('/api/get_all_departments', [DepartmentsController::class, 'departmentsApi'])->middleware('manager');
+Route::get('/api/get_all_projects', [TasksController::class, 'projectsApi'])->middleware('manager');
