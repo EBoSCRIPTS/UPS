@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\TasksProjectModel;
 use App\Models\TasksStatusModel;
+use App\Models\TasksTaskModel;
 
 class TasksController extends Controller
 {
@@ -48,8 +49,20 @@ class TasksController extends Controller
         return TasksProjectModel::query()->select('id', 'name')->get();
     }
 
-//    public function newTask(Request $request)
-//    {
-//
-//    }
+    public function newTask(Request $request)
+    {
+        $newTask = new TasksTaskModel([
+            'title' => $request->input('task_name'),
+            'description' => $request->input('description'),
+            'project_id' => $request->input('project'),
+            'made_by' => $request->input('made_by'),
+            'assigned_to' => $request->input('assign_to'),
+            'status_id' => 4,
+            'priority' => $request->input('priority'),
+        ]);
+
+        $newTask->save();
+
+        return redirect('/');
+    }
 }

@@ -17,6 +17,8 @@ class TasksTaskModel extends Model
         'title',
         'description',
         'made_by',
-        'assigned_to'
+        'assigned_to',
+        'status_id',
+        'priority',
     ];
 }

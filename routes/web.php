@@ -79,6 +79,10 @@ Route::get('/tasks/project_settings', [TasksController::class, 'loadAvailablePro
 Route::get('/tasks/project_settings/{project_id}', [TasksController::class, 'getProjectSettings'])->name('project_settings');
 
 Route::post('/tasks/create_new_project/insert', [TasksController::class, 'createNewProject'])->name('create_new_project');
+Route::get('/tasks/create_new_task', function(){
+    view('tasks_create_task');
+});
+Route::post('/tasks/create_new_task/create', [TasksController::class, 'newTask'])->name('create_new_task');
 
 
 /* REST API routes */
