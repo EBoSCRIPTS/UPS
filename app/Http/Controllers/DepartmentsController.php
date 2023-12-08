@@ -37,4 +37,10 @@ class DepartmentsController extends Controller
 
         return redirect('/departaments');
     }
+
+    public function departmentsApi()
+    {
+        $departments = DepartamentsModel::query()->select('id', 'name')->get();
+        return response()->json($departments);
+    }
 }
