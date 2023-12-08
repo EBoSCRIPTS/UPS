@@ -69,9 +69,8 @@ Route::get('/accountant/{id}', [AccountantController::class, 'showDept'])->name(
 Route::post('/accountant/user', [AccountantController::class, 'loadEmployeeInformation'])->name('accountant_view_department');
 
 /* Tasks view */
-Route::get('/tasks', function(){
-   return view('tasks_landing');
-});
+Route::get('/tasks', [TasksController::class, 'loadMyTasks'])->name('tasks.show');
+
 Route::get('/tasks/create_new_project', function(){
    return view('tasks_create_project');
 });
@@ -82,7 +81,10 @@ Route::post('/tasks/create_new_project/insert', [TasksController::class, 'create
 Route::get('/tasks/create_new_task', function(){
     view('tasks_create_task');
 });
+
+Route::get('/tasks/ticket/{ticket_id}', [TasksController::class, 'loadTicket'])->name('tasks.ticket');
 Route::post('/tasks/create_new_task/create', [TasksController::class, 'newTask'])->name('create_new_task');
+
 
 
 /* REST API routes */

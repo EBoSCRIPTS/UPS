@@ -65,4 +65,18 @@ class TasksController extends Controller
 
         return redirect('/');
     }
+
+    public function loadMyTasks(Request $request)
+    {
+        $myTasks = TasksTaskModel::query()->where('assigned_to', $request->user()->id)->get();
+
+        return view(' tasks_landing', ['tasks' => $myTasks]);
+    }
+
+    public function loadTicket(Request $request)
+    {
+        $ticket = TasksTaskModel::query()->where('id', $request->ticket_id)->first();
+
+        return view('tasks_ticket', ['ticket' => $ticket]);
+    }
 }
