@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class TasksTaskCommentsModel extends Model
 {
@@ -16,4 +17,9 @@ class TasksTaskCommentsModel extends Model
         'comment_author_id',
         'comment_text',
     ];
+
+    public function author(): BelongsTo
+    {
+        return $this->belongsTo(UserModel::class, 'comment_author_id', 'id');
+    }
 }

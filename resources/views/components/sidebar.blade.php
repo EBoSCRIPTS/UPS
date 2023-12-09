@@ -69,6 +69,10 @@
                                         <a href="/employee_information" class="nav-link px-0"> <span
                                                     class="d-none d-sm-inline">Employee Information</span></a>
                                     </li>
+                                    <li>
+                                        <a href="/tasks/project_settings" class="nav-link px-0"> <span
+                                                    class="d-none d-sm-inline">Project Settings</span></a>
+                                    </li>
                                 </ul>
                             </li>
                         @endif

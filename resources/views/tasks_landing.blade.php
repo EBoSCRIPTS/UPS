@@ -12,6 +12,7 @@
 <div class="row">
 @include('components.sidebar')
     <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-3">
+        @include('components.tasks_navbar')
         <div class="card">
             <div class="card-title">
                 <p class="h3">My Tasks</p>
@@ -24,6 +25,15 @@
                 @endforeach
             </div>
         </div>
+
+        <hr class="hr"/>
+        <p class="h2">My projects</p>
+        @foreach($myProjects as $project)
+            <ul class="list-group">
+                <li class="list-group-item"><a href="/tasks/projects/{{$project->project_id}}">{{$project->projectName->name}}</li>
+            </ul>
+        @endforeach
+
     </div>
 
 </div>

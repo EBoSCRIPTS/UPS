@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"> CREATE A NEW TASK</button>
-    <select id="project_id">
+    <button type="button" class="btn btn-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal"> CREATE A NEW TASK</button>
+    <select id="project_id" class="form-select" style="width: 10%; margin-left: 10px;">
         <option disabled selected>PROJECTS</option>
     </select>
 </nav>
@@ -63,8 +63,14 @@
             let projectOption = document.createElement('option');
             projectOption.value = data[i].id;
             projectOption.text = data[i].name;
+            projectOption.href = data[i].id;
             selectField.append(projectOption);
         }
+
+        selectField.addEventListener('change', function(){
+            const selectedValue = this.value;
+            window.location.href='/tasks/projects/' + selectedValue;
+        })
     }
 
     function assignToMe()
@@ -77,7 +83,6 @@
         getProjects('project_id');
         getProjects('project');
     }
-
 
 
 </script>

@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\TasksParticipantsModel;
+use App\Models\TasksTaskCommentsModel;
 use Illuminate\Http\Request;
 use App\Models\TasksProjectModel;
 use App\Models\TasksStatusModel;
 use App\Models\TasksTaskModel;
+use App\Models\UserModel;
 
 class TasksController extends Controller
 {
@@ -38,10 +41,15 @@ class TasksController extends Controller
     public function getProjectSettings(Request $request)
     {
         $project = TasksProjectModel::query()->where('id', $request->project_id)->first();
-
         $projectStatuses = TasksStatusModel::query()->where('project_id', $request->project_id)->get();
+        $projectUsers = TasksParticipantsModel::query()->where('project_id', $request->project_id)->select('employee_id')->get();
+        $allUsers = UserModel::query()->select('id', 'first_name', 'last_name')->get();
 
-        return view('tasks_projects_settings_project', ['project' => $project, 'statuses' => $projectStatuses]);
+        return view('tasks_projects_settings_project',
+            [   'project' => $project,
+                'statuses' => $projectStatuses,
+                'projectUsers' => $projectUsers,
+                'users' => $allUsers]);
     }
 
     public function projectsApi()
@@ -69,14 +77,80 @@ class TasksController extends Controller
     public function loadMyTasks(Request $request)
     {
         $myTasks = TasksTaskModel::query()->where('assigned_to', $request->user()->id)->get();
+        $myProjects = TasksParticipantsModel::query()->where('employee_id', $request->user()->id)->select('project_id')->get();
 
-        return view(' tasks_landing', ['tasks' => $myTasks]);
+        return view(' tasks_landing', ['tasks' => $myTasks, 'myProjects' => $myProjects]);
     }
 
     public function loadTicket(Request $request)
     {
         $ticket = TasksTaskModel::query()->where('id', $request->ticket_id)->first();
+        $statuses = TasksStatusModel::query()->where('project_id', $ticket->project_id)->get();
+        $getComments = $this->loadCommentsForTicket($request->ticket_id);
 
-        return view('tasks_ticket', ['ticket' => $ticket]);
+        return view('tasks_ticket', ['ticket' => $ticket, 'statuses' => $statuses, 'comments' => $getComments]);
+    }
+
+    public function loadProjectTasks(Request $request)
+    {
+        $projectTasks = TasksTaskModel::query()->where('project_id', $request->project_id)->get();
+        $myTasks = TasksTaskModel::query()->where('assigned_to', $request->user()->id)->get();
+        $projectStatus = TasksStatusModel::query()->where('project_id', $request->project_id)->get();
+        $projectName = TasksProjectModel::query()->where('id', $request->project_id)->select('name')->first();
+
+        return view('tasks_project_board', ['tasks' => $projectTasks, 'my_tasks' => $myTasks, 'statuses' => $projectStatus, 'project_name' => $projectName]);
+    }
+
+    public function updateStatus(Request $request)
+    {
+        $ticket = TasksTaskModel::query()->where('id', $request->ticket_id)->first();
+        $currentStatus = $ticket->status_id;
+        if ($request->next == 'next') {
+            $status = $currentStatus + 1;
+        } else {
+            $status = $currentStatus - 1;
+        }
+
+        $ticket->update([
+            'status_id' => $status
+        ]);
+
+        return redirect('/tasks/ticket/' . $request->ticket_id);
+    }
+
+    public function loadCommentsForTicket($ticket_id)
+    {
+        return TasksTaskCommentsModel::query()->where('task_id', $ticket_id)->get();
+    }
+
+    public function addComment(Request $request){
+        $newComment = new TasksTaskCommentsModel([
+            'task_id' => $request->input('task_id'),
+            'comment_author_id' => $request->input('comment_author'),
+            'comment_text' => $request->input('comment'),
+        ]);
+
+        $newComment->save();
+
+        return redirect('/tasks/ticket/' . $request->input('task_id'));
+    }
+
+    public function addUserToProject(Request $request)
+    {
+        for ($i = 0; $i < sizeof($request->input('participants')); $i++) {
+            $newUser = new TasksParticipantsModel([
+                'project_id' => $request->input('project_id'),
+                'employee_id' => $request->input('participants')[$i],
+            ]);
+            $newUser->save();
+        }
+        return redirect('/tasks/project_settings/' . $request->input('project_id'));
+    }
+
+    public function removeUserFromProject(Request $request)
+    {
+        TasksParticipantsModel::query()->where('project_id', $request->project_id)->where('employee_id', $request->input('user_id'))->delete();
+
+        return redirect('/tasks/project_settings/' . $request->input('project_id'));
     }
 }

@@ -70,24 +70,33 @@ Route::post('/accountant/user', [AccountantController::class, 'loadEmployeeInfor
 
 /* Tasks view */
 Route::get('/tasks', [TasksController::class, 'loadMyTasks'])->name('tasks.show');
+Route::get('/tasks/projects/{project_id}', [TasksController::class, 'loadProjectTasks'])->name('tasks.projects');
 
 Route::get('/tasks/create_new_project', function(){
    return view('tasks_create_project');
 });
+
+
 Route::get('/tasks/project_settings', [TasksController::class, 'loadAvailableProjects']);
 Route::get('/tasks/project_settings/{project_id}', [TasksController::class, 'getProjectSettings'])->name('project_settings');
+Route::post('/tasks/project_settings/add_user', [TasksController::class, 'addUserToProject'])->name('tasks.project_add_user');
+Route::post('/tasks/project_settings/remove_user', [TasksController::class, 'removeUserFromProject'])->name('tasks.project_remove_user');
 
 Route::post('/tasks/create_new_project/insert', [TasksController::class, 'createNewProject'])->name('create_new_project');
+
+
 Route::get('/tasks/create_new_task', function(){
     view('tasks_create_task');
 });
 
 Route::get('/tasks/ticket/{ticket_id}', [TasksController::class, 'loadTicket'])->name('tasks.ticket');
 Route::post('/tasks/create_new_task/create', [TasksController::class, 'newTask'])->name('create_new_task');
-
+Route::post('/tasks/ticket/update_ticket/', [TasksController::class, 'updateStatus'])->name('tasks.update_status');
+Route::post('/tasks/ticket/add_comment', [TasksController::class, 'addComment'])->name('tasks.add_comment');
 
 
 /* REST API routes */
-Route::get('/api/all_users_json/{first_name}', [UserSearchController::class, 'index'])->middleware('admin');
+Route::get('/api/get_all_users/', [UserSearchController::class, 'allUsers'])->middleware('admin');
+Route::get('/api/all_users_json/{first_name}', [UserSearchController::class, 'userSpecific'])->middleware('admin');
 Route::get('/api/get_all_departments', [DepartmentsController::class, 'departmentsApi'])->middleware('manager');
-Route::get('/api/get_all_projects', [TasksController::class, 'projectsApi'])->middleware('manager');
+Route::get('/api/get_all_projects', [TasksController::class, 'projectsApi']);
