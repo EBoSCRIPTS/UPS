@@ -93,7 +93,7 @@ Route::get('/tasks/ticket/{ticket_id}', [TasksController::class, 'loadTicket'])-
 Route::post('/tasks/create_new_task/create', [TasksController::class, 'newTask'])->name('create_new_task');
 Route::post('/tasks/ticket/update_ticket/', [TasksController::class, 'updateStatus'])->name('tasks.update_status');
 Route::post('/tasks/ticket/add_comment', [TasksController::class, 'addComment'])->name('tasks.add_comment');
-
+Route::post('/tasks/ticket/update', [TasksController::class, 'updateTaskDescription'])->name('tasks.update_description');
 
 /* REST API routes */
 Route::get('/api/get_all_users/', [UserSearchController::class, 'allUsers'])->middleware('admin');

@@ -14,9 +14,16 @@
     <div class="col-md-9 ms-sm-auto col-lg-4 px-md-4 mt-3">
         <p class="h2">{{$ticket->title}}</p>
         <hr class="hr"/>
-        <p class="h5">Task description</p>
-        <textarea id="ticket_description" name="ticket_description"></textarea>
+        <form action="{{route('tasks.update_description')}} " method="POST">
+            @csrf
+            <p class="h5">Task description</p>
+            <input type="hidden" name="ticket_id" value="{{$ticket->id}}">
+            <textarea id="ticket_description" name="ticket_description" style="width: 18rem; height:8rem"></textarea>
+            <br>
+            <button type="submit" class="btn btn-sm btn-primary">Update</button>
+        </form>
         <hr class="hr"/>
+
         <p class="h3">Comment section</p>
         @foreach($comments as $comment)
             <div class="card">

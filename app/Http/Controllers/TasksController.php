@@ -91,6 +91,18 @@ class TasksController extends Controller
         return view('tasks_ticket', ['ticket' => $ticket, 'statuses' => $statuses, 'comments' => $getComments]);
     }
 
+    public function updateTaskDescription (Request $request)
+    {
+        $ticket = TasksTaskModel::query()->where('id', $request->input('ticket_id'))->first();
+
+        $ticket->update([
+            'description' => $request->input('ticket_description'),
+        ]);
+
+        return redirect('/tasks/ticket/' . $request->ticket_id);
+    }
+
+
     public function loadProjectTasks(Request $request)
     {
         $projectTasks = TasksTaskModel::query()->where('project_id', $request->project_id)->get();
