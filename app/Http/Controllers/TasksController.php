@@ -134,16 +134,30 @@ class TasksController extends Controller
     public function updateStatus(Request $request)
     {
         $ticket = TasksTaskModel::query()->where('id', $request->ticket_id)->first();
-        $currentStatus = $ticket->status_key;
-        if ($request->next == 'next') {
-            $status = $currentStatus + 1;
-        } else {
-            $status = $currentStatus - 1;
-        }
+        $ticketAllStatuses = TasksStatusModel::query()->where('project_id', $ticket['project_id'])->select('statuses')->get()->toArray();
 
-        $ticket->update([
-            'status_key' => $status
-        ]);
+        $stats = json_decode($ticketAllStatuses['0']['statuses']);
+
+        $currentStatus = $ticket->status_key;
+
+        if ($request->next && $currentStatus < sizeof($stats) - 1) {
+            $status = $currentStatus + 1;
+
+            $ticket->update([
+                'status_key' => $status
+            ]);
+
+            return redirect('/tasks/ticket/' . $request->ticket_id);
+        }
+        if ($request->back && $currentStatus > 0){
+            $status = $currentStatus - 1;
+
+            $ticket->update([
+                'status_key' => $status
+            ]);
+
+            return redirect('/tasks/ticket/' . $request->ticket_id);
+        }
 
         return redirect('/tasks/ticket/' . $request->ticket_id);
     }
