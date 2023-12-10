@@ -129,7 +129,7 @@ class TasksController extends Controller
         $projectTasks = TasksTaskModel::query()->where('project_id', $request->project_id)->get();
         $myTasks = TasksTaskModel::query()->where('assigned_to', $request->user()->id)->get();
         $projectStatus = TasksStatusModel::query()->where('project_id', $request->project_id)->select('statuses')->get()->toArray();
-        $projectName = TasksProjectModel::query()->where('id', $request->project_id)->select('name')->first();
+        $projectName = TasksProjectModel::query()->where('id', $request->project_id)->select('id','name')->first();
 
         $projectStatus = json_decode($projectStatus['0']['statuses']);
 
@@ -219,4 +219,24 @@ class TasksController extends Controller
 
         return redirect('/tasks/ticket/' . $request->ticket_id);
     }
+
+    public function loadAllProjectTasks(Request $request)
+    {
+        $allTasks = TasksTaskModel::query()
+            ->join('tasks_status', 'tasks_task.project_id', '=', 'tasks_status.project_id')
+            ->where('tasks_task.project_id', $request->project_id)
+            ->select('tasks_task.*', 'tasks_status.statuses')
+            ->get();
+
+        $statuses = TasksStatusModel::query()
+            ->where('project_id', $request->project_id)
+            ->select('statuses')
+            ->get()
+            ->toArray();
+
+        $statuses = json_decode($statuses['0']['statuses']);
+
+        return view('tasks.tasks_project_all_tasks', ['tasks' => $allTasks, 'statuses' => $statuses]);
+    }
+
 }

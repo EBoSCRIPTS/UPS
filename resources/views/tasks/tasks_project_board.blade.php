@@ -32,7 +32,7 @@
             </div>
         </div>
         <hr class="hr" />
-        <p class="h2">{{$project_name->name}} board</p>
+        <p class="h2">{{$project_name->name}} board | <a href="{{route('tasks.projects.all_tasks', ['project_id' => $project_name->id])}}">See all tasks</a></p>
         <table class="table table-striped">
             <thead>
             <tr>

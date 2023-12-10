@@ -35,7 +35,7 @@
                     </div>
                     <div class="col-md-6">
                         <label for="assignTo" class="form-label">Assign To</label>
-                        <input id="assign_to" name="assign_to" type="text" class="form-control" placeholder="Search for user" oninput="userSearchDebounced" required>
+                        <input id="assign_to" name="assign_to" type="text" class="form-control" placeholder="Search for user" oninput="userSearchDebounced">
                         <a href="#" id="assignToMe" onclick="assignToMe()"> <small>Assign to me</small></a>
                         <input type="hidden" id="madeBy" name="made_by" value="{{ Auth::user()->id }}">
                     </div>
