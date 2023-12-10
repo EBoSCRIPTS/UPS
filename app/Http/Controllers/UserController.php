@@ -58,7 +58,7 @@ class UserController extends Controller
     public function showAll(): View
     {
         $users = UserModel::all();
-        return view('user_edit', ['users' => $users]);
+        return view('user_manage.user_edit', ['users' => $users]);
     }
 
     public function deleteUser(Request $request)

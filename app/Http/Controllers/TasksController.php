@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\TasksParticipantsModel;
-use App\Models\TasksTaskCommentsModel;
-use Illuminate\Http\Request;
-use App\Models\TasksProjectModel;
-use App\Models\TasksStatusModel;
-use App\Models\TasksTaskModel;
+use App\Models\Tasks\TasksParticipantsModel;
+use App\Models\Tasks\TasksProjectModel;
+use App\Models\Tasks\TasksStatusModel;
+use App\Models\Tasks\TasksTaskCommentsModel;
+use App\Models\Tasks\TasksTaskModel;
 use App\Models\UserModel;
+use Illuminate\Http\Request;
 
 class TasksController extends Controller
 {
@@ -35,7 +35,7 @@ class TasksController extends Controller
     public function loadAvailableProjects()
     {
         $projects = TasksProjectModel::all();
-        return view('tasks_projects_settings', ['projects' => $projects]);
+        return view('tasks.tasks_projects_settings', ['projects' => $projects]);
     }
 
     public function getProjectSettings(Request $request)
@@ -45,7 +45,7 @@ class TasksController extends Controller
         $projectUsers = TasksParticipantsModel::query()->where('project_id', $request->project_id)->select('employee_id')->get();
         $allUsers = UserModel::query()->select('id', 'first_name', 'last_name')->get();
 
-        return view('tasks_projects_settings_project',
+        return view('tasks.tasks_projects_settings_project',
             [   'project' => $project,
                 'statuses' => $projectStatuses,
                 'projectUsers' => $projectUsers,
@@ -79,7 +79,7 @@ class TasksController extends Controller
         $myTasks = TasksTaskModel::query()->where('assigned_to', $request->user()->id)->get();
         $myProjects = TasksParticipantsModel::query()->where('employee_id', $request->user()->id)->select('project_id')->get();
 
-        return view(' tasks_landing', ['tasks' => $myTasks, 'myProjects' => $myProjects]);
+        return view('tasks.tasks_landing', ['tasks' => $myTasks, 'myProjects' => $myProjects]);
     }
 
     public function loadTicket(Request $request)
@@ -88,7 +88,7 @@ class TasksController extends Controller
         $statuses = TasksStatusModel::query()->where('project_id', $ticket->project_id)->get();
         $getComments = $this->loadCommentsForTicket($request->ticket_id);
 
-        return view('tasks_ticket', ['ticket' => $ticket, 'statuses' => $statuses, 'comments' => $getComments]);
+        return view('tasks.tasks_ticket', ['ticket' => $ticket, 'statuses' => $statuses, 'comments' => $getComments]);
     }
 
     public function updateTaskDescription (Request $request)
@@ -110,7 +110,7 @@ class TasksController extends Controller
         $projectStatus = TasksStatusModel::query()->where('project_id', $request->project_id)->get();
         $projectName = TasksProjectModel::query()->where('id', $request->project_id)->select('name')->first();
 
-        return view('tasks_project_board', ['tasks' => $projectTasks, 'my_tasks' => $myTasks, 'statuses' => $projectStatus, 'project_name' => $projectName]);
+        return view('tasks.tasks_project_board', ['tasks' => $projectTasks, 'my_tasks' => $myTasks, 'statuses' => $projectStatus, 'project_name' => $projectName]);
     }
 
     public function updateStatus(Request $request)

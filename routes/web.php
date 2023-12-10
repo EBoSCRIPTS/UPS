@@ -19,7 +19,7 @@ Route::get('/', function () {
 
 /* Manager views */
 Route::get('/mng/register', function () {
-    return view('user_create');
+    return view('user_manage.user_create');
 });
 Route::get('/mng/allusers', [UserController::class, 'showAll'])->name('users')->middleware('admin');
 Route::get('/mng/edit', [UserController::class, 'showAll'])->name('users')->middleware('admin');
@@ -73,7 +73,7 @@ Route::get('/tasks', [TasksController::class, 'loadMyTasks'])->name('tasks.show'
 Route::get('/tasks/projects/{project_id}', [TasksController::class, 'loadProjectTasks'])->name('tasks.projects');
 
 Route::get('/tasks/create_new_project', function(){
-   return view('tasks_create_project');
+   return view('tasks.tasks_create_project');
 });
 
 

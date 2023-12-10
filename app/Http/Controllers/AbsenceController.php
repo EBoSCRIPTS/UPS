@@ -19,7 +19,7 @@ class AbsenceController extends Controller
         $absences = $this->reviewAbsence($request);
         $reviewedAbsences = $this->getReviewedAbsence($request);
 
-        return view('absence_review', ['absences' => $absences, 'reviewedAbsences' => $reviewedAbsences]);
+        return view('absence.absence_review', ['absences' => $absences, 'reviewedAbsences' => $reviewedAbsences]);
     }
 
     public function userAbsences()
@@ -27,7 +27,7 @@ class AbsenceController extends Controller
         $showSent = $this->getUserAbsence();
         $showReviewed = $this->getUserAbsenceReviewed();
 
-        return view('absence', ['showSent' => $showSent, 'showReviewed' => $showReviewed]);
+        return view('absence.absence', ['showSent' => $showSent, 'showReviewed' => $showReviewed]);
     }
 
     public function addAbsence(Request $request)

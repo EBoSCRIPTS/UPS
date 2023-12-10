@@ -16,7 +16,7 @@ class AccountantController extends Controller
     {
         $showDept = DepartamentsModel::all();
 
-        return view('accountant_view', ['departments' => $showDept]);
+        return view('accountant.accountant_view', ['departments' => $showDept]);
     }
 
     public function showDept(Request $request)
@@ -24,7 +24,7 @@ class AccountantController extends Controller
         $showDept = DepartamentsModel::query()->find($request->id);
         $showEmployees = EmployeeInformationModel::query()->where('department_id', $request->id)->get();
 
-        return view('accountant_view_department', ['department' => $showDept, 'employees' => $showEmployees, 'loadEmployee' => false]);
+        return view('accountant.accountant_view_department', ['department' => $showDept, 'employees' => $showEmployees, 'loadEmployee' => false]);
     }
 
     public function loadEmployeeInformation(Request $request)
@@ -35,7 +35,7 @@ class AccountantController extends Controller
         $getHours = $this->getEmployeeWorkedHoursThisMonth($request->employee);
         $expectedPay = $employee->hour_pay * $getHours;
 
-        return view('accountant_view_department', ['employeeInformation' => $employee, 'employees' => $showEmployees, 'loadEmployee' => true, 'hours' => $getHours, 'expectedPay' => $expectedPay]);
+        return view('accountant.accountant_view_department', ['employeeInformation' => $employee, 'employees' => $showEmployees, 'loadEmployee' => true, 'hours' => $getHours, 'expectedPay' => $expectedPay]);
 
     }
 
