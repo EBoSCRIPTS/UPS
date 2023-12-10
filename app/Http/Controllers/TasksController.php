@@ -120,7 +120,13 @@ class TasksController extends Controller
         $projectName = TasksProjectModel::query()->where('id', $request->project_id)->select('name')->first();
 
         $projectStatus = json_decode($projectStatus['0']['statuses']);
-        $currentStatus = $projectTasks[0]['status_key'];
+
+        if($projectTasks->toArray() != null) {
+            $currentStatus = $projectTasks[0]['status_key'];
+        }
+        else{
+            $currentStatus = null;
+        }
 
         return view('tasks.tasks_project_board', ['tasks' => $projectTasks, 'my_tasks' => $myTasks, 'statuses' => $projectStatus, 'project_name' => $projectName, 'currentStatus' => $currentStatus]);
     }

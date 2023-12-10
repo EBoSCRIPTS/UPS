@@ -36,7 +36,7 @@
             <tr>
                 @foreach($statuses as $status)
                     <th scope="col">
-                        {{$status->status_name}}
+                        {{$status}}
                     </th>
                 @endforeach
             </tr>
@@ -44,25 +44,11 @@
             <tbody>
             @foreach($tasks as $task)
                 <tr>
-                    @foreach($statuses as $status)
-                        @if($task->status_id == $status->id)
+                    @foreach($statuses as $key => $status)
+                        @if($task->status_key == $key)
                             <td>
                                 <a href="{{route('tasks.ticket', $task->id)}}" style="text-decoration: none">
-                                @if($task->priority == 'low')
-                                    <div class="card bg-light" style="width: 18rem;">
-                                        @endif
-
-                                        @if($task->priority == 'medium')
-                                            <div class="card bg-info" style="width: 18rem;">
-                                                @endif
-
-                                        @if($task->priority == 'high')
-                                            <div class="card bg-warning" style="width: 18rem;">
-                                                @endif
-
-                                                @if($task->priority == 'critical')
-                                                    <div class="card bg-danger" style="width: 18rem;">
-                                                        @endif
+                                <div class="card bg-light">
                                     <div class="card-body">
                                         {{$task->title}}
                                     <br>
