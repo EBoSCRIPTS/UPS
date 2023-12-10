@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 06, 2023 at 05:12 PM
+-- Generation Time: Dec 10, 2023 at 03:26 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -107,6 +107,78 @@ CREATE TABLE `roles` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `tasks_participants`
+--
+
+CREATE TABLE `tasks_participants` (
+  `id` int(11) NOT NULL,
+  `project_id` int(11) NOT NULL,
+  `employee_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tasks_project`
+--
+
+CREATE TABLE `tasks_project` (
+  `id` int(11) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `department_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tasks_status`
+--
+
+CREATE TABLE `tasks_status` (
+  `id` int(11) NOT NULL,
+  `statuses` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`statuses`)),
+  `project_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tasks_task`
+--
+
+CREATE TABLE `tasks_task` (
+  `id` int(11) NOT NULL,
+  `department_id` int(11) DEFAULT NULL COMMENT 'refers to department table, this value represents the dept the task is asigned to',
+  `title` varchar(255) NOT NULL,
+  `description` text NOT NULL,
+  `made_by` int(11) NOT NULL,
+  `assigned_to` int(11) DEFAULT NULL,
+  `status_id` int(11) NOT NULL DEFAULT 4,
+  `status_key` int(11) NOT NULL COMMENT 'key for retrieving values from statuses names json',
+  `priority` varchar(50) NOT NULL,
+  `project_id` int(11) NOT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tasks_task_comments`
+--
+
+CREATE TABLE `tasks_task_comments` (
+  `id` int(11) NOT NULL,
+  `task_id` int(11) NOT NULL COMMENT 'refers to tasks_task ID table field',
+  `comment_author_id` int(11) NOT NULL COMMENT 'refers to users user_id table field',
+  `comment_text` text NOT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `users`
 --
 
@@ -160,6 +232,37 @@ ALTER TABLE `roles`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `tasks_participants`
+--
+ALTER TABLE `tasks_participants`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `tasks_project`
+--
+ALTER TABLE `tasks_project`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `tasks_status`
+--
+ALTER TABLE `tasks_status`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `tasks_task`
+--
+ALTER TABLE `tasks_task`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_status_id` (`status_id`);
+
+--
+-- Indexes for table `tasks_task_comments`
+--
+ALTER TABLE `tasks_task_comments`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
@@ -202,6 +305,36 @@ ALTER TABLE `roles`
   MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `tasks_participants`
+--
+ALTER TABLE `tasks_participants`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `tasks_project`
+--
+ALTER TABLE `tasks_project`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `tasks_status`
+--
+ALTER TABLE `tasks_status`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `tasks_task`
+--
+ALTER TABLE `tasks_task`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `tasks_task_comments`
+--
+ALTER TABLE `tasks_task_comments`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
@@ -222,6 +355,12 @@ ALTER TABLE `employee_information`
 --
 ALTER TABLE `req_absence`
   ADD CONSTRAINT `fk_users_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `tasks_task`
+--
+ALTER TABLE `tasks_task`
+  ADD CONSTRAINT `fk_status_id` FOREIGN KEY (`status_id`) REFERENCES `tasks_status` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
