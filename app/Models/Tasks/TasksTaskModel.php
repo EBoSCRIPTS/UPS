@@ -21,6 +21,7 @@ class TasksTaskModel extends Model
         'made_by',
         'assigned_to',
         'status_id',
+        'status_key',
         'priority',
     ];
 

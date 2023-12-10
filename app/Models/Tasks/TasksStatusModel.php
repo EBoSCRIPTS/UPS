@@ -14,6 +14,7 @@ class TasksStatusModel extends Model
     protected $fillable = [
         'status_name',
         'project_id',
+        'statuses',
     ];
 
     public $timestamps = false;

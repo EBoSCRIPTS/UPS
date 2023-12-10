@@ -55,7 +55,7 @@
         <div class="row">
             <form action="{{route('tasks.update_status')}}" method="POST">
                 @csrf
-            <p class="h5">Status: {{$ticket->ticketStatus->status_name}}
+            <p class="h5">Status: {{$currentStatus}}
                 <input type="hidden" name="ticket_id" value="{{$ticket->id}}">
                 <button type="submit" class="btn btn-info btn-sm" name="back" value="back">←</button>
                 <button type="submit" class="btn btn-info btn-sm" name="next" value="next">→</button>

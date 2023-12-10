@@ -20,14 +20,15 @@ class TasksController extends Controller
         ]);
         $newProject->save();
 
-        for ($i = 1; $i <= $request->input('counter'); $i++) {
-            $projectStatusFields = new TasksStatusModel([
-                'project_id' => $newProject->id,
-                'status_name' => $request->input('project_status_field' . $i),
-            ]);
-            $projectStatusFields->save();
+        $statuses= [];
+        for($i = 1; $i <= $request->input('counter'); $i++){
+            $statuses[] = $request->input('project_status_field' . $i);
         }
-
+        $projectStatusFields = new TasksStatusModel([
+            'project_id' => $newProject->id,
+            'statuses' => json_encode($statuses),
+        ]);
+        $projectStatusFields->save();
 
         return redirect('/tasks/create_new_project');
     }
@@ -41,10 +42,9 @@ class TasksController extends Controller
     public function getProjectSettings(Request $request)
     {
         $project = TasksProjectModel::query()->where('id', $request->project_id)->first();
-        $projectStatuses = TasksStatusModel::query()->where('project_id', $request->project_id)->get();
+        $projectStatuses = TasksStatusModel::query()->where('project_id', $request->project_id)->select('statuses')->get();
         $projectUsers = TasksParticipantsModel::query()->where('project_id', $request->project_id)->select('employee_id')->get();
         $allUsers = UserModel::query()->select('id', 'first_name', 'last_name')->get();
-
         return view('tasks.tasks_projects_settings_project',
             [   'project' => $project,
                 'statuses' => $projectStatuses,
@@ -59,13 +59,16 @@ class TasksController extends Controller
 
     public function newTask(Request $request)
     {
+        $getTaskStatusesForProject = TasksStatusModel::query()->where('project_id', $request->input('project'))->select('id')->get()->toArray();
+
         $newTask = new TasksTaskModel([
             'title' => $request->input('task_name'),
             'description' => $request->input('description'),
             'project_id' => $request->input('project'),
             'made_by' => $request->input('made_by'),
             'assigned_to' => $request->input('assign_to'),
-            'status_id' => 4,
+            'status_id' => $getTaskStatusesForProject[0]['id'],
+            'status_key' => 0,
             'priority' => $request->input('priority'),
         ]);
 
@@ -85,10 +88,16 @@ class TasksController extends Controller
     public function loadTicket(Request $request)
     {
         $ticket = TasksTaskModel::query()->where('id', $request->ticket_id)->first();
-        $statuses = TasksStatusModel::query()->where('project_id', $ticket->project_id)->get();
+        $statuses = TasksStatusModel::query()->where('project_id', $ticket->project_id)->select('statuses')->get()->toArray();
+
+
+        $statusKey = $ticket['status_key'];
+        $decoded = json_decode($statuses['0']['statuses']);
+        $statusKeyDecoded = $decoded[$statusKey];
+
         $getComments = $this->loadCommentsForTicket($request->ticket_id);
 
-        return view('tasks.tasks_ticket', ['ticket' => $ticket, 'statuses' => $statuses, 'comments' => $getComments]);
+        return view('tasks.tasks_ticket', ['ticket' => $ticket, 'statuses' => $statuses, 'comments' => $getComments, 'currentStatus' => $statusKeyDecoded]);
     }
 
     public function updateTaskDescription (Request $request)
@@ -107,16 +116,19 @@ class TasksController extends Controller
     {
         $projectTasks = TasksTaskModel::query()->where('project_id', $request->project_id)->get();
         $myTasks = TasksTaskModel::query()->where('assigned_to', $request->user()->id)->get();
-        $projectStatus = TasksStatusModel::query()->where('project_id', $request->project_id)->get();
+        $projectStatus = TasksStatusModel::query()->where('project_id', $request->project_id)->select('statuses')->get()->toArray();
         $projectName = TasksProjectModel::query()->where('id', $request->project_id)->select('name')->first();
 
-        return view('tasks.tasks_project_board', ['tasks' => $projectTasks, 'my_tasks' => $myTasks, 'statuses' => $projectStatus, 'project_name' => $projectName]);
+        $projectStatus = json_decode($projectStatus['0']['statuses']);
+        $currentStatus = $projectTasks[0]['status_key'];
+
+        return view('tasks.tasks_project_board', ['tasks' => $projectTasks, 'my_tasks' => $myTasks, 'statuses' => $projectStatus, 'project_name' => $projectName, 'currentStatus' => $currentStatus]);
     }
 
     public function updateStatus(Request $request)
     {
         $ticket = TasksTaskModel::query()->where('id', $request->ticket_id)->first();
-        $currentStatus = $ticket->status_id;
+        $currentStatus = $ticket->status_key;
         if ($request->next == 'next') {
             $status = $currentStatus + 1;
         } else {
@@ -124,7 +136,7 @@ class TasksController extends Controller
         }
 
         $ticket->update([
-            'status_id' => $status
+            'status_key' => $status
         ]);
 
         return redirect('/tasks/ticket/' . $request->ticket_id);
