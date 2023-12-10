@@ -23,6 +23,8 @@
                     <li class="list-group-item">
                     <a href="{{route('tasks.ticket', $task->id)}}" class="list-group-item list-group-item-action">
                         {{$task->title}}
+                        <br>
+                        {{$task->projectName->name}}
                     </a>
                     </li>
                 @endforeach

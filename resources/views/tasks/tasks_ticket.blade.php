@@ -72,7 +72,17 @@
             <p class="h5" style="color: red">Priority: {{$ticket->priority}}</p>
         @endif
         <hr class="hr"/>
-        <p class="h5">Assigned to: {{$ticket->userTo->first_name}} {{$ticket->userTo->last_name}}</p>
+        <p class="h5">Assigned to:
+            <form action="{{ route('tasks.update_assignee', ['ticket_id' => $ticket->id]) }}" method="POST" name="assignee_change">
+            @csrf
+            <select class="form-select" style="width: 50%" id="selectField" name="assignee_select" onchange="assignee_change.submit()">
+                <option selected>{{$ticket->userTo->first_name}} {{$ticket->userTo->last_name}}</option>
+                @foreach($users as $user)
+                    <option value="{{$user->id}}">{{$user->first_name}} {{$user->last_name}}</option>
+                @endforeach
+            </select>
+            </form>
+        </p>
         <p class="h5">Created by: {{$ticket->userMade->first_name}} {{$ticket->userMade->last_name}}</p>
 
         <small>Created at: {{$ticket->created_at}}</small>
@@ -95,4 +105,5 @@ s
     {
         populateTextArea();
     }
+
 </script>

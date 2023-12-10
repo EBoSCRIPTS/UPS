@@ -61,6 +61,13 @@ class TasksController extends Controller
     {
         $getTaskStatusesForProject = TasksStatusModel::query()->where('project_id', $request->input('project'))->select('id')->get()->toArray();
 
+        $request->validate([
+            'title' => 'required|unique|string|max:255',
+            'description' => 'required|string',
+            'made_by' => 'required|integer',
+            'priority' => 'required|string',
+        ]);
+
         $newTask = new TasksTaskModel([
             'title' => $request->input('task_name'),
             'description' => $request->input('description'),
@@ -89,7 +96,7 @@ class TasksController extends Controller
     {
         $ticket = TasksTaskModel::query()->where('id', $request->ticket_id)->first();
         $statuses = TasksStatusModel::query()->where('project_id', $ticket->project_id)->select('statuses')->get()->toArray();
-
+        $users = UserModel::query()->select('id', 'first_name', 'last_name')->get();
 
         $statusKey = $ticket['status_key'];
         $decoded = json_decode($statuses['0']['statuses']);
@@ -97,7 +104,12 @@ class TasksController extends Controller
 
         $getComments = $this->loadCommentsForTicket($request->ticket_id);
 
-        return view('tasks.tasks_ticket', ['ticket' => $ticket, 'statuses' => $statuses, 'comments' => $getComments, 'currentStatus' => $statusKeyDecoded]);
+        return view('tasks.tasks_ticket',
+            ['ticket' => $ticket,
+                'statuses' => $statuses,
+                'comments' => $getComments,
+                'currentStatus' => $statusKeyDecoded,
+                'users' => $users]);
     }
 
     public function updateTaskDescription (Request $request)
@@ -196,5 +208,15 @@ class TasksController extends Controller
         TasksParticipantsModel::query()->where('project_id', $request->project_id)->where('employee_id', $request->input('user_id'))->delete();
 
         return redirect('/tasks/project_settings/' . $request->input('project_id'));
+    }
+
+    public function updateAssignee(Request $request)
+    {
+        $ticket = TasksTaskModel::query()->where('id', $request->ticket_id)->first();
+        $ticket->update([
+            'assigned_to' => $request->input('assignee_select'),
+        ]);
+
+        return redirect('/tasks/ticket/' . $request->ticket_id);
     }
 }

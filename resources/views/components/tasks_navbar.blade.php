@@ -11,7 +11,7 @@
             <form action="{{route('create_new_task')}}" method="POST">
                 @csrf
             <div class="modal-header">
-                <input type="text" class="form-control" id="task_name" name="task_name" placeholder="TASK NAME"/>
+                <input type="text" class="form-control" id="task_name" name="task_name" placeholder="TASK NAME" maxlength="255" required/>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -22,7 +22,7 @@
                         </select>
 
                         <label for="text" class="form-label">Text</label>
-                        <textarea id="description" name="description" class="form-control">
+                        <textarea id="description" name="description" class="form-control" required>
                         </textarea>
 
                         <label for="priority" class="form-label">Priority</label>
@@ -35,7 +35,7 @@
                     </div>
                     <div class="col-md-6">
                         <label for="assignTo" class="form-label">Assign To</label>
-                        <input id="assign_to" name="assign_to" type="text" class="form-control" placeholder="Search for user" oninput="userSearchDebounced">
+                        <input id="assign_to" name="assign_to" type="text" class="form-control" placeholder="Search for user" oninput="userSearchDebounced" required>
                         <a href="#" id="assignToMe" onclick="assignToMe()"> <small>Assign to me</small></a>
                         <input type="hidden" id="madeBy" name="made_by" value="{{ Auth::user()->id }}">
                     </div>
@@ -77,6 +77,7 @@
     {
         const assignToMe = document.getElementById('assign_to');
         assignToMe.value = '{{ Auth::user()->id }}';
+        assignToMe.text = '{{Auth::user()->first_name}}'
     }
 
     window.onload = function() {

@@ -18,11 +18,17 @@
                 <p class="h3">My Tasks</p>
             </div>
             <div class="card-box">
-                @foreach($tasks as $task)
-                    <a href="{{route('tasks.ticket', $task->id)}}" class="list-group-item list-group-item-action">
-                        {{$task->title}}
-                    </a>
-                @endforeach
+                <ul class="list-group">
+                    @foreach($tasks as $task)
+                        <li class="list-group-item">
+                            <a href="{{route('tasks.ticket', $task->id)}}" class="list-group-item list-group-item-action">
+                                {{$task->title}}
+                                <br>
+                                {{$task->projectName->name}}
+                            </a>
+                        </li>
+                    @endforeach
+                </ul>
             </div>
         </div>
 

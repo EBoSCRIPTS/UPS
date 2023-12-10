@@ -35,8 +35,8 @@ class TasksTaskModel extends Model
         return $this->belongsTo(UserModel::class, 'assigned_to', 'id');
     }
 
-    public function ticketStatus(): BelongsTo
+    public function projectName(): BelongsTo
     {
-        return $this->belongsTo(TasksStatusModel::class, 'status_id', 'id');
+        return $this->belongsTo(TasksProjectModel::class, 'project_id', 'id');
     }
 }
