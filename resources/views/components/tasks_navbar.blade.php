@@ -67,10 +67,13 @@
             selectField.append(projectOption);
         }
 
-        selectField.addEventListener('change', function(){
-            const selectedValue = this.value;
-            window.location.href='/tasks/projects/' + selectedValue;
-        })
+        if(field_id === 'project_id'){
+            selectField.addEventListener('change', function(){
+                const selectedValue = this.value;
+                window.location.href='/tasks/projects/' + selectedValue;
+            })
+        }
+
     }
 
     function assignToMe()

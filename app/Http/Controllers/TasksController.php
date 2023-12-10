@@ -61,13 +61,6 @@ class TasksController extends Controller
     {
         $getTaskStatusesForProject = TasksStatusModel::query()->where('project_id', $request->input('project'))->select('id')->get()->toArray();
 
-        $request->validate([
-            'title' => 'required|unique|string|max:255',
-            'description' => 'required|string',
-            'made_by' => 'required|integer',
-            'priority' => 'required|string',
-        ]);
-
         $newTask = new TasksTaskModel([
             'title' => $request->input('task_name'),
             'description' => $request->input('description'),
@@ -237,6 +230,14 @@ class TasksController extends Controller
         $statuses = json_decode($statuses['0']['statuses']);
 
         return view('tasks.tasks_project_all_tasks', ['tasks' => $allTasks, 'statuses' => $statuses]);
+    }
+
+    public function deleteTicket(Request $request)
+    {
+        $ticket = TasksTaskModel::query()->where('id', $request->ticket_id)->first();
+        $ticket->delete();
+
+        return redirect('/tasks');
     }
 
 }

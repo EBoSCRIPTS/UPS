@@ -96,6 +96,8 @@ Route::post('/tasks/ticket/update_ticket/', [TasksController::class, 'updateStat
 Route::post('/tasks/ticket/add_comment', [TasksController::class, 'addComment'])->name('tasks.add_comment');
 Route::post('/tasks/ticket/update', [TasksController::class, 'updateTaskDescription'])->name('tasks.update_description');
 Route::post('/tasks/ticket/update_assignee/{ticket_id}', [TasksController::class, 'updateAssignee'])->name('tasks.update_assignee');
+Route::post('/tasks/ticket/delete', [TasksController::class, 'deleteTicket'])->name('tasks.delete_ticket');
+
 
 /* REST API routes */
 Route::get('/api/get_all_users/', [UserSearchController::class, 'allUsers'])->middleware('admin');
