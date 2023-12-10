@@ -38,9 +38,9 @@
 
             <label for="role_id">Role</label>
             <select name="role_id" id="role_id" class="form-control">
-                <option value="Superadmin">Superadmin</option>
-                <option value="Manager">Manager</option>
-                <option value="Employee">Employee</option>
+                <option value="1">Superadmin</option>
+                <option value="3">Manager</option>
+                <option value="2">Employee</option>
             </select>
 
         <button type="submit" class="btn btn-primary" style="margin-top: 10px">Submit</button>

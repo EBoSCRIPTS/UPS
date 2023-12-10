@@ -25,19 +25,6 @@ class UserController extends Controller
 
         $role = $request->input('role_id');
 
-        switch($role) {
-            case 'Superadmin':
-                $role = 1;
-                break;
-            case 'Manager':
-                $role = 3;
-                break;
-            case 'Employee':
-                $role = 2;
-                break;
-            default:
-                $role = 2;
-        }
         $request->merge(['role_id' => $role]);
 
         $user = new UserModel([
