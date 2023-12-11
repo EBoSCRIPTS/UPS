@@ -30,8 +30,15 @@ class LogHoursController extends Controller
 
     public function insertLoggedHours(Request $request)
     {
-        for($i = 0; $i < Carbon::now()->day; $i++) {
-            $dates[] = Carbon::now()->startOfMonth()->addDays($i)->format('Y-m-d');
+        if ($request->input('month') == Carbon::now()->subMonth()->monthName){
+            for ($i = 0; $i < Carbon::now()->subMonth()->daysInMonth; $i++) {
+                $dates[] = Carbon::now()->subMonth()->startOfMonth()->addDays($i)->format('Y-m-d');
+            }
+        }
+        else {
+            for ($i = 0; $i < Carbon::now()->day; $i++) {
+                $dates[] = Carbon::now()->startOfMonth()->addDays($i)->format('Y-m-d');
+            }
         }
 
         foreach ($dates as $date)
@@ -48,7 +55,7 @@ class LogHoursController extends Controller
             }
         }
 
-        return redirect('/loghours')->with('success', 'User created!');
+        return redirect('/loghours')->with('success', 'Hours inserted!');
     }
 
     public function deleteLoggedHours(Request $request)
@@ -56,7 +63,7 @@ class LogHoursController extends Controller
         $loggedHours = LogHoursModel::query()->find($request->input('id'));
         $loggedHours->delete();
 
-        return redirect('/loghours')->with('success', 'User deleted!');
+        return redirect('/loghours')->with('success', 'Hours deleted!');
     }
 
     private function getUserAlreadyLoggedHours()
@@ -72,11 +79,12 @@ class LogHoursController extends Controller
         for($i = 0; $i < $day; $i++) {
             $dates[] = Carbon::now()->subMonth()->startOfMonth()->addDays($i)->format('Y-m-d');
         }
-        $hide = true;
 
         $getDates = $this->getUserAlreadyLoggedHours();
 
         $datesToFill = array_diff($dates, $getDates);
+
+        $hide = true;
 
         $userLogs = LogHoursModel::query()->where('user_id', Auth::user()->id)->get();
         return view('log_worked_hours', ['dates' => $datesToFill, 'month' => $month, 'userLogs' => $userLogs, 'hide' => $hide]);
