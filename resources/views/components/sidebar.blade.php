@@ -73,6 +73,10 @@
                                         <a href="/tasks/project_settings" class="nav-link px-0"> <span
                                                     class="d-none d-sm-inline">Project Settings</span></a>
                                     </li>
+                                    <li>
+                                        <a href="/send_mail" class="nav-link px-0"> <span
+                                                class="d-none d-sm-inline">Send Email To All Users</span></a>
+                                    </li>
                                 </ul>
                             </li>
                         @endif

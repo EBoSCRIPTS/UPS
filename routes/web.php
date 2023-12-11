@@ -11,6 +11,7 @@ use App\Http\Controllers\EmployeeInformationController;
 use App\Http\Controllers\AccountantController;
 use App\Http\Controllers\UserSearchController;
 use App\Http\Controllers\TasksController;
+use App\Http\Controllers\MailController;
 
 /* Home view */
 Route::get('/', function () {
@@ -98,6 +99,14 @@ Route::post('/tasks/ticket/add_comment', [TasksController::class, 'addComment'])
 Route::post('/tasks/ticket/update', [TasksController::class, 'updateTaskDescription'])->name('tasks.update_description');
 Route::post('/tasks/ticket/update_assignee/{ticket_id}', [TasksController::class, 'updateAssignee'])->name('tasks.update_assignee');
 Route::post('/tasks/ticket/delete', [TasksController::class, 'deleteTicket'])->name('tasks.delete_ticket');
+
+
+
+/* MAIL Related views */
+Route::get('/send_mail', function(){
+    return view('send_mail');
+})->middleware('manager');
+Route::post('/send_mail/submit', [MailController::class, 'sendMail'])->name('send_mail')->middleware('manager');
 
 
 /* REST API routes */
