@@ -22,7 +22,7 @@
 
                 @foreach($statuses as $status)
                     <label for="status">Status</label>
-                    <input type="text" class="form-control" id="status" name="status" placeholder="{{$status->status_name}}" disabled/>
+                    <input type="text" class="form-control" id="status" name="status" placeholder="{{$status}}" disabled/>
                 @endforeach
             </form>
             <hr class="hr"/>

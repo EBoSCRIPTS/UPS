@@ -15,7 +15,14 @@
 <div class="row">
     @include('components.sidebar')
     <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-3">
-        <p class="h-4"> Month of {{ $month }}</p>
+        <p class="h-4"> Month of {{ $month }}
+        @if(!isset($hide))
+        <form action="{{route('loghours.previous_month')}}" method="POST">
+            @csrf
+            <button type="submit" class="btn btn-sm btn-info">Go back to previous month</button>
+        </form>
+        @endif
+        </p>
         <form action="{{ route('loghours.create') }}" method="POST">
             @csrf
             <table class="table">

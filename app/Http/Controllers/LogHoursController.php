@@ -63,4 +63,22 @@ class LogHoursController extends Controller
     {
         return LogHoursModel::query()->where('user_id', Auth::user()->id)->pluck('date')->toArray();
     }
+
+    public function getPreviousMonth()
+    {
+        $month = Carbon::now()->subMonth()->monthName;
+        $day = Carbon::now()->subMonth()->daysInMonth;
+
+        for($i = 0; $i < $day; $i++) {
+            $dates[] = Carbon::now()->subMonth()->startOfMonth()->addDays($i)->format('Y-m-d');
+        }
+        $hide = true;
+
+        $getDates = $this->getUserAlreadyLoggedHours();
+
+        $datesToFill = array_diff($dates, $getDates);
+
+        $userLogs = LogHoursModel::query()->where('user_id', Auth::user()->id)->get();
+        return view('log_worked_hours', ['dates' => $datesToFill, 'month' => $month, 'userLogs' => $userLogs, 'hide' => $hide]);
+    }
 }

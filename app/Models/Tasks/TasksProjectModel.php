@@ -25,4 +25,9 @@ class TasksProjectModel extends Model
         return $this->belongsTo(DepartmentsModel::class, 'department_id', 'id');
     }
 
+    public function participants(): BelongsTo
+    {
+        return $this->belongsTo(TasksParticipantsModel::class, 'id', 'project_id');
+    }
+
 }

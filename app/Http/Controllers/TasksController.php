@@ -42,9 +42,12 @@ class TasksController extends Controller
     public function getProjectSettings(Request $request)
     {
         $project = TasksProjectModel::query()->where('id', $request->project_id)->first();
-        $projectStatuses = TasksStatusModel::query()->where('project_id', $request->project_id)->select('statuses')->get();
+        $projectStatuses = TasksStatusModel::query()->where('project_id', $request->project_id)->select('statuses')->get()->toArray();
         $projectUsers = TasksParticipantsModel::query()->where('project_id', $request->project_id)->select('employee_id')->get();
         $allUsers = UserModel::query()->select('id', 'first_name', 'last_name')->get();
+
+        $projectStatuses = json_decode($projectStatuses[0]['statuses']);
+
         return view('tasks.tasks_projects_settings_project',
             [   'project' => $project,
                 'statuses' => $projectStatuses,
@@ -54,7 +57,10 @@ class TasksController extends Controller
 
     public function projectsApi()
     {
-        return TasksProjectModel::query()->select('id', 'name')->get();
+        $projects = TasksParticipantsModel::where('employee_id', 7)
+            ->join('tasks_project', 'tasks_project.id', '=', 'tasks_participants.project_id')
+            ->get();
+        return response()->json($projects);
     }
 
     public function newTask(Request $request)

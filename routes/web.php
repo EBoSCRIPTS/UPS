@@ -47,6 +47,7 @@ Route::post('/user/edit', [UserController::class, 'editUser'])->name('user.edit'
 /* Log hours */
 Route::get('/loghours', [LogHoursController::class, 'getCurrentMonth'])->name('loghours');
 Route::post('/loghours/create', [LogHoursController::class, 'insertLoggedHours'])->name('loghours.create');
+Route::post('/loghours/previous_month', [LogHoursController::class, 'getPreviousMonth'])->name('loghours.previous_month');
 
 Route::get('/loghours/view', [ViewLoggedHoursController::class, 'ViewLogged'])->name('loghours.view');
 Route::post('/loghours/view/user', [ViewLoggedHoursController::class, 'showUserLoggedHours'])->name('loghours.view.user');

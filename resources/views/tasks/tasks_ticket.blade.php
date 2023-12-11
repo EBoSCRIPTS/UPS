@@ -93,7 +93,7 @@
         <form action="{{route('tasks.delete_ticket')}}" method="POST">
             @csrf
             <input type="hidden" name="ticket_id" value="{{$ticket->id}}">
-            <button type="submit" class="btn btn-danger btn-sm" onsubmit="return confirm('Are you sure you want to delete this ticket?')">Delete Ticket</button>
+            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this ticket?')">Delete Ticket</button>
         </form>
     </div>
 
