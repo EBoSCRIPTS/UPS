@@ -12,6 +12,7 @@ use App\Http\Controllers\AccountantController;
 use App\Http\Controllers\UserSearchController;
 use App\Http\Controllers\TasksController;
 use App\Http\Controllers\MailController;
+use App\Http\Controllers\EquipmentController;
 
 /* Home view */
 Route::get('/', function () {
@@ -102,6 +103,14 @@ Route::post('/tasks/ticket/update_assignee/{ticket_id}', [TasksController::class
 Route::post('/tasks/ticket/delete', [TasksController::class, 'deleteTicket'])->name('tasks.delete_ticket');
 Route::post('/tasks/ticket/complete', [TasksController::class, 'completeTicket'])->name('tasks.complete_ticket');
 
+/* Equipment views */
+Route::get('/equipment/register', [EquipmentController::class, 'showRegistered'])->name('equipment.register');
+
+Route::post('/equipment/register/insert', [EquipmentController::class, 'addEquipmentType'])->name('equipment.add_equipment_type');
+Route::post('/equipment/register/add', [EquipmentController::class, 'addEquipment'])->name('equipment.add_equipment');
+
+Route::get('/equipment/equipment_assignment', [EquipmentController::class, 'loadAssignables'])->name('equipment.assignment');
+Route::post('/equipment/equipment_assignment/assign', [EquipmentController::class, 'assignEquipment'])->name('equipment.assign_equipment');
 
 /* MAIL Related views */
 Route::get('/send_mail', function(){

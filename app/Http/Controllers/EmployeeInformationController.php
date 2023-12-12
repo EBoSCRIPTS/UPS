@@ -50,4 +50,9 @@ class EmployeeInformationController extends Controller
 
         return redirect('/employee_information');
     }
+
+    public function getAllEmployees()
+    {
+        return EmployeeInformationModel::query()->select('id', 'user_id')->get();
+    }
 }

@@ -4,6 +4,7 @@ namespace App\Models\Equipment;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class EquipmentItemsModel extends Model
 {
@@ -12,8 +13,14 @@ class EquipmentItemsModel extends Model
     protected $table = 'equipment_items';
 
     protected $fillable = [
-        'type',
+        'type_id',
         'name',
-        'number_of_units',
+        'serial_number',
+        'is_assigned'
     ];
+
+    public function type(): BelongsTo
+    {
+        return $this->belongsTo(EquipmentTypeModel::class, 'type', 'id');
+    }
 }
