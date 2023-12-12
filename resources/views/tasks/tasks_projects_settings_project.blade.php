@@ -15,15 +15,18 @@
             @include('components.tasks_navbar')
             <p class="h2">Projects settings</p>
             <hr class="hr"/>
-            <form>
+            <form action="{{route('tasks.project_edit', $project->id)}}" method="POST">
+                @csrf
+                <button id="editButton" type="button" class="btn btn-primary btn-sm float-end" onclick="enableDisabledInputs()">Edit</button>
                 <label class="h4" for="name">Project name</label>
                 <input type="text" class="form-control" id="name" name="name" placeholder="{{$project->name}}" disabled/>
 
-
+                <div class="status-fields">
                 @foreach($statuses as $status)
                     <label for="status">Status</label>
-                    <input type="text" class="form-control" id="status" name="status" placeholder="{{$status}}" disabled/>
+                    <input type="text" class="form-control" id="status" name="status[]" placeholder="{{$status}}" disabled/>
                 @endforeach
+                </div>
             </form>
             <hr class="hr"/>
             <p class="h4">Project participants</p>
@@ -72,3 +75,57 @@
 
 </body>
 
+<script>
+    function enableDisabledInputs() {
+        const inputs = document.getElementsByTagName('input');
+        const editButton = document.getElementById('editButton');
+        const saveButton = document.createElement('button');
+        const cancelButton = document.createElement('button');
+        const addFieldButton = document.createElement('button');
+
+        saveButton.textContent = '✔';
+        saveButton.class = 'btn btn-primary btn-sm mb-2';
+        saveButton.type = 'submit';
+
+        cancelButton.textContent = '𐄂';
+        cancelButton.class = 'btn btn-danger btn-sm mb-2';
+
+        addFieldButton.textContent = '+';
+        addFieldButton.class = 'btn btn-primary btn-sm mb-2';
+        addFieldButton.type = 'button';
+        addFieldButton.onclick = addField;
+
+        editButton.appendChild(cancelButton);
+        editButton.appendChild(saveButton);
+        editButton.append(addFieldButton);
+
+
+        for (let i = 0; i < inputs.length; i++) {
+            if (inputs[i].disabled) {
+                inputs[i].value = inputs[i].placeholder;
+                inputs[i].disabled = false;
+            }
+        }
+    }
+
+
+    function addField()
+    {
+        const projectStatusFields = document.getElementsByClassName('status-fields');
+        const labelNewField = document.createElement('label');
+        const inputField = document.createElement('input');
+
+        labelNewField.for = 'status[]';
+        labelNewField.textContent = 'New Status';
+
+        inputField.type = 'text';
+        inputField.name = 'status[]'
+        inputField.className = 'form-control mt-2';
+        inputField.placeholder = 'Status field name...';
+
+        projectStatusFields[0].appendChild(labelNewField);
+        projectStatusFields[0].appendChild(inputField);
+
+
+    }
+</script>

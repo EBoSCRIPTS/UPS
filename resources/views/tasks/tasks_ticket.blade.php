@@ -53,6 +53,7 @@
         <p class="h2">Details</p>
         <hr class="hr"/>
         <div class="row">
+            @if($ticket->is_completed == '0')
             <form action="{{route('tasks.update_status')}}" method="POST">
                 @csrf
             <p class="h5">Status: {{$currentStatus}}
@@ -65,18 +66,23 @@
         @if($ticket->priority === 'low')
         <p class="h5" style="color: green">Priority: {{$ticket->priority}}</p>
         @elseif($ticket->priority === 'medium')
-            <p class="h5" style="color: yellow">Priority: {{$ticket->priority}}</p>
+            <p class="h5" style="color: blue">Priority: {{$ticket->priority}}</p>
         @elseif ($ticket->priority === 'high')
             <p class="h5" style="color: orange">Priority: {{$ticket->priority}}</p>
         @elseif ($ticket->priority === 'critical')
             <p class="h5" style="color: red">Priority: {{$ticket->priority}}</p>
         @endif
         <hr class="hr"/>
+        @endif
         <p class="h5">Assigned to:
             <form action="{{ route('tasks.update_assignee', ['ticket_id' => $ticket->id]) }}" method="POST" name="assignee_change">
             @csrf
             <select class="form-select" style="width: 50%" id="selectField" name="assignee_select" onchange="assignee_change.submit()">
+                @if(isset($ticket->userTo->first_name))
                 <option selected>{{$ticket->userTo->first_name}} {{$ticket->userTo->last_name}}</option>
+                @else
+                    <option selected disabled>Unassigned</option>
+                @endif
                 @foreach($users as $user)
                     <option value="{{$user->id}}">{{$user->first_name}} {{$user->last_name}}</option>
                 @endforeach
@@ -110,6 +116,7 @@
                 <form action="{{route('tasks.complete_ticket')}}" method="POST">
                     @csrf
                     <input type="hidden" name="ticket_id" value="{{$ticket->id}}">
+                    <input type="hidden" name="user_id" value="{{Auth::user()->id}}">
                     <button type="submit" class="btn btn-warning btn-sm float-end" onclick="return confirm('Are you sure you want to return this ticket?')">Return Ticket</button>
                 </form>
                 @endif

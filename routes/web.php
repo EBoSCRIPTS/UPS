@@ -84,6 +84,7 @@ Route::get('/tasks/project_settings', [TasksController::class, 'loadAvailablePro
 Route::get('/tasks/project_settings/{project_id}', [TasksController::class, 'getProjectSettings'])->name('project_settings');
 Route::post('/tasks/project_settings/add_user', [TasksController::class, 'addUserToProject'])->name('tasks.project_add_user');
 Route::post('/tasks/project_settings/remove_user', [TasksController::class, 'removeUserFromProject'])->name('tasks.project_remove_user');
+Route::post('/tasks/project_settings/project_edit/{project_id}', [TasksController::class, 'editProject'])->name('tasks.project_edit');
 
 Route::post('/tasks/create_new_project/insert', [TasksController::class, 'createNewProject'])->name('create_new_project');
 

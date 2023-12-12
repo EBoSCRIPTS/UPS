@@ -125,7 +125,7 @@ class TasksController extends Controller
 
     public function loadProjectTasks(Request $request)
     {
-        $projectTasks = TasksTaskModel::query()->where('project_id', $request->project_id)->get();
+        $projectTasks = TasksTaskModel::query()->where('project_id', $request->project_id)->where('is_completed', 0)->get();
         $myTasks = TasksTaskModel::query()->where('assigned_to', $request->user()->id)->get();
         $projectStatus = TasksStatusModel::query()->where('project_id', $request->project_id)->select('statuses')->get()->toArray();
         $projectName = TasksProjectModel::query()->where('id', $request->project_id)->select('id','name')->first();
@@ -258,17 +258,38 @@ class TasksController extends Controller
 
         if ($ticket->is_completed == 1) {
             $ticket->update([
+                'assigned_to' => $request->input('user_id'),
                 'is_completed' => 0
             ]);
         }
 
         else {
             $ticket->update([
-                'is_completed' => 1
+                'assigned_to' => null,
+                'is_completed' => 1,
             ]);
         }
 
         return back()->with('success', 'Ticket completed!');
+    }
+
+    public function editProject(Request $request)
+    {
+        $project = TasksProjectModel::query()->where('id', $request->project_id)->first();
+        $project->update([
+            'name' => $request->input('name'),
+        ]);
+
+        $projectStatuses = TasksStatusModel::query()->where('project_id', $request->project_id)->first();
+
+        $editStatus = $request->input('status');
+        $editStatus = json_encode($editStatus);
+
+        $projectStatuses->update([
+            'statuses' => $editStatus
+        ]);
+
+        return back()->with('success', 'Project updated!');
     }
 
 }

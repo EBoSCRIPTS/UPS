@@ -23,7 +23,7 @@
             <label name="description" for="description" class="form-label">Description</label>
             <textarea class="form-control" id="description" name="description"></textarea>
 
-            <button type="submit" class="btn btn-primary">Add</button>
+            <button type="submit" class="btn btn-primary mt-2">Add</button>
         </form>
 
         <table class="table">

@@ -88,7 +88,6 @@
         counter.value = count;
         projectStatusFields[0].appendChild(counter);
 
-
     }
 
 </script>
