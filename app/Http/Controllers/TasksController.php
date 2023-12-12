@@ -283,8 +283,13 @@ class TasksController extends Controller
         $projectStatuses = TasksStatusModel::query()->where('project_id', $request->project_id)->first();
 
         $editStatus = $request->input('status');
-        $editStatus = json_encode($editStatus);
+        foreach($editStatus as $key => $value){
+            if($value == null){
+                unset($editStatus[$key]);
+            }
+        }
 
+        $editStatus = json_encode($editStatus);
         $projectStatuses->update([
             'statuses' => $editStatus
         ]);
