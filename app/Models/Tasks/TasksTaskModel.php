@@ -20,9 +20,9 @@ class TasksTaskModel extends Model
         'description',
         'made_by',
         'assigned_to',
-        'status_id',
         'status_key',
         'priority',
+        'is_completed',
     ];
 
     public function userMade(): BelongsTo

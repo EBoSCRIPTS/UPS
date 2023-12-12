@@ -223,7 +223,13 @@ class TasksController extends Controller
     {
         $allTasks = TasksTaskModel::query()
             ->join('tasks_status', 'tasks_task.project_id', '=', 'tasks_status.project_id')
-            ->where('tasks_task.project_id', $request->project_id)
+            ->where('tasks_task.project_id', $request->project_id)->where('is_completed', 0)
+            ->select('tasks_task.*', 'tasks_status.statuses')
+            ->get();
+
+        $tasksCompleted = TasksTaskModel::query()
+            ->join('tasks_status', 'tasks_task.project_id', '=', 'tasks_status.project_id')
+            ->where('tasks_task.project_id', $request->project_id)->where('is_completed', 1)
             ->select('tasks_task.*', 'tasks_status.statuses')
             ->get();
 
@@ -235,7 +241,7 @@ class TasksController extends Controller
 
         $statuses = json_decode($statuses['0']['statuses']);
 
-        return view('tasks.tasks_project_all_tasks', ['tasks' => $allTasks, 'statuses' => $statuses]);
+        return view('tasks.tasks_project_all_tasks', ['tasks' => $allTasks, 'statuses' => $statuses, 'tasksCompleted' => $tasksCompleted]);
     }
 
     public function deleteTicket(Request $request)
@@ -244,6 +250,25 @@ class TasksController extends Controller
         $ticket->delete();
 
         return redirect('/tasks');
+    }
+
+    public function completeTicket(Request $request)
+    {
+        $ticket = TasksTaskModel::query()->where('id', $request->ticket_id)->first();
+
+        if ($ticket->is_completed == 1) {
+            $ticket->update([
+                'is_completed' => 0
+            ]);
+        }
+
+        else {
+            $ticket->update([
+                'is_completed' => 1
+            ]);
+        }
+
+        return back()->with('success', 'Ticket completed!');
     }
 
 }

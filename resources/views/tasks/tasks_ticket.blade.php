@@ -90,11 +90,31 @@
         <small>Updated at: {{$ticket->updated_at}}</small>
 
         <hr class="hr"/>
-        <form action="{{route('tasks.delete_ticket')}}" method="POST">
-            @csrf
-            <input type="hidden" name="ticket_id" value="{{$ticket->id}}">
-            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this ticket?')">Delete Ticket</button>
-        </form>
+        <div class="row">
+            <div class="col-md-6">
+                <form action="{{route('tasks.delete_ticket')}}" method="POST">
+                    @csrf
+                    <input type="hidden" name="ticket_id" value="{{$ticket->id}}">
+                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this ticket?')">Delete Ticket</button>
+                </form>
+            </div>
+
+            <div class="col-md-6">
+                @if($ticket->is_completed == '0')
+                <form action="{{route('tasks.complete_ticket')}}" method="POST">
+                    @csrf
+                    <input type="hidden" name="ticket_id" value="{{$ticket->id}}">
+                    <button type="submit" class="btn btn-success btn-sm float-end" onclick="return confirm('Are you sure you want to complete this ticket?')">Complete Ticket</button>
+                </form>
+                @else
+                <form action="{{route('tasks.complete_ticket')}}" method="POST">
+                    @csrf
+                    <input type="hidden" name="ticket_id" value="{{$ticket->id}}">
+                    <button type="submit" class="btn btn-warning btn-sm float-end" onclick="return confirm('Are you sure you want to return this ticket?')">Return Ticket</button>
+                </form>
+                @endif
+            </div>
+        </div>
     </div>
 
 </div>

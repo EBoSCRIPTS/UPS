@@ -29,6 +29,24 @@
                 </li>
             </ul>
         @endforeach
+        <hr class="hr"/>
+        <p class="h3">Completed tasks</p>
+         @foreach($tasksCompleted as $taskComplete)
+            <ul class="list-group">
+                <li class="list-group-item">
+                    <a href="{{route('tasks.ticket', $taskComplete->id)}}" class="list-group-item list-group-item-action">
+                        {{$taskComplete->title}}
+                        <br>
+                        Priority: {{$taskComplete->priority}}
+                        <br>
+                        Status: {{$statuses[$taskComplete->status_key]}}
+                        <br>
+                        {{$taskComplete->userTo->first_name}} {{$taskComplete->userTo->last_name}}
+                        {{$taskComplete->projectName->name}}
+                    </a>
+                </li>
+            </ul>
+        @endforeach
     </div>
 
 </div>
