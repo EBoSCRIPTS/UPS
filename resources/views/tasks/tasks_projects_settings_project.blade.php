@@ -17,7 +17,9 @@
             <hr class="hr"/>
             <form action="{{route('tasks.project_edit', $project->id)}}" method="POST">
                 @csrf
+                <div class="editButtons">
                 <button id="editButton" type="button" class="btn btn-primary btn-sm float-end" onclick="enableDisabledInputs()">Edit</button>
+                </div>
                 <label class="h4" for="name">Project name</label>
                 <input type="text" class="form-control" id="name" name="name" placeholder="{{$project->name}}" disabled/>
 
@@ -78,6 +80,7 @@
 <script>
     function enableDisabledInputs() {
         const inputs = document.getElementsByTagName('input');
+        const editFields = document.getElementsByClassName('editFields');
         const editButton = document.getElementById('editButton');
         const saveButton = document.createElement('button');
         const cancelButton = document.createElement('button');

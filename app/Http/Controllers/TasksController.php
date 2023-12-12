@@ -24,6 +24,7 @@ class TasksController extends Controller
         for($i = 1; $i <= $request->input('counter'); $i++){
             $statuses[] = $request->input('project_status_field' . $i);
         }
+
         $projectStatusFields = new TasksStatusModel([
             'project_id' => $newProject->id,
             'statuses' => json_encode($statuses),
@@ -100,6 +101,7 @@ class TasksController extends Controller
         $statusKey = $ticket['status_key'];
         $decoded = json_decode($statuses['0']['statuses']);
         $statusKeyDecoded = $decoded[$statusKey];
+
 
         $getComments = $this->loadCommentsForTicket($request->ticket_id);
 
@@ -290,9 +292,17 @@ class TasksController extends Controller
         }
 
         $editStatus = json_encode($editStatus);
+
         $projectStatuses->update([
             'statuses' => $editStatus
         ]);
+
+        $loadAllProjectTasks = TasksTaskModel::query()->where('project_id', $request->project_id)->get();
+        foreach($loadAllProjectTasks as $loadAllProjectTask) {
+            $loadAllProjectTask->update([
+                'status_key' => 0
+            ]);
+        }
 
         return back()->with('success', 'Project updated!');
     }
