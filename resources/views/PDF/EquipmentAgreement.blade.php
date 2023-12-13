@@ -10,22 +10,51 @@
 
 <body>
 <h1>{{$title}}</h1>
-<p>{{$date}}</p>
-<p>{{$equipment}}</p>
-<p>{{$employee}}</p>
-<p> List of equipment</p>
+<p class="h4">{{$date}}</p>
+<p class="h4">Employee assigned to {{$employee}}</p>
+<hr class="hr"/>
+<p class="h5">Agreement</p>
+<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+    Aliquam non sollicitudin turpis, a condimentum quam.
+    Maecenas eget suscipit enim.
+    Aliquam ac orci et metus consectetur venenatis.
+    Vestibulum auctor quam a nulla ullamcorper pellentesque.
+    Nam vehicula turpis felis.
+    Nunc nisi enim, lacinia et imperdiet vitae, efficitur quis orci.
+    Nunc nulla quam, fringilla sed commodo non, rutrum hendrerit elit.
+    Nunc lacinia, mauris ut varius blandit, nulla ex bibendum dolor,
+    et convallis leo lacus sed massa. Donec convallis quam erat,
+    a rutrum sapien tincidunt placerat. Suspendisse efficitur,
+    purus vel ultrices pretium, leo eros mollis mauris,
+    ut faucibus neque purus faucibus sapien.
+    Nullam maximus consequat tellus, in viverra tellus cursus id.
+    Morbi et ullamcorper nibh.
+    Nam ipsum velit, pharetra ac congue vitae,
+    blandit id metus. Nunc risus odio, dignissim in accumsan vitae,
+    tempor et sapien. Proin est nibh,
+    commodo non turpis egestas, suscipit vehicula lorem.
+    Morbi rhoncus finibus elit, vitae pharetra purus ullamcorper ac.</p>
+
+<p class="h4"> List of equipment given to the employee</p>
 <table class="table">
     <thead>
         <tr>
             <th scope="col">Name</th>
+            <th scope="col">Serial Number</th>
         </tr>
     </thead>
     <tbody>
+    @foreach($equipment as $eq)
     <tr>
-        @foreach($equipment as $eq)
-            <td>{{$eq->equipment->name}}</td>
-        @endforeach
+            <td>{{$eq['name']}}</td>
+            <td>{{$eq['serial_number']}}</td>
     </tr>
+    @endforeach
     </tbody>
 </table>
+
+
+<p class="h4" style="bottom: 0; margin-top: 50px">Employee Signature</p>
+
+<p style="margin-top: 50px">__________________</p>
 </body>
