@@ -62,6 +62,7 @@
                 <tr>
                     <th scope="col">Name</th>
                     <th scope="col">Serial Number</th>
+                    <th scope="col">Assigned on</th>
                     <th scope="col">Action</th>
                 </tr>
             </thead>
@@ -70,6 +71,7 @@
                 <tr>
                     <td>{{$assignment->equipment->name}} </td>
                     <td>{{$assignment->equipment->serial_number}}</td>
+                    <td>{{$assignment->date_given}}</td>
                     <td>
                         <form action="{{route('equipment.return_equipment')}}" method="POST">
                             @csrf
