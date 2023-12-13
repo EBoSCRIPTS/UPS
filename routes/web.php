@@ -14,6 +14,7 @@ use App\Http\Controllers\TasksController;
 use App\Http\Controllers\MailController;
 use App\Http\Controllers\EquipmentController;
 use App\Http\Controllers\PDFController;
+use App\Http\Controllers\NewsController;
 
 /* Home view */
 Route::get('/', function () {
@@ -115,6 +116,9 @@ Route::post('/equipment/equipment_assignment/assign', [EquipmentController::clas
 Route::post('/equipment/get_user_assignments', [EquipmentController::class, 'loadAssignables'])->name('equipment.get_equipment_for_user');
 Route::post('/equipment/delete_equipment_item', [EquipmentController::class, 'deleteEquipment'])->name('equipment.delete_equipment');
 Route::post('/equipment/return_equipment_item', [EquipmentController::class, 'returnEquipment'])->name('equipment.return_equipment');
+
+/* Topic creation views */
+Route::get('/news/create_topic', [NewsController::class, 'createTopic'])->name('news.create_topic');
 
 /* MAIL Related views */
 Route::get('/send_mail', function(){
