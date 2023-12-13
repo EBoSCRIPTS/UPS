@@ -40,14 +40,13 @@
             <button type="submit" class="btn btn-primary mt-3">Add equipment</button>
         </form>
         <hr class="hr"/>
-        <p class="h4">List of registered equipment</p>
+        <p class="h4">List of assigned equipment</p>
         <table class="table">
             <thead>
                 <tr>
                     <th scope="col">Type</th>
                     <th scope="col">Name</th>
                     <th scope="col">Serial Number</th>
-                    <th scope="col">Status</th>
                 </tr>
             </thead>
             <tbody>
@@ -56,16 +55,41 @@
                         <td>{{$equipment->type->name}}</td>
                         <td>{{$equipment->name}}</td>
                         <td>{{$equipment->serial_number}}</td>
-                        @if($equipment->is_assigned == 1)
-                            <td>Assigned</td>
-                        @else
-                            <td>Not assigned</td>
-                        @endif
                     </tr>
                 @endforeach
             </tbody>
         </table>
 
+        <hr class="hr"/>
+        <p class="h4">List of available equipment</p>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Type</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Serial Number</th>
+                    <th scope="col">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                 @foreach($availableEquipments as $availableEq)
+                     <tr>
+                         <td>{{$availableEq->type->name}}</td>
+                         <td>{{$availableEq->name}}</td>
+                         <td>{{$availableEq->serial_number}}</td>
+                         <td>
+                             <form action="{{route('equipment.delete_equipment')}}" method="POST">
+                                 @csrf
+                                 <input type="hidden" name="id" value="{{$availableEq->id}}">
+                             <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                             </form>
+                         </td>
+                     </tr>
+                 @endforeach
+            </tbody>
+
+        </table>
     </div>
 </div>
 </body>

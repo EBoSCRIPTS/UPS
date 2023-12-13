@@ -12,9 +12,10 @@ class EquipmentController extends Controller
 {
     public function showRegistered()
     {
-        $equipment = EquipmentItemsModel::all();
+        $equipment = EquipmentItemsModel::query()->where('is_assigned', 1)->get();
+        $notAssigned = EquipmentItemsModel::query()->where('is_assigned', 0)->get();
         $type = EquipmentTypeModel::all();
-        return view('equipment_registration', ['equipments' => $equipment, 'types' => $type]);
+        return view('equipment_registration', ['equipments' => $equipment, 'types' => $type, 'availableEquipments' => $notAssigned]);
     }
 
     public function addEquipmentType(Request $request)
@@ -74,6 +75,27 @@ class EquipmentController extends Controller
         }
 
         return view('equipment_assignment', ['employees' => $employee, 'equipments' => $equipment]);
+    }
+
+    public function deleteEquipment(Request $request)
+    {
+        $equipment = EquipmentItemsModel::query()->where('id', $request->input('id'))->first();
+        $equipment->delete();
+
+        return back()->with('success', 'Item deleted!');
+    }
+
+    public function returnEquipment(Request $request)
+    {
+        $equipment = EquipmentItemsModel::query()->where('id', $request->input('id'))->first();
+        $userAssignment = EquipmentAssignmentModel::query()->where('id', $request->input('assignment_id'))->first();
+        $userAssignment->delete();
+
+        $equipment->update([
+            'is_assigned' => 0
+        ]);
+
+        return redirect('/equipment/equipment_assignment')->with('success', 'Item returned!');
     }
 
 

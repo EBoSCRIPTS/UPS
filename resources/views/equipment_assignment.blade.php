@@ -35,24 +35,53 @@
 
         </form>
         <p class="h3">Get equipment for user</p>
+        <div class="row">
+            <div class="col-md-6">
         <form action="{{route('equipment.get_equipment_for_user')}}" method="POST">
             @csrf
             <select name="employee" id="employee" class="form-select">
+                <option value="---" selected>Select an employee</option>
                 @foreach($employees as $employee)
                     <option value="{{$employee->id}}">{{$employee->user->first_name}} {{$employee->user->last_name}}</option>
             @endforeach
             </select>
             <button type="submit" class="btn btn-primary mt-2">Get equipment</button>
         </form>
+            </div>
+                <div class="col-md-6">
         @if(isset($assignments))
             <form action="{{route('equipment.generate_agreement')}}" method="POST">
                 @csrf
                 <input type="hidden" name="employee" value="{{$employee}}">
-                <button type="submit" class="btn btn-info btn-sm">Generate PDF</button>
+                <button type="submit" class="btn btn-info btn-sm">Generate PDF Agreement</button>
             </form>
+                </div>
+        </div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Serial Number</th>
+                    <th scope="col">Action</th>
+                </tr>
+            </thead>
+            <tbody>
             @foreach($assignments as $assignment)
-                <p>{{$assignment->equipment->name}} ({{$assignment->equipment->serial_number}})</p>
+                <tr>
+                    <td>{{$assignment->equipment->name}} </td>
+                    <td>{{$assignment->equipment->serial_number}}</td>
+                    <td>
+                        <form action="{{route('equipment.return_equipment')}}" method="POST">
+                            @csrf
+                            <input type="hidden" name="assignment_id" value="{{$assignment->id}}">
+                            <input type="hidden" name="id" value="{{$assignment->equipment->id}}">
+                        <button type="submit" class="btn btn-danger btn-sm">Return</button>
+                        </form>
+                    </td>
+                </tr>
             @endforeach
+            </tbody>
+        </table>
         @endif
     </div>
 
