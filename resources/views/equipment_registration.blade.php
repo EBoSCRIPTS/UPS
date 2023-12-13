@@ -46,7 +46,24 @@
                 <tr>
                     <th scope="col">Type</th>
                     <th scope="col">Name</th>
+                    <th scope="col">Serial Number</th>
+                    <th scope="col">Status</th>
+                </tr>
             </thead>
+            <tbody>
+                @foreach($equipments as $equipment)
+                    <tr>
+                        <td>{{$equipment->type->name}}</td>
+                        <td>{{$equipment->name}}</td>
+                        <td>{{$equipment->serial_number}}</td>
+                        @if($equipment->is_assigned == 1)
+                            <td>Assigned</td>
+                        @else
+                            <td>Not assigned</td>
+                        @endif
+                    </tr>
+                @endforeach
+            </tbody>
         </table>
 
     </div>

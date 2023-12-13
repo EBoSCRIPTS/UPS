@@ -14,7 +14,7 @@ class EquipmentController extends Controller
     {
         $equipment = EquipmentItemsModel::all();
         $type = EquipmentTypeModel::all();
-        return view('equipment_registration', ['equipment' => $equipment, 'types' => $type]);
+        return view('equipment_registration', ['equipments' => $equipment, 'types' => $type]);
     }
 
     public function addEquipmentType(Request $request)
@@ -68,7 +68,13 @@ class EquipmentController extends Controller
 
         $equipment = EquipmentItemsModel::query()->where('is_assigned', 0)->get();
 
+        if($request->has('employee')) {
+            $user = EquipmentAssignmentModel::query()->where('employee_id', $request->input('employee'))->get();
+            return view('equipment_assignment', ['employees' => $employee, 'equipments' => $equipment, 'assignments' => $user, 'employee' => $request->input('employee')]);
+        }
+
         return view('equipment_assignment', ['employees' => $employee, 'equipments' => $equipment]);
     }
+
 
 }

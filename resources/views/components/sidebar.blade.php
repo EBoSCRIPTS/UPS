@@ -80,6 +80,23 @@
                                 </ul>
                             </li>
                         @endif
+
+                        @if(isset(Auth::user()->role_id) && Auth::user()->role_id == 1 || Auth::user()->role_id == 3)
+                            <li>
+                                <a href="#submenu5" data-bs-toggle="collapse" class="nav-link px-0 align-middle ">
+                                    <i class="fs-4 bi-bootstrap"></i> <span class="ms-1 d-none d-sm-inline">EQUIPMENT</span></a>
+                                <ul class="collapse nav flex-column ms-1" id="submenu5" data-bs-parent="#menu">
+                                    <li class="w-100">
+                                        <a href="/equipment/register" class="nav-link px-0"> <span
+                                                class="d-none d-sm-inline">Register new Equipment </span></a>
+                                    </li>
+
+                                    <li class="w-100">
+                                        <a href="/equipment/equipment_assignment" class="nav-link px-0"> <span
+                                                class="d-none d-sm-inline">Assign Equipment </span></a>
+                                    </li>
+                                </ul>
+                        @endif
                         @if(Auth::user()->role_id == 1 || Auth::user()->role_id == 3)
                             <li>
                                 <a href="#submenu4" data-bs-toggle="collapse" class="nav-link px-0 align-middle">

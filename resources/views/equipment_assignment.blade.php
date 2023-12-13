@@ -23,14 +23,37 @@
             </select>
 
             <label for="equipment" class="form-label">Equipment</label>
-            <select name="equipment" id="equipment" class="form-select">
+            <select name="equipment" id="equipment" class="form-select" multiple size="10">
                 @foreach($equipments as $equipment)
-                    <option value="{{$equipment->id}}">{{$equipment->name}}</option>
+                    <option value="{{$equipment->id}}">{{$equipment->name}} ({{$equipment->serial_number}})</option>
             @endforeach
             </select>
 
             <button type="submit" class="btn btn-primary mt-2">Assign</button>
+
+            <hr class="hr"/>
+
         </form>
+        <p class="h3">Get equipment for user</p>
+        <form action="{{route('equipment.get_equipment_for_user')}}" method="POST">
+            @csrf
+            <select name="employee" id="employee" class="form-select">
+                @foreach($employees as $employee)
+                    <option value="{{$employee->id}}">{{$employee->user->first_name}} {{$employee->user->last_name}}</option>
+            @endforeach
+            </select>
+            <button type="submit" class="btn btn-primary mt-2">Get equipment</button>
+        </form>
+        @if(isset($assignments))
+            <form action="{{route('equipment.generate_agreement')}}" method="POST">
+                @csrf
+                <input type="hidden" name="employee" value="{{$employee}}">
+                <button type="submit" class="btn btn-info btn-sm">Generate PDF</button>
+            </form>
+            @foreach($assignments as $assignment)
+                <p>{{$assignment->equipment->name}} ({{$assignment->equipment->serial_number}})</p>
+            @endforeach
+        @endif
     </div>
 
 </div>

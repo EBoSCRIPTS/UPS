@@ -21,6 +21,6 @@ class EquipmentItemsModel extends Model
 
     public function type(): BelongsTo
     {
-        return $this->belongsTo(EquipmentTypeModel::class, 'type', 'id');
+        return $this->belongsTo(EquipmentTypeModel::class, 'type_id', 'id');
     }
 }

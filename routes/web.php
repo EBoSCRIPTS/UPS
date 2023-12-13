@@ -13,6 +13,7 @@ use App\Http\Controllers\UserSearchController;
 use App\Http\Controllers\TasksController;
 use App\Http\Controllers\MailController;
 use App\Http\Controllers\EquipmentController;
+use App\Http\Controllers\PDFController;
 
 /* Home view */
 Route::get('/', function () {
@@ -111,12 +112,16 @@ Route::post('/equipment/register/add', [EquipmentController::class, 'addEquipmen
 
 Route::get('/equipment/equipment_assignment', [EquipmentController::class, 'loadAssignables'])->name('equipment.assignment');
 Route::post('/equipment/equipment_assignment/assign', [EquipmentController::class, 'assignEquipment'])->name('equipment.assign_equipment');
+Route::post('/equipment/get_user_assignments', [EquipmentController::class, 'loadAssignables'])->name('equipment.get_equipment_for_user');
 
 /* MAIL Related views */
 Route::get('/send_mail', function(){
     return view('send_mail');
 })->middleware('manager');
 Route::post('/send_mail/submit', [MailController::class, 'sendMail'])->name('send_mail')->middleware('manager');
+
+/* PDF creation views */
+Route::post('/equipment/generate_agreement', [PDFController::class, 'generateEquipmentAgreement'])->name('equipment.generate_agreement');
 
 
 /* REST API routes */
