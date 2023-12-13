@@ -15,6 +15,18 @@
         <script>window.location="/login"</script>
         @endif
     @include('components.sidebar')
-        <h1> home page </h1>
+        <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-3">
+            <div class="d-flex flex-wrap">
+                <div class="p-2">
+                    CONTENT HERE
+                </div>
+                <div class="p-2">
+                    CONTENT THERE
+                </div>
+            </div>
+            <div class="p-2">
+                <p>More content here but without a split</p>
+            </div>
+        </div>
 </body>
 
