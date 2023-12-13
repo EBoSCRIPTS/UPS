@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 10, 2023 at 03:26 PM
+-- Generation Time: Dec 13, 2023 at 04:26 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -56,6 +56,46 @@ CREATE TABLE `employee_information` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `equipment_assignment`
+--
+
+CREATE TABLE `equipment_assignment` (
+  `id` int(11) NOT NULL,
+  `equipment_id` int(11) NOT NULL,
+  `employee_id` int(11) NOT NULL,
+  `date_given` date NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `equipment_items`
+--
+
+CREATE TABLE `equipment_items` (
+  `id` int(11) NOT NULL,
+  `type_id` int(11) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `serial_number` varchar(50) NOT NULL,
+  `is_assigned` int(11) NOT NULL DEFAULT 0,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `equipment_type`
+--
+
+CREATE TABLE `equipment_type` (
+  `id` int(11) NOT NULL,
+  `name` varchar(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `logged_hours`
 --
 
@@ -68,6 +108,52 @@ CREATE TABLE `logged_hours` (
   `date` date NOT NULL,
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
   `updated_at` datetime DEFAULT NULL ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `news_comments`
+--
+
+CREATE TABLE `news_comments` (
+  `id` int(11) NOT NULL,
+  `name` int(11) NOT NULL,
+  `comment` int(11) NOT NULL,
+  `agree_count` int(11) NOT NULL,
+  `disagree_count` int(11) NOT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `news_comments_rating`
+--
+
+CREATE TABLE `news_comments_rating` (
+  `id` int(11) NOT NULL,
+  `comment_id` int(11) NOT NULL COMMENT 'relates to news comments',
+  `agree` int(11) NOT NULL COMMENT 'relates to news comments',
+  `disagree` int(11) NOT NULL COMMENT 'relates to news comments',
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `news_topic`
+--
+
+CREATE TABLE `news_topic` (
+  `id` int(11) NOT NULL,
+  `topic` varchar(100) NOT NULL,
+  `text` text NOT NULL,
+  `news_image` varchar(500) NOT NULL COMMENT 'uploaded image location',
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -153,10 +239,10 @@ CREATE TABLE `tasks_task` (
   `description` text NOT NULL,
   `made_by` int(11) NOT NULL,
   `assigned_to` int(11) DEFAULT NULL,
-  `status_id` int(11) NOT NULL DEFAULT 4,
   `status_key` int(11) NOT NULL COMMENT 'key for retrieving values from statuses names json',
   `priority` varchar(50) NOT NULL,
   `project_id` int(11) NOT NULL,
+  `is_completed` tinyint(1) NOT NULL DEFAULT 0,
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
   `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -213,9 +299,40 @@ ALTER TABLE `employee_information`
   ADD KEY `fk_dept_id` (`department_id`);
 
 --
+-- Indexes for table `equipment_assignment`
+--
+ALTER TABLE `equipment_assignment`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `equipment_items`
+--
+ALTER TABLE `equipment_items`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_type_id` (`type_id`);
+
+--
+-- Indexes for table `equipment_type`
+--
+ALTER TABLE `equipment_type`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `logged_hours`
 --
 ALTER TABLE `logged_hours`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `news_comments`
+--
+ALTER TABLE `news_comments`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `news_comments_rating`
+--
+ALTER TABLE `news_comments_rating`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -253,8 +370,7 @@ ALTER TABLE `tasks_status`
 -- Indexes for table `tasks_task`
 --
 ALTER TABLE `tasks_task`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `fk_status_id` (`status_id`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `tasks_task_comments`
@@ -287,9 +403,39 @@ ALTER TABLE `employee_information`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `equipment_assignment`
+--
+ALTER TABLE `equipment_assignment`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `equipment_items`
+--
+ALTER TABLE `equipment_items`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `equipment_type`
+--
+ALTER TABLE `equipment_type`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `logged_hours`
 --
 ALTER TABLE `logged_hours`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `news_comments`
+--
+ALTER TABLE `news_comments`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `news_comments_rating`
+--
+ALTER TABLE `news_comments_rating`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
@@ -351,16 +497,16 @@ ALTER TABLE `employee_information`
   ADD CONSTRAINT `fk_dept_id` FOREIGN KEY (`department_id`) REFERENCES `departaments` (`id`);
 
 --
+-- Constraints for table `equipment_items`
+--
+ALTER TABLE `equipment_items`
+  ADD CONSTRAINT `fk_type_id` FOREIGN KEY (`type_id`) REFERENCES `equipment_type` (`id`);
+
+--
 -- Constraints for table `req_absence`
 --
 ALTER TABLE `req_absence`
   ADD CONSTRAINT `fk_users_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
-
---
--- Constraints for table `tasks_task`
---
-ALTER TABLE `tasks_task`
-  ADD CONSTRAINT `fk_status_id` FOREIGN KEY (`status_id`) REFERENCES `tasks_status` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
