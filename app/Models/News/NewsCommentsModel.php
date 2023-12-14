@@ -13,8 +13,7 @@ class NewsCommentsModel extends Model
 
     protected $fillable = [
         'name',
+        'topic_id',
         'comment',
-        'agree_count',
-        'disagree_count',
     ];
 }

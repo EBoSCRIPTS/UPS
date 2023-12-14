@@ -24,7 +24,7 @@
             <input type="text" name="topic" class="form-control" placeholder="Topic title here.." required>
             <hr class="hr"/>
 
-            <input type="hidden" name="editorContent">
+            <input type="hidden" name="editorContent" id="editorContent">
             <div id="editor">
             </div>
 
@@ -66,12 +66,17 @@
     let userContent = document.getElementsByClassName('ql-editor');
     const submitButton = document.getElementById('submitButton');
     const form = document.getElementById('contentForm');
+    const inputField = document.getElementById('editorContent');
 
-    form.onsubmit = function ()
+
+    form.onsubmit = function()
     {
-        const pageContent = document.querySelector('input[name="editorContent"]');
-        pageContent.value = JSON.stringify(quill.getContents());
+        pageContent = document.querySelector('.ql-editor').innerHTML;
+        inputField.value = pageContent;
+
         return true;
     }
+
+
 
 </script>
