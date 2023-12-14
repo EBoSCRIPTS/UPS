@@ -10,4 +10,9 @@ class NewsController extends Controller
     {
         return view('news_creation');
     }
+
+    public function insertNewTopic(Request $request)
+    {
+        dd($request->all());
+    }
 }

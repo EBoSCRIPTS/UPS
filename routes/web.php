@@ -119,6 +119,7 @@ Route::post('/equipment/return_equipment_item', [EquipmentController::class, 're
 
 /* Topic creation views */
 Route::get('/news/create_topic', [NewsController::class, 'createTopic'])->name('news.create_topic');
+Route::post('/news/create_topic/new', [NewsController::class, 'insertNewTopic'])->name('news.create_new_topic');
 
 /* MAIL Related views */
 Route::get('/send_mail', function(){
