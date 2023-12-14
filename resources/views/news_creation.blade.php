@@ -18,7 +18,7 @@
     @include('components.sidebar')
     <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-3">
         <p class="h2">Create new topic</p>
-        <form action="{{route('news.create_new_topic')}}" method="POST" id="contentForm">
+        <form action="{{route('news.create_new_topic')}}" method="POST" id="contentForm" enctype="multipart/form-data">
             @csrf
             <label for="topic">Topic</label>
             <input type="text" name="topic" class="form-control" placeholder="Topic title here.." required>
@@ -28,6 +28,8 @@
             <div id="editor">
             </div>
 
+            <label for="coverPhoto">Cover Photo</label>
+            <input type="file" name="coverPhoto" class="form-control">
             <button id="submitButton" type="submit" class="btn btn-primary mt-2 float-end">Create new topic</button>
         </form>
     </div>

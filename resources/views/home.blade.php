@@ -15,17 +15,37 @@
         <script>window.location="/login"</script>
         @endif
     @include('components.sidebar')
-        <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-3">
+        <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4" style="margin-top: 100px">
             <div class="d-flex flex-wrap">
-                <div class="p-2">
-                    CONTENT HERE
+                <div class="p-2 ml-5">
+                    <a href="/news/view_topic/{{$topics[0]['id']}}">
+                        <img src="{{asset($topics[0]['news_image'])}}" class=" rounded d-block mx-auto" alt="..." width="400" height="200">
+                        {{$topics[0]['topic']}}
+                    </a>
                 </div>
                 <div class="p-2">
-                    CONTENT THERE
+                    <img src="{{asset($topics[0]['news_image'])}}" class=" rounded d-block mx-auto" alt="..." width="400" height="200">
+                    <a href="/news/view_topic/{{$topics[0]['id']}}">{{$topics[0]['topic']}} </a>
                 </div>
             </div>
             <div class="p-2">
-                <p>More content here but without a split</p>
+                <div class="row">
+                    <a href="/news/view_topic/{{$topics[0]['id']}}" class="col-lg-4">
+                        <img src="{{asset($topics[0]['news_image'])}}" class="rounded d-block" alt="..." width="400" height="200">
+                        <p>{{$topics[0]['topic']}}</p>
+                    </a>
+
+                    <a href="/news/view_topic/{{$topics[0]['id']}}" class="col-lg-4">
+                        <img src="{{asset($topics[0]['news_image'])}}" class="rounded d-block" alt="..." width="400" height="200">
+                        <p>{{$topics[0]['topic']}}</p>
+                    </a>
+
+                    <a href="/news/view_topic/{{$topics[0]['id']}}" class="col-lg-4">
+                        <img src="{{asset($topics[0]['news_image'])}}" class="rounded d-block" alt="..." width="400" height="200">
+                        <p>{{$topics[0]['topic']}}</p>
+                    </a>
+                </div>
+
             </div>
         </div>
 </body>

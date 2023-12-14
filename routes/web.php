@@ -17,9 +17,7 @@ use App\Http\Controllers\PDFController;
 use App\Http\Controllers\NewsController;
 
 /* Home view */
-Route::get('/', function () {
-    return view('home');
-});
+Route::get('/', [NewsController::class, 'loadAllTopics']);
 
 /* Manager views */
 Route::get('/mng/register', function () {
