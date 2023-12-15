@@ -12,6 +12,7 @@
 <div class="row">
     @include('components.sidebar')
     <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-3">
+        <div class="container" style="width: 80%">
     <p class="h3">Assign equipment</p>
         <form action="{{route('equipment.assign_equipment')}}" method="POST">
             @csrf
@@ -85,6 +86,7 @@
             </tbody>
         </table>
         @endif
+        </div>
     </div>
 
 </div>

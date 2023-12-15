@@ -12,7 +12,10 @@
 <div class="row">
     @include('components.sidebar')
     <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-        <form action="{{ route('absence.create') }}" method="POST">
+        <div class="container" style="width: 75%; margin-top: 20px">
+        <p class="h2 text-center">Absence Requests</p>
+            <hr class="hr"/>
+            <form action="{{ route('absence.create') }}" method="POST">
             @csrf
             <div class="form-group">
                 <input type="hidden" name="user_id" id="user_id" value="{{ Auth::user()->id }}">
@@ -73,6 +76,7 @@
                 </div>
             </div>
         @endforeach
+        </div>
 </div>
 
 </div>

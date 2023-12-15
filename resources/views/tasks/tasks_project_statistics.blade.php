@@ -36,8 +36,10 @@
         </div>
             <hr class="hr"/>
             <p class="h3 text-center">Summary</p>
-            <p class="lead"> The team has registered {{$createdTasksCount}} in the month of {{$month}}, out of which {{$completedThisMonth}} have been completed</p>
+            <p class="lead"> The team has registered {{$createdTasksCount}} tasks in the month of {{$month}}, out of which {{$completedThisMonth}} have been completed</p>
             <p class="lead"> Total task points {{$allTasksPoints}}, completed task points {{$completedTaskPoints}}</p>
+
+            <small>Drafted tasks don't count towards the statistics</small>
         </div>
 
     </div>

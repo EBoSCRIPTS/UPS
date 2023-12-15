@@ -13,16 +13,18 @@
 <div class="row">
 @include('components.sidebar')
     <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-3">
-        @foreach($absences as $absence)
+        <div class="container" style="width: 80%">
+        <p class="h2 text-center">Absence review page</p>
+            @foreach($absences as $absence)
             <form action="{{route('absence.update')}}" method="POST">
                 @csrf
-                <div class="card mt-3">
+                <div class="card mt-3 bg-light">
                     <div class="card-box">
                         <h5 class="card-header">Created at: {{ $absence->created_at }} | Status: {{ $absence->status }} </h5>
                         <div class="card-body">
                         <input type="hidden" name="id" value="{{ $absence->id }}">
                         <p>Requested by: {{ $absence->user->first_name }} {{ $absence->user->last_name }}  {{ $absence->user->email }} {{ $absence->user->phone_number }}</p>
-                        <p>Type: {{$absence->type}}</p>
+                            <p><strong>Type: {{$absence->type}}</strong></p>
                         <p>Comment: {{ $absence->reason }}</p>
                         <input type="submit" class="btn btn-danger" name="status" value="DENY">
                         <input type="submit" class="btn btn-success" name="status" value="APPROVE">
@@ -35,7 +37,7 @@
             <hr class="hr" />
             <p class="h2">Reviewed Requests</p>
             @foreach($reviewedAbsences as $reviewedAbsence)
-                <div class="card mt-3">
+                <div class="card mt-3 bg-light" >
                     <div class="card-box">
                         @if($reviewedAbsence->status == 'APPROVE')
                         <h5 class="card-header" style="color: green">Created at: {{ $reviewedAbsence->created_at }} |
@@ -58,6 +60,7 @@
                     </div>
                 </div>
             @endforeach
+        </div>
     </div>
 
 

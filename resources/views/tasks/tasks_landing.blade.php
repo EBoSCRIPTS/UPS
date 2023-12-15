@@ -13,30 +13,36 @@
 @include('components.sidebar')
     <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-3">
         @include('components.tasks_navbar')
-        <div class="card">
-            <div class="card-body">
-                <h3 class="card-title text-center">My tasks</h3>
-                <ul class="list-group">
+        <div class="container" style="width: 80%">
+        <div class="myTasks" style="border: 1px solid; border-radius: 10px; margin-top: 10px">
+            <div class="myTasks_box" style="margin: 5px">
+                <p class="h3 text-center">My tasks</p>
                     @foreach($tasks as $task)
-                        <li class="list-group-item">
-                            <a href="{{route('tasks.ticket', $task->id)}}" class="list-group-item list-group-item-action">
-                                {{$task->title}}
-                                <br>
-                                {{$task->projectName->name}}
+                            <a href="{{route('tasks.ticket', $task->id)}}" class="list-group-item list-group-item-action" onmouseover="this.style.backgroundColor='#f8f9fa'" onmouseout="this.style.backgroundColor=''">
+                                <p style="border: 1px solid">{{$task->projectName->name}} | {{$task->title}} </p>
                             </a>
-                        </li>
                     @endforeach
-                </ul>
             </div>
         </div>
 
         <hr class="hr"/>
-        <p class="h2">My projects</p>
-        @foreach($myProjects as $project)
-            <ul class="list-group">
-                <li class="list-group-item"><a href="/tasks/projects/{{$project->project_id}}">{{$project->projectName->name}}</li>
-            </ul>
+        <p class="h2 text-center">My projects</p>
+        <div class="row">
+            @foreach($myProjects as $project)
+        <div class="col-lg-6">
+            <div class="p-2">
+                <a href="/tasks/projects/{{$project->project_id}}">
+                <div class="card" style="height: 200px" onmouseover="this.style.backgroundColor='#f8f9fa'" onmouseout="this.style.backgroundColor=''">
+                    <div class="card-body">
+                        <p class="h1 text-center">{{$project->projectName->name}}</p>
+                    </div>
+                </div>
+                </a>
+            </div>
+        </div>
         @endforeach
+        </div>
+        </div>
 
     </div>
 

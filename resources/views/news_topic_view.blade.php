@@ -16,20 +16,21 @@
 <div class="row">
 @include('components.sidebar')
     <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-3">
-       <div class="topic">
+       <div class="container">
+        <div class="topic">
             <p class="h1" align="center">{{$topic[0]['topic']}}</p>
-           <img src="{{asset($topic[0]['news_image'])}}" class="img-fluid rounded d-block mx-auto" alt="..." width="300px" height="300px">
+           <img src="{{asset($topic[0]['news_image'])}}" class=" rounded d-block mx-auto" alt="..." width="900px" height="300px">
 
-            <div id="textContent">
+               <div id="textContent" style="margin-top: 50px">
                 {!! $topic[0]['text'] !!}
-            </div>
+                </div>
        </div>
         <hr class="hr"/>
         <p class="h3">Comments</p>
         @if(isset($comments))
             @foreach($comments as $comment)
-                <div class="card">
-                    <div class="card-body">
+                <div class="card mt-3">
+                    <div class="card-body bg-light">
                         <p class="h5 card-title">{{$comment->name}}
                             <small class="float-end">{{$comment->created_at}}</small>
                         </p>
@@ -45,10 +46,11 @@
             <input type="hidden" name="topic_id" value="{{$topic[0]['id']}}">
             <label for="name">Your name</label>
             <input type="text" name="name" class="form-control" placeholder="Your name..">
-            <textarea type="text" name="text" class="form-control" style="min-height: 100px"> </textarea>
+            <textarea type="text" name="text" class="form-control mt-3" style="min-height: 100px"> </textarea>
             <button type="submit" class="btn btn-primary btn-sm mt-3 float-end">Add comment</button>
         </form>
         </div>
+       </div>
     </div>
 </div>
 </body>

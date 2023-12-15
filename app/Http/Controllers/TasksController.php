@@ -326,20 +326,9 @@ class TasksController extends Controller
     {
         $currentMonth = Carbon::now()->monthName;
 
-//        $createdTasksCount = TasksTaskModel::query()
-//            ->where('project_id', $request->project_id)
-//            ->where('created_at', '<=', Carbon::now())
-//            ->where('created_at', '>=', Carbon::now()
-//                    ->startOfMonth())->count();
-//
-//        $completedThisMonth = TasksTaskModel::query()
-//            ->where('project_id', $request->project_id)
-//            ->where('is_completed', 1)
-//            ->where('created_at', '<=', Carbon::now())
-//            ->where('created_at', '>=', Carbon::now()
-//                    ->startOfMonth())->count();
         $tasksThisMonth = TasksTaskModel::query()
             ->where('project_id', $request->project_id)
+            ->where('is_draft', 0)
             ->where('created_at', '<=', Carbon::now())
             ->where('created_at', '>=', Carbon::now()->startOfMonth())->get()->toArray();
 
@@ -380,7 +369,6 @@ class TasksController extends Controller
             ]);
             $task->save();
         }
-
 
         return back()->with('success', 'Draft status updated!');
     }

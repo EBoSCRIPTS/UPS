@@ -13,8 +13,9 @@
 <body class="row" style="height: 100%">
 @include('components.sidebar')
     <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+        <div class="container" style="width: 80%">
     @if(isset(Auth::user()->email) && Auth::user()->role_id == 1)
-        <h1 class="display-2">Add new user </h1>
+        <h1 class="display-2 text-center">Add new user </h1>
     <form action="{{ route('user.create') }}" method="POST">
         <div class="form-group">
         @csrf
@@ -46,6 +47,7 @@
         <button type="submit" class="btn btn-primary" style="margin-top: 10px">Submit</button>
         </div>
     </form>
+        </div>
     </div>
         @else <script>window.location="/"</script>
     @endif
