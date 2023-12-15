@@ -17,6 +17,7 @@
     @include('components.sidebar')
         <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4" style="margin-top: 100px">
             <div class="container" style="width: 80%">
+                <p class="h2 text-center">HOME PAGE</p>
             <div class="d-flex flex-wrap justify-content-center">
                 <div class="p-2 ml-5">
                     <a href="/news/view_topic/{{$topics[0]['id']}}">

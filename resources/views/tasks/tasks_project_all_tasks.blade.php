@@ -46,6 +46,23 @@
                 </li>
             </ul>
         @endforeach
+        <hr class="hr"/>
+        <p class="h3">Drafted tasks</p>
+    @foreach($tasksDrafted as $taskDraft)
+            <ul class="list-group">
+                <li class="list-group-item">
+                    <a href="{{route('tasks.ticket', $taskDraft->id)}}" class="list-group-item list-group-item-action">
+                        {{$taskDraft->title}}
+                        <br>
+                        Priority: {{$taskDraft->priority}}
+                        <br>
+                        Status: {{$statuses[$taskDraft->status_key]}}
+                        <br>
+                        {{$taskDraft->projectName->name}}
+                    </a>
+                </li>
+            </ul>
+        @endforeach
     </div>
 
 </div>

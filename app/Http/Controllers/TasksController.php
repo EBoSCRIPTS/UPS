@@ -229,12 +229,19 @@ class TasksController extends Controller
         $allTasks = TasksTaskModel::query()
             ->join('tasks_status', 'tasks_task.project_id', '=', 'tasks_status.project_id')
             ->where('tasks_task.project_id', $request->project_id)->where('is_completed', 0)
+            ->where('tasks_task.is_draft', 0)
             ->select('tasks_task.*', 'tasks_status.statuses')
             ->get();
 
         $tasksCompleted = TasksTaskModel::query()
             ->join('tasks_status', 'tasks_task.project_id', '=', 'tasks_status.project_id')
             ->where('tasks_task.project_id', $request->project_id)->where('is_completed', 1)
+            ->select('tasks_task.*', 'tasks_status.statuses')
+            ->get();
+
+        $tasksDrafted = TasksTaskModel::query()
+            ->join('tasks_status', 'tasks_task.project_id', '=', 'tasks_status.project_id')
+            ->where('tasks_task.project_id', $request->project_id)->where('is_draft', 1)
             ->select('tasks_task.*', 'tasks_status.statuses')
             ->get();
 
@@ -246,7 +253,12 @@ class TasksController extends Controller
 
         $statuses = json_decode($statuses['0']['statuses']);
 
-        return view('tasks.tasks_project_all_tasks', ['tasks' => $allTasks, 'statuses' => $statuses, 'tasksCompleted' => $tasksCompleted]);
+        return view('tasks.tasks_project_all_tasks',
+            ['tasks' => $allTasks,
+                'statuses' => $statuses,
+                'tasksCompleted' => $tasksCompleted,
+                'tasksDrafted' => $tasksDrafted
+            ]);
     }
 
     public function deleteTicket(Request $request)
@@ -351,6 +363,26 @@ class TasksController extends Controller
             'month' => $currentMonth,
             'completedTaskPoints' => $completedTaskPoints,
             'allTasksPoints' => $allTasksPoints]);
+    }
+
+    public function updateTaskDraftStatus(Request $request)
+    {
+        $task = TasksTaskModel::query()->where('id', $request->input('ticket_id'))->first();
+        if($task->is_draft == 1){
+            $task->update([
+                'is_draft' => 0
+            ]);
+            $task->save();
+        }
+        else{
+            $task->update([
+                'is_draft' => 1
+            ]);
+            $task->save();
+        }
+
+
+        return back()->with('success', 'Draft status updated!');
     }
 
 }
