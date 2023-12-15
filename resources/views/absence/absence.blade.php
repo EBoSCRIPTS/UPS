@@ -37,7 +37,7 @@
                 <label for="Attachment" class="form-label">Attachment</label>
                 <input type="file" name="attachment" id="attachment" class="form-control">
 
-            <button type="submit" class="btn btn-primary">Submit</button>
+            <button type="submit" class="btn btn-primary mt-3">Submit Absence Request</button>
             </div>
         </form>
         <hr class="hr" />

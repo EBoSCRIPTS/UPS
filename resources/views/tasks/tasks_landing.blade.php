@@ -14,10 +14,8 @@
     <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-3">
         @include('components.tasks_navbar')
         <div class="card">
-            <div class="card-title">
-                <p class="h3">My Tasks</p>
-            </div>
-            <div class="card-box">
+            <div class="card-body">
+                <h3 class="card-title text-center">My tasks</h3>
                 <ul class="list-group">
                     @foreach($tasks as $task)
                         <li class="list-group-item">
@@ -36,7 +34,7 @@
         <p class="h2">My projects</p>
         @foreach($myProjects as $project)
             <ul class="list-group">
-                <li class="list-group-item"><a href="/tasks/projects/{{$project->project_id}}">{{$project->project_id}}</li>
+                <li class="list-group-item"><a href="/tasks/projects/{{$project->project_id}}">{{$project->projectName->name}}</li>
             </ul>
         @endforeach
 

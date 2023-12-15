@@ -62,6 +62,7 @@
                     <tr>
                         <th scope="col">{{$department->name}}</th>
                         <th scope="col">Hour Pay</th>
+                        <th scope="col">Salary</th>
                         <th scope="col">Position</th>
                         <th scope="col">Actions</th>
                     </tr>
@@ -72,6 +73,7 @@
                     <tr>
                         <td>{{$employee->user->first_name}} {{$employee->user->last_name}} </td>
                         <td>{{$employee->hour_pay}}</td>
+                        <td>{{$employee->salary}}</td>
                         <td>{{$employee->position}}</td>
                         <td>
                         <form action="{{route('employee_information.delete')}}" method="POST">

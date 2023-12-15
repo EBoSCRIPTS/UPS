@@ -14,10 +14,8 @@
     <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-3">
         @include('components.tasks_navbar')
         <div class="card">
-            <div class="card-title">
-                <p class="h3">My Tasks</p>
-            </div>
-            <div class="card-box">
+            <div class="card-body">
+                <h3 class="card-title text-center">My tasks</h3>
                 <ul class="list-group">
                 @foreach($my_tasks as $task)
                     <li class="list-group-item">
