@@ -58,7 +58,7 @@
                                     <div class="card-body">
                                         {{$task->title}}
                                     <br>
-                                    <small>{{$task->userTo->first_name}} {{$task->userTo->last_name}}</small>
+                                    <small>{{$task->userMade->first_name}} {{$task->userMade->last_name}}</small>
                                         <br>
                                         <small>Task priority: {{$task->priority}}</small>
                                     </div>

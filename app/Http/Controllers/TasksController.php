@@ -78,6 +78,8 @@ class TasksController extends Controller
             'status_id' => $getTaskStatusesForProject[0]['id'],
             'status_key' => 0,
             'priority' => $request->input('priority'),
+            'is_draft' => $request->input('is_draft'),
+            'task_points' => $request->input('task_points'),
         ]);
 
         $newTask->save();
@@ -128,7 +130,7 @@ class TasksController extends Controller
 
     public function loadProjectTasks(Request $request)
     {
-        $projectTasks = TasksTaskModel::query()->where('project_id', $request->project_id)->where('is_completed', 0)->get();
+        $projectTasks = TasksTaskModel::query()->where('project_id', $request->project_id)->where('is_completed', 0)->where('is_draft', 0)->get();
         $myTasks = TasksTaskModel::query()->where('assigned_to', $request->user()->id)->get();
         $projectStatus = TasksStatusModel::query()->where('project_id', $request->project_id)->select('statuses')->get()->toArray();
         $projectName = TasksProjectModel::query()->where('id', $request->project_id)->select('id','name')->first();
@@ -312,20 +314,43 @@ class TasksController extends Controller
     {
         $currentMonth = Carbon::now()->monthName;
 
-        $createdTasksCount = TasksTaskModel::query()
+//        $createdTasksCount = TasksTaskModel::query()
+//            ->where('project_id', $request->project_id)
+//            ->where('created_at', '<=', Carbon::now())
+//            ->where('created_at', '>=', Carbon::now()
+//                    ->startOfMonth())->count();
+//
+//        $completedThisMonth = TasksTaskModel::query()
+//            ->where('project_id', $request->project_id)
+//            ->where('is_completed', 1)
+//            ->where('created_at', '<=', Carbon::now())
+//            ->where('created_at', '>=', Carbon::now()
+//                    ->startOfMonth())->count();
+        $tasksThisMonth = TasksTaskModel::query()
             ->where('project_id', $request->project_id)
             ->where('created_at', '<=', Carbon::now())
-            ->where('created_at', '>=', Carbon::now()
-                    ->startOfMonth())->count();
+            ->where('created_at', '>=', Carbon::now()->startOfMonth())->get()->toArray();
 
-        $completedThisMonth = TasksTaskModel::query()
-            ->where('project_id', $request->project_id)
-            ->where('is_completed', 1)
-            ->where('created_at', '<=', Carbon::now())
-            ->where('created_at', '>=', Carbon::now()
-                    ->startOfMonth())->count();
+        $createdTasksCount = sizeof($tasksThisMonth);
+        $completedThisMonth = 0;
 
-        return view('tasks.tasks_project_statistics', ['createdTasksCount' => $createdTasksCount, 'completedThisMonth' => $completedThisMonth, 'month' => $currentMonth]);
+        $completedTaskPoints = 0;
+        $allTasksPoints = 0;
+
+        for($i = 0; $i < sizeof($tasksThisMonth); $i++){
+            $allTasksPoints += $tasksThisMonth[$i]['task_points'];
+            if($tasksThisMonth[$i]['is_completed'] == 1){
+                $completedTaskPoints += $tasksThisMonth[$i]['task_points'];
+                $completedThisMonth++;
+            }
+        }
+
+        return view('tasks.tasks_project_statistics',
+            ['createdTasksCount' => $createdTasksCount,
+            'completedThisMonth' => $completedThisMonth,
+            'month' => $currentMonth,
+            'completedTaskPoints' => $completedTaskPoints,
+            'allTasksPoints' => $allTasksPoints]);
     }
 
 }

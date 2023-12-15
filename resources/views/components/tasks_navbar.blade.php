@@ -32,12 +32,20 @@
                             <option value="high">HIGH</option>
                             <option value="critical">CRITICAL</option>
                         </select>
+
+                        <label for="task_points" class="form-label">Task points(TP)</label>
+                        <input type="number" class="form-select" id="task_points" name="task_points" required min="0" max="100">
                     </div>
                     <div class="col-md-6">
                         <label for="assignTo" class="form-label">Assign To</label>
                         <input id="assign_to" name="assign_to" type="text" class="form-control" placeholder="Search for user" oninput="userSearchDebounced">
                         <a href="#" id="assignToMe" onclick="assignToMe()"> <small>Assign to me</small></a>
                         <input type="hidden" id="madeBy" name="made_by" value="{{ Auth::user()->id }}">
+                        <br>
+                        <label for="draft">Draft</label>
+                        <input class="form-check-input" type="checkbox" id="draft" name="draft">
+                        <br>
+                        <small>If the task is draft, it won't be placed in the board but can be found under project-tasks section and undrafted</small>
                     </div>
                 </div>
             </div>

@@ -36,7 +36,7 @@
         <p class="h2">My projects</p>
         @foreach($myProjects as $project)
             <ul class="list-group">
-                <li class="list-group-item"><a href="/tasks/projects/{{$project->project_id}}">{{$project->projectName->name}}</li>
+                <li class="list-group-item"><a href="/tasks/projects/{{$project->project_id}}">{{$project->project_id}}</li>
             </ul>
         @endforeach
 

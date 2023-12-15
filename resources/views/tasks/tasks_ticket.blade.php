@@ -53,7 +53,7 @@
         <p class="h2">Details</p>
         <hr class="hr"/>
         <div class="row">
-            @if($ticket->is_completed == '0')
+            @if($ticket->is_completed == '0' || $ticket->is_draft == '0')
             <form action="{{route('tasks.update_status')}}" method="POST">
                 @csrf
             <p class="h5">Status: {{$currentStatus}}
@@ -72,6 +72,7 @@
         @elseif ($ticket->priority === 'critical')
             <p class="h5" style="color: red">Priority: {{$ticket->priority}}</p>
         @endif
+        <p class="h5">Task value: {{$ticket->task_points}} (TP)</p>
         <hr class="hr"/>
         @endif
         <p class="h5">Assigned to:

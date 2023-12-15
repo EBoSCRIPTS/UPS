@@ -23,7 +23,7 @@
                         <br>
                         Status: {{$statuses[$task->status_key]}}
                         <br>
-                        Made by: {{$task->userTo->first_name}} {{$task->userTo->last_name}}
+                        Made by: {{$task->userMade->first_name}} {{$task->userMade->last_name}}
                         | Project: {{$task->projectName->name}}
                     </a>
                 </li>

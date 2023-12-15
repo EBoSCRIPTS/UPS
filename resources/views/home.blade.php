@@ -16,36 +16,42 @@
         @endif
     @include('components.sidebar')
         <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4" style="margin-top: 100px">
-            <div class="container">
-            <div class="d-flex flex-wrap">
+            <div class="container" style="width: 80%">
+            <div class="d-flex flex-wrap justify-content-center">
                 <div class="p-2 ml-5">
                     <a href="/news/view_topic/{{$topics[0]['id']}}">
                         <img src="{{asset($topics[0]['news_image'])}}" class=" rounded d-block mx-auto" alt="..." width="400" height="200">
-                        {{$topics[0]['topic']}}
+                        <p class="text-center">{{$topics[0]['topic']}}</p>
                     </a>
                 </div>
+
+                <div class="d-flex">
+                    <div class="vr"></div>
+                </div>
+
                 <div class="p-2">
                     <a href="/news/view_topic/{{$topics[0]['id']}}">
                     <img src="{{asset($topics[0]['news_image'])}}" class=" rounded d-block mx-auto" alt="..." width="400" height="200">
-                        {{$topics[0]['topic']}}
+                        <p class="text-center">{{$topics[0]['topic']}}</p>
                     </a>
                 </div>
             </div>
+                <hr class="hr"/>
             <div class="p-2">
                 <div class="row">
                     <a href="/news/view_topic/{{$topics[0]['id']}}" class="col-lg-4">
                         <img src="{{asset($topics[0]['news_image'])}}" class="rounded d-block" alt="..." width="400" height="200">
-                        <p>{{$topics[0]['topic']}}</p>
+                        <p class="text-center">{{$topics[0]['topic']}}</p>
                     </a>
 
                     <a href="/news/view_topic/{{$topics[0]['id']}}" class="col-lg-4">
                         <img src="{{asset($topics[0]['news_image'])}}" class="rounded d-block" alt="..." width="400" height="200">
-                        <p>{{$topics[0]['topic']}}</p>
+                        <p class="text-center">{{$topics[0]['topic']}}</p>
                     </a>
 
                     <a href="/news/view_topic/{{$topics[0]['id']}}" class="col-lg-4">
                         <img src="{{asset($topics[0]['news_image'])}}" class="rounded d-block" alt="..." width="400" height="200">
-                        <p>{{$topics[0]['topic']}}</p>
+                        <p class="text-center">{{$topics[0]['topic']}}</p>
                     </a>
                 </div>
 
