@@ -16,6 +16,7 @@
         @endif
     @include('components.sidebar')
         <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4" style="margin-top: 100px">
+            <div class="container">
             <div class="d-flex flex-wrap">
                 <div class="p-2 ml-5">
                     <a href="/news/view_topic/{{$topics[0]['id']}}">
@@ -24,8 +25,10 @@
                     </a>
                 </div>
                 <div class="p-2">
+                    <a href="/news/view_topic/{{$topics[0]['id']}}">
                     <img src="{{asset($topics[0]['news_image'])}}" class=" rounded d-block mx-auto" alt="..." width="400" height="200">
-                    <a href="/news/view_topic/{{$topics[0]['id']}}">{{$topics[0]['topic']}} </a>
+                        {{$topics[0]['topic']}}
+                    </a>
                 </div>
             </div>
             <div class="p-2">
@@ -46,6 +49,7 @@
                     </a>
                 </div>
 
+            </div>
             </div>
         </div>
 </body>

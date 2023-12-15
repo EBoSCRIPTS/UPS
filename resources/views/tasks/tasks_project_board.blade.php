@@ -32,7 +32,11 @@
             </div>
         </div>
         <hr class="hr" />
-        <p class="h2">{{$project_name->name}} board | <a href="{{route('tasks.projects.all_tasks', ['project_id' => $project_name->id])}}">See all tasks</a></p>
+        <p class="h2">{{$project_name->name}} board |
+            <a href="{{route('tasks.projects.all_tasks', ['project_id' => $project_name->id])}}">See all tasks</a>
+            |
+            <a href="{{route('tasks.projects.statistics', ['project_id' => $project_name->id])}}">See statistics</a>
+        </p>
         <table class="table table-striped">
             <thead>
             <tr>

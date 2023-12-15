@@ -9,6 +9,7 @@ use App\Models\Tasks\TasksTaskCommentsModel;
 use App\Models\Tasks\TasksTaskModel;
 use App\Models\UserModel;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 class TasksController extends Controller
 {
@@ -305,6 +306,26 @@ class TasksController extends Controller
         }
 
         return back()->with('success', 'Project updated!');
+    }
+
+    public function getProjectStatistics(Request $request)
+    {
+        $currentMonth = Carbon::now()->monthName;
+
+        $createdTasksCount = TasksTaskModel::query()
+            ->where('project_id', $request->project_id)
+            ->where('created_at', '<=', Carbon::now())
+            ->where('created_at', '>=', Carbon::now()
+                    ->startOfMonth())->count();
+
+        $completedThisMonth = TasksTaskModel::query()
+            ->where('project_id', $request->project_id)
+            ->where('is_completed', 1)
+            ->where('created_at', '<=', Carbon::now())
+            ->where('created_at', '>=', Carbon::now()
+                    ->startOfMonth())->count();
+
+        return view('tasks.tasks_project_statistics', ['createdTasksCount' => $createdTasksCount, 'completedThisMonth' => $completedThisMonth, 'month' => $currentMonth]);
     }
 
 }

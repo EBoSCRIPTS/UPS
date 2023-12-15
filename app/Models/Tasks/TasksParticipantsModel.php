@@ -25,7 +25,7 @@ class TasksParticipantsModel extends Model
         return $this->belongsTo(UserModel::class, 'employee_id', 'id');
     }
 
-    public function projectName(): BelongsTo
+    public function projectName(): belongsTo
     {
         return $this->belongsTo(TasksProjectModel::class, 'project_id', 'id');
     }
