@@ -15,14 +15,22 @@
 <div class="row">
     @include('components.sidebar')
     <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-3">
-        <form action="{{route('loghours.view.user')}}" method="POST">
-            @csrf
-        <select name="user_id">
-            @foreach($users as $user)
-                <option value="{{$user->id}}">{{($user->first_name)}} {{$user->last_name}}</option>
-            @endforeach
-        </select>
-        <input type="submit" value="Submit" class="btn btn-primary"/>
+        <div class="container" style="width: 80%">
+            <p class="h2 text-center">Logged Hours</p>
+            <div class="row">
+                    <div class="col-md-4">
+                        <form action="{{route('loghours.view.user')}}" method="POST">
+                            @csrf
+                                <select name="user_id" class="form-select">
+                                    @foreach($users as $user)
+                                     <option value="{{$user->id}}">{{($user->first_name)}} {{$user->last_name}}</option>
+                                    @endforeach
+                                </select>
+                    </div>
+                <div class="col-md-4">
+                    <input type="submit" value="Submit" class="btn btn-primary"/>
+                </div>
+                </div>
         </form>
         <table class="table">
             <thead>
@@ -42,6 +50,7 @@
         @endforeach
             </tbody>
         </table>
+        </div>
     </div>
 
 </div>

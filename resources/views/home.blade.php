@@ -19,7 +19,7 @@
             <div class="container" style="width: 80%">
                 <p class="h2 text-center">HOME PAGE</p>
             <div class="d-flex flex-wrap justify-content-center">
-                <div class="p-2 ml-5">
+                <div class="p-2 ml-5 justify-content-center">
                     <a href="/news/view_topic/{{$topics[0]['id']}}">
                         <img src="{{asset($topics[0]['news_image'])}}" class=" rounded d-block mx-auto" alt="..." width="400" height="200">
                         <p class="text-center">{{$topics[0]['topic']}}</p>
@@ -30,7 +30,7 @@
                     <div class="vr"></div>
                 </div>
 
-                <div class="p-2">
+                <div class="p-2 justify-content-center">
                     <a href="/news/view_topic/{{$topics[0]['id']}}">
                     <img src="{{asset($topics[0]['news_image'])}}" class=" rounded d-block mx-auto" alt="..." width="400" height="200">
                         <p class="text-center">{{$topics[0]['topic']}}</p>

@@ -18,15 +18,14 @@
     <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-3">
        <div class="container">
         <div class="topic">
-            <p class="h1" align="center">{{$topic[0]['topic']}}</p>
+            <p class="h1 text-center">{{$topic[0]['topic']}}</p>
            <img src="{{asset($topic[0]['news_image'])}}" class=" rounded d-block mx-auto" alt="..." width="900px" height="300px">
-
                <div id="textContent" style="margin-top: 50px">
                 {!! $topic[0]['text'] !!}
                 </div>
        </div>
         <hr class="hr"/>
-        <p class="h3">Comments</p>
+        <p class="h3 text-center">Leave a comment</p>
         @if(isset($comments))
             @foreach($comments as $comment)
                 <div class="card mt-3">

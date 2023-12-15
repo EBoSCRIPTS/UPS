@@ -67,7 +67,7 @@
         <hr class="hr" />
         <p class="h2 text-center">Reviewed Requests</p>
         @foreach($showReviewed as $absence)
-            <div class="card mt-3">
+            <div class="card mt-3 bg-light">
                 <div class="card-box">
                     <h5 class="card-header">Created at: {{ $absence->created_at }} | Status: {{ $absence->status }} </h5>
                     <p>Type: {{$absence->type}}</p>

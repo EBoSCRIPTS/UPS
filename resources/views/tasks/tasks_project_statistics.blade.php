@@ -40,6 +40,9 @@
             <p class="lead"> Total task points {{$allTasksPoints}}, completed task points {{$completedTaskPoints}}</p>
 
             <small>Drafted tasks don't count towards the statistics</small>
+
+            <hr>
+            <button type="button" class="btn btn-success">Download XLSX</button>
         </div>
 
     </div>

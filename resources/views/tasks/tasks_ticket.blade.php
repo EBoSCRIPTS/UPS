@@ -11,14 +11,16 @@
 <body>
 <div class="row">
     @include('components.sidebar')
-    <div class="col-md-9 ms-sm-auto col-lg-4 px-md-4 mt-3">
+
+    <div class="row" style="margin: 50px; width: 80%">
+        <div class="col-lg-6">
         <p class="h2">{{$ticket->title}}</p>
         <hr class="hr"/>
         <form action="{{route('tasks.update_description')}} " method="POST">
             @csrf
             <p class="h5">Task description</p>
             <input type="hidden" name="ticket_id" value="{{$ticket->id}}">
-            <textarea id="ticket_description" name="ticket_description" style="width: 18rem; height:8rem"></textarea>
+            <textarea class="bg-light" id="ticket_description" name="ticket_description" style="width: 24rem; height: 10rem"></textarea>
             <br>
             <button type="submit" class="btn btn-sm btn-primary">Update</button>
         </form>
@@ -26,7 +28,7 @@
 
         <p class="h3">Comment section</p>
         @foreach($comments as $comment)
-            <div class="card">
+            <div class="card bg-light mt-3">
                 <div class="card-body">
                     <p class="h5 card-title">{{$comment->author->first_name}} {{$comment->author->last_name}}
                     <small>{{$comment->created_at}}</small>
@@ -49,7 +51,7 @@
         </form>
     </div>
 
-    <div class="col-md-9 ms-sm-auto col-lg-4 px-md-4 mt-3">
+        <div class="col-lg-6">
         <p class="h2">Details</p>
         <hr class="hr"/>
         <div class="row">
@@ -137,6 +139,7 @@
         </div>
     </div>
 
+    </div>
 </div>
 </body>
 

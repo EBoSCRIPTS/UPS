@@ -15,8 +15,8 @@
         {{redirect('/home')}}
 
     @else(!isset(Auth::user()->email))
-        <div class="position-absolute top-50 start-50 translate-middle">
-            <h1>UPS</h1>
+        <div class="position-absolute top-50 start-50 translate-middle" style="width: 500px;">
+            <h1 class="text-center">UPS</h1>
         <form action="{{ route('logging_in') }}" method="POST">
             @csrf
             <div class="form-group mb-3">
