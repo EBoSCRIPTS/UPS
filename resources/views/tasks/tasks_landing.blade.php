@@ -29,18 +29,18 @@
         <p class="h2 text-center">My projects</p>
         <div class="row">
             @foreach($myProjects as $project)
-        <div class="col-lg-6">
-            <div class="p-2">
-                <a href="/tasks/projects/{{$project->project_id}}">
-                <div class="card" style="height: 200px" onmouseover="this.style.backgroundColor='#f8f9fa'" onmouseout="this.style.backgroundColor=''">
-                    <div class="card-body">
-                        <p class="h1 text-center">{{$project->projectName->name}}</p>
+                <div class="col-lg-6">
+                    <div class="p-2">
+                        <a href="/tasks/projects/{{$project->project_id}}">
+                        <div class="card" style="height: 200px" onmouseover="this.style.backgroundColor='#f8f9fa'" onmouseout="this.style.backgroundColor=''">
+                            <div class="card-body">
+                                <p class="h1 text-center">{{$project->projectName->name}}</p>
+                            </div>
+                        </div>
+                        </a>
                     </div>
                 </div>
-                </a>
-            </div>
-        </div>
-        @endforeach
+            @endforeach
         </div>
         </div>
 

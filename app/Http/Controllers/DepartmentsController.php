@@ -32,7 +32,7 @@ class DepartmentsController extends Controller
 
     public function deleteDepartament(Request $request)
     {
-        $departament = DepartamentsModel::query()->find($request->input('departament_id'));
+        $departament = DepartamentsModel::query()->find($request->input('id'));
         $departament->delete();
 
         return redirect('/departaments');
