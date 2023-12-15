@@ -76,6 +76,7 @@ Route::get('/tasks', [TasksController::class, 'loadMyTasks'])->name('tasks.show'
 Route::get('/tasks/projects/{project_id}', [TasksController::class, 'loadProjectTasks'])->name('tasks.projects');
 Route::get('/tasks/projects/{project_id}/all_tasks', [TasksController::class, 'loadAllProjectTasks'])->name('tasks.projects.all_tasks');
 Route::get('/tasks/projects/{project_id}/statistics', [TasksController::class, 'getProjectStatistics'])->name('tasks.projects.statistics');
+Route::post('/tasks/projects/{project_id}/statistics/generate_period', [TasksController::class, 'getStatisticsForPeriod'])->name('tasks.projects.statistics.generate_for_period');
 
 Route::get('/tasks/create_new_project', function(){
    return view('tasks.tasks_create_project');

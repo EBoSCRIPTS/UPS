@@ -43,6 +43,24 @@
 
             <hr>
             <button type="button" class="btn btn-success">Download XLSX</button>
+            <hr class="hr"/>
+
+            <p class="h4">Generate statistics for a different time period</p>
+            <div class="row mb-3">
+                <form action="{{route('tasks.projects.statistics.generate_for_period',  $project_id)}}" method="POST">
+                        @csrf
+                    <div class="col-md-4">
+                        <input type="date" class="form-control" name="startDate" required>
+                    </div>
+                    <div class="col-md-4">
+                        <input type="date" class="form-control" name="endDate" required>
+                    </div>
+                    <div class="col-md-4">
+                        <input type="hidden" name="project_id" value="{{$project_id}}">
+                        <button type="submit" class="btn btn-primary">Generate for the specific period</button>
+                    </div>
+                </form>
+            </div>
         </div>
 
     </div>

@@ -351,7 +351,8 @@ class TasksController extends Controller
             'completedThisMonth' => $completedThisMonth,
             'month' => $currentMonth,
             'completedTaskPoints' => $completedTaskPoints,
-            'allTasksPoints' => $allTasksPoints]);
+            'allTasksPoints' => $allTasksPoints,
+            'project_id' => $request->project_id]);
     }
 
     public function updateTaskDraftStatus(Request $request)
@@ -371,6 +372,39 @@ class TasksController extends Controller
         }
 
         return back()->with('success', 'Draft status updated!');
+    }
+
+    public function getStatisticsForPeriod(Request $request)
+    {
+        $currentMonth = Carbon::now()->monthName;
+
+        $tasksThisMonth = TasksTaskModel::query()
+            ->where('project_id', $request->project_id)
+            ->where('is_draft', 0)
+            ->where('created_at', '>=', $request->input('startDate'))
+            ->where('created_at', '<=', $request->input('endDate'))->get()->toArray();
+
+        $createdTasksCount = sizeof($tasksThisMonth);
+        $completedThisMonth = 0;
+
+        $completedTaskPoints = 0;
+        $allTasksPoints = 0;
+
+        for($i = 0; $i < sizeof($tasksThisMonth); $i++){
+            $allTasksPoints += $tasksThisMonth[$i]['task_points'];
+            if($tasksThisMonth[$i]['is_completed'] == 1){
+                $completedTaskPoints += $tasksThisMonth[$i]['task_points'];
+                $completedThisMonth++;
+            }
+        }
+
+        return view('tasks.tasks_project_statistics',
+            ['createdTasksCount' => $createdTasksCount,
+                'completedThisMonth' => $completedThisMonth,
+                'month' => $currentMonth,
+                'completedTaskPoints' => $completedTaskPoints,
+                'allTasksPoints' => $allTasksPoints,
+                'project_id' => $request->project_id]);
     }
 
 }
