@@ -390,9 +390,9 @@ class TasksController extends Controller
         $completedTaskPoints = 0;
         $allTasksPoints = 0;
 
-        for($i = 0; $i < sizeof($tasksThisMonth); $i++){
+        for ($i = 0; $i < sizeof($tasksThisMonth); $i++) {
             $allTasksPoints += $tasksThisMonth[$i]['task_points'];
-            if($tasksThisMonth[$i]['is_completed'] == 1){
+            if ($tasksThisMonth[$i]['is_completed'] == 1) {
                 $completedTaskPoints += $tasksThisMonth[$i]['task_points'];
                 $completedThisMonth++;
             }
@@ -406,5 +406,4 @@ class TasksController extends Controller
                 'allTasksPoints' => $allTasksPoints,
                 'project_id' => $request->project_id]);
     }
-
 }

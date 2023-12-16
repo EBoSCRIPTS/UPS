@@ -83,13 +83,13 @@ Route::get('/tasks/create_new_project', function(){
 });
 
 
-Route::get('/tasks/project_settings', [TasksController::class, 'loadAvailableProjects']);
-Route::get('/tasks/project_settings/{project_id}', [TasksController::class, 'getProjectSettings'])->name('project_settings');
-Route::post('/tasks/project_settings/add_user', [TasksController::class, 'addUserToProject'])->name('tasks.project_add_user');
-Route::post('/tasks/project_settings/remove_user', [TasksController::class, 'removeUserFromProject'])->name('tasks.project_remove_user');
-Route::post('/tasks/project_settings/project_edit/{project_id}', [TasksController::class, 'editProject'])->name('tasks.project_edit');
+Route::get('/tasks/project_settings', [TasksController::class, 'loadAvailableProjects'])->middleware('manager');
+Route::get('/tasks/project_settings/{project_id}', [TasksController::class, 'getProjectSettings'])->name('project_settings')->middleware('manager');
+Route::post('/tasks/project_settings/add_user', [TasksController::class, 'addUserToProject'])->name('tasks.project_add_user')->middleware('manager');
+Route::post('/tasks/project_settings/remove_user', [TasksController::class, 'removeUserFromProject'])->name('tasks.project_remove_user')->middleware('manager');
+Route::post('/tasks/project_settings/project_edit/{project_id}', [TasksController::class, 'editProject'])->name('tasks.project_edit')->middleware('manager');
 
-Route::post('/tasks/create_new_project/insert', [TasksController::class, 'createNewProject'])->name('create_new_project');
+Route::post('/tasks/create_new_project/insert', [TasksController::class, 'createNewProject'])->name('create_new_project')->middleware('manager');
 
 
 Route::get('/tasks/create_new_task', function(){

@@ -14,9 +14,13 @@ class AccountantController extends Controller
 {
     public function showAll()
     {
-        $showDept = DepartamentsModel::all();
+        $departments  = DepartamentsModel::all();
+        $departmentCounts = [];
+        foreach ($departments as $department) {
+            $departmentCounts[$department->name] = $department->employeeInformation()->count();
+        }
 
-        return view('accountant.accountant_view', ['departments' => $showDept]);
+        return view('accountant.accountant_view', ['departments' => $departments, 'departmentCounts' => $departmentCounts]);
     }
 
     public function showDept(Request $request)

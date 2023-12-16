@@ -18,12 +18,6 @@ class DepartmentsController extends Controller
 
         return view('departaments');
     }
-
-    public function showDepartments(Request $request)
-    {
-        return DepartamentsModel::all();
-    }
-
     public function showAllDepartments()
     {
         $departments = DepartamentsModel::all();
