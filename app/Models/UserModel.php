@@ -50,6 +50,11 @@ class UserModel extends Authenticatable
         return $this->role_id == 3;
     }
 
+    public function isWriter()
+    {
+        return $this->is_writer == 1;
+    }
+
     public function employee(): BelongsTo
     {
         return $this->belongsTo(EmployeeInformationModel::class, 'id', 'user_id');

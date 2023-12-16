@@ -119,16 +119,16 @@ Route::post('/equipment/delete_equipment_item', [EquipmentController::class, 'de
 Route::post('/equipment/return_equipment_item', [EquipmentController::class, 'returnEquipment'])->name('equipment.return_equipment');
 
 /* Topic creation views */
-Route::get('/news/create_topic', [NewsController::class, 'createTopic'])->name('news.create_topic');
-Route::post('/news/create_topic/new', [NewsController::class, 'insertNewTopic'])->name('news.create_new_topic');
+Route::get('/news/create_topic', [NewsController::class, 'createTopic'])->name('news.create_topic')->middleware('writer');
+Route::post('/news/create_topic/new', [NewsController::class, 'insertNewTopic'])->name('news.create_new_topic')->middleware('writer');
 
 Route::get('/news/view_topic/{topic_id}', [NewsController::class, 'loadNewsTopic'])->name('news.view_topic');
 Route::post('/news/view_topic/add_comment', [NewsController::class, 'postTopicComment'])->name('news.add_comment');
 
 Route::get('/news/topics', [NewsController::class, 'loadNewsPageTopics'])->name('news.topics');
-Route::get('/news/topic/edit/{topic_id}', [NewsController::class, 'loadEditNewsTopic'])->name('news.edit_topic');
-Route::post('/news/topic/edit/update/', [NewsController::class, 'updateTopic'])->name('news.edit_save');
-Route::post('/news/topic/delete/{topic_id}', [NewsController::class, 'deleteNewsTopic'])->name('news.delete_topic');
+Route::get('/news/topic/edit/{topic_id}', [NewsController::class, 'loadEditNewsTopic'])->name('news.edit_topic')->middleware('writer');
+Route::post('/news/topic/edit/update/', [NewsController::class, 'updateTopic'])->name('news.edit_save')->middleware('writer');
+Route::post('/news/topic/delete/{topic_id}', [NewsController::class, 'deleteNewsTopic'])->name('news.delete_topic')->middleware('writer');
 
 /* MAIL Related views */
 Route::get('/send_mail', function(){

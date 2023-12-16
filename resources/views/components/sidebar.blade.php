@@ -81,6 +81,19 @@
                             </li>
                         @endif
 
+                        @if(Auth::user()->is_writer == 1)
+                            <li>
+                                <a href="#submenu7" data-bs-toggle="collapse" class="nav-link px-0 align-middle ">
+                                    <i class="fs-4 bi-bootstrap"></i> <span class="ms-1 d-none d-sm-inline">NEWS</span></a>
+                                <ul class="collapse nav flex-column ms-1" id="submenu7" data-bs-parent="#menu">
+                                    <li class="w-100">
+                                        <a href="/news/create_topic" class="nav-link px-0"> <span
+                                                class="d-none d-sm-inline">Create new topic </span></a>
+                                    </li>
+                                </ul>
+                        @endif
+
+
                         @if(isset(Auth::user()->role_id) && Auth::user()->role_id == 1 || Auth::user()->role_id == 3)
                             <li>
                                 <a href="#submenu5" data-bs-toggle="collapse" class="nav-link px-0 align-middle ">
