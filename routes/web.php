@@ -125,6 +125,11 @@ Route::post('/news/create_topic/new', [NewsController::class, 'insertNewTopic'])
 Route::get('/news/view_topic/{topic_id}', [NewsController::class, 'loadNewsTopic'])->name('news.view_topic');
 Route::post('/news/view_topic/add_comment', [NewsController::class, 'postTopicComment'])->name('news.add_comment');
 
+Route::get('/news/topics', [NewsController::class, 'loadNewsPageTopics'])->name('news.topics');
+Route::get('/news/topic/edit/{topic_id}', [NewsController::class, 'loadEditNewsTopic'])->name('news.edit_topic');
+Route::post('/news/topic/edit/update/', [NewsController::class, 'updateTopic'])->name('news.edit_save');
+Route::post('/news/topic/delete/{topic_id}', [NewsController::class, 'deleteNewsTopic'])->name('news.delete_topic');
+
 /* MAIL Related views */
 Route::get('/send_mail', function(){
     return view('send_mail');

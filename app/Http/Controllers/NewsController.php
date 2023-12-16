@@ -11,23 +11,27 @@ class NewsController extends Controller
 {
     public function createTopic()
     {
-        return view('news_creation');
+        $topics = NewsTopicModel::all();
+        return view('news_creation', ['topics' => $topics]);
     }
 
     public function insertNewTopic(Request $request)
     {
-        if ($request->hasFile('coverPhoto')) {
-            $image = $request->file('coverPhoto');
+        if ($request->hasFile('coverImage')) {
+            $image = $request->file('coverImage');
             $imageName = time().'.'.$image->getClientOriginalExtension();
             $image->move(public_path('uploads'), $imageName);
-
             $imageName = public_path('uploads/'.$imageName);
-            dd($imageName);
+
+            $uploadFolder = 'uploads/';
+            $imageName = baseName($imageName);
+            $imageName = $uploadFolder.$imageName;
         }
 
         $newTopic = new NewsTopicModel([
             'topic' => $request->input('topic'),
             'text' => $request->input('editorContent'),
+            'about' => $request->input('about'),
             'news_image' => $imageName,
         ]);
 
@@ -59,6 +63,50 @@ class NewsController extends Controller
 
     public function loadAllTopics()
     {
-        return view('home', ['topics' => NewsTopicModel::query()->orderBy('id', 'desc')->get()->toArray()]);
+        return view('home', ['topics' => NewsTopicModel::query()->orderBy('id', 'desc')->limit(6)->get()->toArray()]);
+    }
+
+    public function loadNewsPageTopics()
+    {
+        return view('news_all_news', ['topics' => NewsTopicModel::query()->orderBy('id', 'desc')->get()]);
+    }
+
+    public function loadEditNewsTopic(Request $request)
+    {
+        $topic = NewsTopicModel::query()->where('id', $request->topic_id)->first();
+        return view('news_edit', ['topic' => $topic]);
+    }
+
+    public function updateTopic(Request $request)
+    {
+        $topic = NewsTopicModel::query()->where('id', $request->input('topic_id'))->first();
+
+        if ($request->hasFile('coverImage')) {
+            $image = $request->file('coverImage');
+            $imageName = time().'.'.$image->getClientOriginalExtension();
+            $image->move(public_path('uploads'), $imageName);
+            $imageName = public_path('uploads/'.$imageName);
+
+            $uploadFolder = 'uploads/';
+            $imageName = baseName($imageName);
+            $imageName = $uploadFolder.$imageName;
+        }
+
+        $topic->update([
+           'topic' => $request->input('topic') ?? $topic->topic,
+           'text' => $request->input('editorContent') ?? $topic->text,
+           'about' => $request->input('about') ?? $topic->about,
+           'news_image' => $imageName ?? $topic->news_image,
+        ]);
+
+        return back()->with('success', 'News topic updated successfully!');
+    }
+
+    public function deleteNewsTopic(Request $request)
+    {
+        $topic = NewsTopicModel::query()->where('id', $request->topic_id)->first();
+        $topic->delete();
+
+        return back()->with('success', 'News topic deleted successfully!');
     }
 }

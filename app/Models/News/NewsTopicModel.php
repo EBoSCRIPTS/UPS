@@ -14,6 +14,7 @@ class NewsTopicModel extends Model
     protected $fillable = [
         'topic',
         'text',
+        'about',
         'news_image'
     ];
 }

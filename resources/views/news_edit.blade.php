@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 
 <head>
-
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -10,7 +9,6 @@
 
     <script src="//cdn.quilljs.com/1.3.6/quill.js"></script>
     <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
-
 </head>
 
 <body>
@@ -18,48 +16,25 @@
     @include('components.sidebar')
     <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-3">
         <div class="container" style="width: 80%">
-            <p class="h2">Create new topic</p>
-            <form action="{{route('news.create_new_topic')}}" method="POST" id="contentForm" enctype="multipart/form-data">
+            <p class="h2 text-center">Edit topic</p>
+            <form action="{{route('news.edit_save')}}" method="POST" id="contentForm" enctype="multipart/form-data">
                 @csrf
+                <input type="hidden" name="topic_id" id="topic_id" value="{{$topic->id}}">
                 <label for="topic">Topic</label>
-                <input type="text" name="topic" class="form-control" placeholder="Topic title here.." required>
-                <hr class="hr"/>
+                <input type="text" name="topic" id="topic" class="form-control" placeholder="{{$topic->topic}}">
 
                 <input type="hidden" name="editorContent" id="editorContent">
-                <div id="editor">
-                </div>
+                <label for="content">Content</label>
+                <div id="textContent"></div>
 
                 <label for="about">About</label>
-                <input type="text" name="about" class="form-control" placeholder="Quick summary here.." required>
-                <hr class="hr"/>
+                <input type="text" name="about" id="about" class="form-control" placeholder="{{$topic->about}}">
 
-                <label for="coverPhoto">Cover Image</label>
-                <input type="file" name="coverPhoto" class="form-control">
-                <button id="submitButton" type="submit" class="btn btn-primary mt-2 float-end">Create new topic</button>
+                <label for="coverImage">Cover Image</label>
+                <input type="file" name="coverImage" id="coverImage" class="form-control">
+
+                <button type="submit" class="btn btn-success mt-2 float-end" id="submitButton">Save changes</button>
             </form>
-            <hr>
-            <p class="h2">Edit Topics</p>
-            <table class="table table-striped">
-                <thead>
-                <tr>
-                    <th scope="col">Topic name</th>
-                    <th scope="col">Actions</th>
-                </tr>
-                </thead>
-                <tbody>
-                    @foreach($topics as $topic)
-                    <tr>
-                        <td>{{$topic->topic}}</td>
-                        <td>
-                            <a href="{{route('news.edit_topic', ['topic_id' => $topic->id])}}" class="btn btn-primary">Edit</a>
-                            <form action="{{route('news.delete_topic', ['topic_id' => $topic->id])}}" method="POST">
-                                @csrf
-                            <button type="submit" class="btn btn-danger">Delete</button>
-                            </form>
-                        </td>
-                    </tr>
-                    @endforeach
-                </tbody>
         </div>
     </div>
 
@@ -87,12 +62,13 @@
         ['clean']
     ];
 
-    let quill = new Quill('#editor', {
+    let quill = new Quill('#textContent', {
         modules: {
             toolbar: toolBar
         },
         theme: 'snow',
     });
+    quill.clipboard.dangerouslyPasteHTML('{!! $topic->text !!}');
 
     let userContent = document.getElementsByClassName('ql-editor');
     const submitButton = document.getElementById('submitButton');

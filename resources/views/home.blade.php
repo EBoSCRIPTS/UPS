@@ -38,7 +38,7 @@
                 </div>
             </div>
                 <hr class="hr"/>
-            <div class="p-2">
+            <div class="p-2 mt-5">
                 <div class="row">
                     <a href="/news/view_topic/{{$topics[0]['id']}}" class="col-lg-4">
                         <img src="{{asset($topics[0]['news_image'])}}" class="rounded d-block" alt="..." width="400" height="200">
