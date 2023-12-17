@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 13, 2023 at 04:26 PM
+-- Generation Time: Dec 17, 2023 at 01:31 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -118,10 +118,9 @@ CREATE TABLE `logged_hours` (
 
 CREATE TABLE `news_comments` (
   `id` int(11) NOT NULL,
-  `name` int(11) NOT NULL,
-  `comment` int(11) NOT NULL,
-  `agree_count` int(11) NOT NULL,
-  `disagree_count` int(11) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `topic_id` int(11) NOT NULL COMMENT 'relates to news_topic it belongs to ',
+  `comment` text NOT NULL,
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
   `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -151,7 +150,8 @@ CREATE TABLE `news_topic` (
   `id` int(11) NOT NULL,
   `topic` varchar(100) NOT NULL,
   `text` text NOT NULL,
-  `news_image` varchar(500) NOT NULL COMMENT 'uploaded image location',
+  `about` text NOT NULL,
+  `news_image` varchar(500) DEFAULT NULL COMMENT 'uploaded image location',
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
   `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -234,13 +234,14 @@ CREATE TABLE `tasks_status` (
 
 CREATE TABLE `tasks_task` (
   `id` int(11) NOT NULL,
-  `department_id` int(11) DEFAULT NULL COMMENT 'refers to department table, this value represents the dept the task is asigned to',
   `title` varchar(255) NOT NULL,
   `description` text NOT NULL,
   `made_by` int(11) NOT NULL,
   `assigned_to` int(11) DEFAULT NULL,
   `status_key` int(11) NOT NULL COMMENT 'key for retrieving values from statuses names json',
   `priority` varchar(50) NOT NULL,
+  `task_points` decimal(4,1) DEFAULT NULL,
+  `is_draft` tinyint(1) NOT NULL DEFAULT 0,
   `project_id` int(11) NOT NULL,
   `is_completed` tinyint(1) NOT NULL DEFAULT 0,
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
@@ -278,7 +279,8 @@ CREATE TABLE `users` (
   `created_at` date NOT NULL DEFAULT current_timestamp(),
   `updated_at` date NOT NULL DEFAULT current_timestamp(),
   `role_id` int(10) UNSIGNED NOT NULL,
-  `profile_picture` longblob NOT NULL
+  `is_writer` enum('0','1','','') NOT NULL DEFAULT '0',
+  `profile_picture` text NOT NULL DEFAULT 'uploads/default_pfp.png'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -327,12 +329,19 @@ ALTER TABLE `logged_hours`
 -- Indexes for table `news_comments`
 --
 ALTER TABLE `news_comments`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_topic_id` (`topic_id`);
 
 --
 -- Indexes for table `news_comments_rating`
 --
 ALTER TABLE `news_comments_rating`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `news_topic`
+--
+ALTER TABLE `news_topic`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -439,6 +448,12 @@ ALTER TABLE `news_comments_rating`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `news_topic`
+--
+ALTER TABLE `news_topic`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `req_absence`
 --
 ALTER TABLE `req_absence`
@@ -501,6 +516,12 @@ ALTER TABLE `employee_information`
 --
 ALTER TABLE `equipment_items`
   ADD CONSTRAINT `fk_type_id` FOREIGN KEY (`type_id`) REFERENCES `equipment_type` (`id`);
+
+--
+-- Constraints for table `news_comments`
+--
+ALTER TABLE `news_comments`
+  ADD CONSTRAINT `fk_topic_id` FOREIGN KEY (`topic_id`) REFERENCES `news_topic` (`id`);
 
 --
 -- Constraints for table `req_absence`
