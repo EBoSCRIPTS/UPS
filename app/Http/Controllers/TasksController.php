@@ -238,4 +238,47 @@ class TasksController extends Controller
 
         return back()->with('success', 'Draft status updated!');
     }
+
+    public function updatePriority(Request $request)
+    {
+        $task = TasksTaskModel::query()->where('id', $request->input('ticket_id'))->first();
+        $priorities = ['low', 'medium', 'high', 'critical'];
+
+        if ($request->input('back') && $task->priority != 'low')
+        {
+            $curPriority = $task->priority;
+
+            for ($i = 0; $i < sizeof($priorities); $i++)
+            {
+                if ($curPriority == $priorities[$i])
+                {
+                    $curPriority = $priorities[$i - 1];
+                    $task->update([
+                        'priority' => $curPriority
+                    ]);
+                    break;
+                }
+            }
+        }
+
+        if ($request->input('next') && $task->priority != 'critical')
+        {
+            $curPriority = $task->priority;
+
+            for ($i = 0; $i < sizeof($priorities); $i++)
+            {
+                if ($curPriority == $priorities[$i])
+                {
+                    $curPriority = $priorities[$i + 1];
+                    $task->update([
+                        'priority' => $curPriority
+                    ]);
+                    break;
+                }
+            }
+        }
+
+        return back()->with('success', 'Priority updated!');
+
+    }
 }

@@ -65,18 +65,24 @@
             </p>
             </form>
         </div>
-        @if($ticket->priority === 'low')
-        <p class="h5" style="color: green">Priority: {{$ticket->priority}}</p>
-        @elseif($ticket->priority === 'medium')
-            <p class="h5" style="color: blue">Priority: {{$ticket->priority}}</p>
-        @elseif ($ticket->priority === 'high')
-            <p class="h5" style="color: orange">Priority: {{$ticket->priority}}</p>
-        @elseif ($ticket->priority === 'critical')
-            <p class="h5" style="color: red">Priority: {{$ticket->priority}}</p>
-        @endif
+            <div class="row">
+                <form action="{{route('tasks.update_priority')}}" method="POST">
+                    @csrf
+                <p class="h5">Task priority: {{$ticket->priority}}
+                    <input type="hidden" name="ticket_id" value="{{$ticket->id}}">
+                    <button type="submit" class="btn btn-success btn-sm" name="back" value="back">←</button>
+                    <button type="submit" class="btn btn-success btn-sm" name="next" value="next">→</button>
+                </p>
+                </form>
+            </div>
+
         <p class="h5">Task value: {{$ticket->task_points}} (TP)</p>
 
+            <div class="row">
+                <div class="col-sm-1">
         <label for="draft">Draft</label>
+                </div>
+        <div class="col-sm-1">
         <form action="{{route('tasks.update_draft')}}" method="POST">
             @csrf
             <input type="hidden" name="ticket_id" value="{{$ticket->id}}">
@@ -86,6 +92,8 @@
             <input type="checkbox" id="draft" name="draft" value="draft" onclick="this.form.submit()">
         @endif
         </form>
+        </div>
+            </div>
 
         <hr class="hr"/>
         @endif

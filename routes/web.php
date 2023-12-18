@@ -109,6 +109,7 @@ Route::post('/tasks/ticket/add_comment', [TasksController::class, 'addComment'])
 Route::post('/tasks/ticket/update', [TasksController::class, 'updateTaskDescription'])->name('tasks.update_description');
 Route::post('/tasks/ticket/update_assignee/{ticket_id}', [TasksController::class, 'updateAssignee'])->name('tasks.update_assignee');
 Route::post('/tasks/ticket/update_draft/', [TasksController::class, 'updateTaskDraftStatus'])->name('tasks.update_draft');
+Route::post('/tasks/ticket/change_priority', [TasksController::class, 'updatePriority'])->name('tasks.update_priority');
 Route::post('/tasks/ticket/delete', [TasksController::class, 'deleteTicket'])->name('tasks.delete_ticket');
 Route::post('/tasks/ticket/complete', [TasksController::class, 'completeTicket'])->name('tasks.complete_ticket');
 
