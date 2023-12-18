@@ -63,13 +63,13 @@ class TasksController extends Controller
             'status_id' => $getTaskStatusesForProject[0]['id'],
             'status_key' => 0,
             'priority' => $request->input('priority'),
-            'is_draft' => $request->input('is_draft'),
+            'is_draft' => $request->input('is_draft') ?? 0,
             'task_points' => $request->input('task_points'),
         ]);
 
         $newTask->save();
 
-        return redirect('/');
+        return redirect('/tasks/ticket/' . $newTask->id);
     }
 
     public function loadMyTasks(Request $request)
