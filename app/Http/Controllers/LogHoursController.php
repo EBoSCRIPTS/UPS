@@ -28,6 +28,7 @@ class LogHoursController extends Controller
            return view('log_worked_hours', ['dates' => $datesToFill, 'month' => $month, 'userLogs' => $userLogs, 'closed' => true]);
        }
 
+
        for($i = 0; $i < $day; $i++) {
            $dates[] = Carbon::now()->startOfMonth()->addDays($i)->format('Y-m-d');
        }
