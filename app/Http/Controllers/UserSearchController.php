@@ -11,12 +11,20 @@ class UserSearchController extends Controller
         $users = UserModel::query()->select('id', 'first_name', 'last_name')->get();
         return response()->json($users);
     }
+
     public function userSpecific(Request $request)
     {
         $users = UserModel::query()
             ->whereRaw('LOWER(first_name) LIKE ?', ['%' . strtolower($request->first_name) . '%'])
             ->select('first_name', 'last_name', 'id')
             ->get();
-        return response()->json($users);
+
+        $usersLastName = UserModel::query()
+            ->whereRaw('LOWER(last_name) LIKE ?', ['%' . strtolower($request->first_name) . '%'])
+            ->select('first_name', 'last_name', 'id')
+            ->get();
+
+
+        return response()->json($users->merge($usersLastName));
     }
 }
