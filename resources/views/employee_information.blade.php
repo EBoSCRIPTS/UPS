@@ -56,9 +56,20 @@
 
         </form>
         <hr class="hr"/>
+        @foreach($departments as $department)
+        <div class="btn-group">
+            <button class="btn btn-primary btn-sm"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#collapse{{$department->name}}" aria-expanded="false" aria-controls="collapse{{$department->name}}">
+                {{$department->name}}
+            </button>
+        </div>
+            @endforeach
+
 
         @foreach($departments as $department)
-            <table class="table mt-3">
+            <div id="collapse{{$department->name}}" class="collapse">
+                <table class="table mt-3">
                 <thead class="thead-light">
                     <tr>
                         <th scope="col">{{$department->name}}</th>
@@ -75,7 +86,7 @@
                         <td>{{$employee->user->first_name}} {{$employee->user->last_name}} </td>
                         <td>{{$employee->hour_pay}}</td>
                         <td>{{$employee->salary}}</td>
-                        <td>{{$employee->position}}</td>
+                        <td style="max-width: 20px">{{$employee->position}}</td>
                         <td>
                         <form action="{{route('employee_information.delete')}}" method="POST">
                             @csrf
@@ -86,7 +97,11 @@
                     </tr>
                @endif
              @endforeach
+            </tbody>
+                </table>
+            </div>
         @endforeach
+
         </div>
     </div>
 </div>

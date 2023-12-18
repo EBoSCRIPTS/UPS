@@ -52,8 +52,8 @@
                         @if($task->status_key == $key)
                             <td>
                                 <a href="{{route('tasks.ticket', $task->id)}}" style="text-decoration: none">
-                                <div class="card bg-light">
-                                    <div class="card-body">
+                                <div class="card bg-light" style="max-width: 300px">
+                                    <div class="card-body text-center">
                                         {{$task->title}}
                                     <br>
                                         @if(isset($task->userTo->first_name))
