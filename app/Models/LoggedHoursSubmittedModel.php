@@ -15,7 +15,8 @@ class LoggedHoursSubmittedModel extends Model
        'user_id',
        'total_hours',
         'month_name',
-       'created_at'
+       'created_at',
+        'is_confirmed'
     ];
 
     public $timestamps = false;

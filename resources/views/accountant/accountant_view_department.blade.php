@@ -17,7 +17,7 @@
 <div class="row">
     @include('components.sidebar')
     <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-3">
-        <p class="h2">Department: {{$department->name}} ({{$month}}) summary</p>
+        <p class="h2">Department: {{$department->name}} ({{$month}}) summary || <a href="/accountant/settings/{{$department->id}}">Settings</a></p>
         <div class="row" style="margin-top: 50px">
             <div class="col-sm-6">
                 <p class="h3 text-center">Department Employees</p>
@@ -27,7 +27,7 @@
                             <th scope="col">Employee Name</th>
                             <th scope="col">Position</th>
                             <th scope="col">Monthly Hours</th>
-                            <th scope="col">Status</th>
+                            <th scope="col">Pay</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -35,26 +35,40 @@
                             <tr>
                                 <td>{{$employee->user_id}} {{$employee->user->first_name}} {{$employee->user->last_name}}</td>
                                 <td>{{$employee->position}}</td>
-                                <td>{{$employeeReports[$employee->user_id]}}/{{$employee->monthly_hours}}</td>
-                                @if($status[$employee->user_id] == '1')
-                                <td>Closed</td>
+                                <td>{{$employee->monthly_hours}}</td>
+                                @if($employee->hour_pay != null)
+                                    <td>{{$employee->hour_pay}}/hr</td>
                                 @else
-                                    <td>Open</td>
-                                @endif
+                                    <td>{{$employee->salary}}</td>
+                                    @endif
                             </tr>
                         @endforeach
                     </tbody>
                 </table>
             </div>
 
+            <div class="col-sm-6">
+                <p class="h3 text-center">Generate payslips</p>
+                @foreach($employees as $employee)
+                    @if($status[$employee->user_id] == '1')
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">{{$employee->user_id}} {{$employee->user->first_name}} {{$employee->user->last_name}}</h5>
+                                <button type="button" class="btn btn-primary">Generate</button>
+                            </div>
+                            @endif
+                            @endforeach
+            </div>
 
+        </div>
+
+        <div class="row" style="margin-top: 50px">
             <div class="col-sm-6">
                 <p class="h3 text-center">Expected expenses</p>
                 <div class="d-flex" style="height: 90%">
                     <canvas id="pieChart"></canvas>
                 </div>
             </div>
-
         </div>
 
 

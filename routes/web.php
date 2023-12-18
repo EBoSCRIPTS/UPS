@@ -73,6 +73,9 @@ Route::post('/employee_information/delete', [EmployeeInformationController::clas
 Route::get('/accountant', [AccountantController::class, 'showAll'])->name('accountant');
 Route::get('/accountant/{id}', [AccountantController::class, 'showDept'])->name('accountant_view_department');
 Route::post('/accountant/user', [AccountantController::class, 'loadEmployeeInformation'])->name('accountant_view_department');
+Route::get('/accountant/settings/{department_id}', [AccountantController::class, 'getDepartmentSettings'])->name('department_settings');
+
+Route::post('/accountant/settings/{department_id}/add_tax', [AccountantController::class, 'addTax'])->name('accountant.add_tax');
 
 /* Tasks view */
 Route::get('/tasks', [TasksController::class, 'loadMyTasks'])->name('tasks.show');

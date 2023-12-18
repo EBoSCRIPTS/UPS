@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\DepartamentsModel;
 use App\Http\Controllers\DepartmentsController;
 use App\Models\EmployeeInformationModel;
+use App\Models\AccountantDepartmentSettingsModel;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 
@@ -84,5 +85,26 @@ class AccountantController extends Controller
         }
 
         return $totalHours;
+    }
+
+    public function getDepartmentSettings(Request $request)
+    {
+        $settings = AccountantDepartmentSettingsModel::query()->where('department_id', $request->department_id)->get();
+        $department = $request->department_id;
+
+        return view('accountant.accountant_department_settings', ['settings' => $settings, 'department' => $department] );
+    }
+
+    public function addTax(Request $request)
+    {
+        $newTax = new AccountantDepartmentSettingsModel([
+            'department_id' => $request->department_id,
+            'tax_name' => $request->input('tax_name'),
+            'tax_rate' => $request->input('tax_rate'),
+        ]);
+
+        $newTax->save();
+
+        return back()->with('success', 'Tax added!');
     }
 }
