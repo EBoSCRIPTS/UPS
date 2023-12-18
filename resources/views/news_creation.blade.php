@@ -51,11 +51,13 @@
                     <tr>
                         <td>{{$topic->topic}}</td>
                         <td>
-                            <a href="{{route('news.edit_topic', ['topic_id' => $topic->id])}}" class="btn btn-primary">Edit</a>
-                            <form action="{{route('news.delete_topic', ['topic_id' => $topic->id])}}" method="POST">
-                                @csrf
-                            <button type="submit" class="btn btn-danger">Delete</button>
-                            </form>
+                            <div class="btn-group">
+                                <a href="{{route('news.edit_topic', ['topic_id' => $topic->id])}}" class="btn btn-primary">Edit</a>
+                                <form action="{{route('news.delete_topic', ['topic_id' => $topic->id])}}" method="POST">
+                                    @csrf
+                                <button type="submit" class="btn btn-danger">Delete</button>
+                                </form>
+                            </div>
                         </td>
                     </tr>
                     @endforeach

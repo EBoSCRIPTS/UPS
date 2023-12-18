@@ -56,7 +56,12 @@
                                     <div class="card-body">
                                         {{$task->title}}
                                     <br>
-                                    <small>{{$task->userMade->first_name}} {{$task->userMade->last_name}}</small>
+                                        @if(isset($task->userTo->first_name))
+                                    <small>{{$task->userTo->first_name}} {{$task->userTo->last_name}}</small>
+
+                                        @else
+                                        <small>No assignees</small>
+                                            @endif
                                         <br>
                                         <small>Task priority: {{$task->priority}}</small>
                                     </div>

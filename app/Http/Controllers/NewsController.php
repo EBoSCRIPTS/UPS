@@ -17,8 +17,8 @@ class NewsController extends Controller
 
     public function insertNewTopic(Request $request)
     {
-        if ($request->hasFile('coverImage')) {
-            $image = $request->file('coverImage');
+        if ($request->hasFile('coverPhoto')) {
+            $image = $request->file('coverPhoto');
             $imageName = time().'.'.$image->getClientOriginalExtension();
             $image->move(public_path('uploads'), $imageName);
             $imageName = public_path('uploads/'.$imageName);
@@ -105,6 +105,13 @@ class NewsController extends Controller
     public function deleteNewsTopic(Request $request)
     {
         $topic = NewsTopicModel::query()->where('id', $request->topic_id)->first();
+
+        $topicComments = NewsCommentsModel::query()->where('topic_id', $request->topic_id)->get();
+
+        foreach($topicComments as $topicComment){
+            $topicComment->delete();
+        }
+
         $topic->delete();
 
         return back()->with('success', 'News topic deleted successfully!');

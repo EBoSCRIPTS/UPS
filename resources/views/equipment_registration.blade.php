@@ -36,7 +36,7 @@
             <input type="text" name="name" id="name" class="form-control">
 
             <label for="serial_number" class="form-label">Serial Number</label>
-            <input type="text" name="serial_number" id="serial_number">
+            <input type="text" name="serial_number" id="serial_number" class="form-control">
 
             <button type="submit" class="btn btn-primary mt-3">Add equipment</button>
         </form>

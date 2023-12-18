@@ -19,11 +19,14 @@ class UserController extends Controller
             $image = $request->file('profile_picture');
             $imageName = time().'.'.$image->getClientOriginalExtension();
             $image->move(public_path('uploads'), $imageName);
-
             $imageName = public_path('uploads/'.$imageName);
+
+            $uploadFolder = 'uploads/';
+            $imageName = baseName($imageName);
+            $imageName = $uploadFolder.$imageName;
         }
         else{
-            $imageName = public_path('default.png');
+            $imageName = 'uploads/default_pfp.png';
         }
 
         $role = $request->input('role_id');
@@ -61,13 +64,25 @@ class UserController extends Controller
     public function editUser(Request $request)
     {
         $user = UserModel::query()->find($request->input('id'));
+        if($request->hasFile('profile_picture'))
+        {
+            $image = $request->file('profile_picture');
+            $imageName = time().'.'.$image->getClientOriginalExtension();
+            $image->move(public_path('uploads'), $imageName);
+            $imageName = public_path('uploads/'.$imageName);
+
+            $uploadFolder = 'uploads/';
+            $imageName = baseName($imageName);
+            $imageName = $uploadFolder.$imageName;
+        }
+
 
         $user->update([
             'first_name' => $request->input('first_name') ?? $user->first_name,
             'last_name' => $request->input('last_name') ?? $user->last_name,
             'email' => $request->input('email') ?? $user->email,
             'phone_number' => $request->input('phone_number') ?? $user->phone_number,
-            'profile_picture' => $request->input('profile_picture') ?? $user->profile_picture,
+            'profile_picture' => $imageName ?? $user->profile_picture,
         ]);
 
         return redirect('/mng/edit')->with('success', 'User edited!');

@@ -45,6 +45,7 @@
                         <label for="draft">Draft</label>
                         <input class="form-check-input" type="checkbox" id="draft" name="draft">
                         <br>
+                        <hr>
                         <small>If the task is draft, it won't be placed in the board but can be found under project-tasks section and undrafted</small>
                     </div>
                 </div>

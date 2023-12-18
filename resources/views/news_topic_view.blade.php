@@ -16,10 +16,10 @@
 <div class="row">
 @include('components.sidebar')
     <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-3">
-       <div class="container">
+       <div class="container" style="width: 60%">
         <div class="topic">
             <p class="h1 text-center">{{$topic[0]['topic']}}</p>
-           <img src="{{asset($topic[0]['news_image'])}}" class=" rounded d-block mx-auto" alt="..." width="900px" height="300px">
+           <img src="{{asset($topic[0]['news_image'])}}" class=" rounded d-block mx-auto" alt="..." width="800px" height="400px">
                <div id="textContent" style="margin-top: 50px">
                 {!! $topic[0]['text'] !!}
                 </div>
