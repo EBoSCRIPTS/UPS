@@ -18,24 +18,34 @@
 @include('components.sidebar')
 @if(isset(Auth::user()->email) && Auth::user()->role_id == 1)
     @foreach ($users as $user)
-        <div class="modal fade" id="exampleModal{{$user->id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal fade" id="editModal{{$user->id}}" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel{{$user->id}}">Modal title</h5>
+                        <h5 class="modal-title" id="editModalLabel{{$user->id}}">Modal title</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <form action="{{ route('user.edit') }}" method="POST" enctype="multipart/form-data">
                             @csrf
                             <input type="hidden" name="id" value="{{ $user->id }}">
-                            <input type="text" name="first_name" placeholder="{{$user->first_name}}">
-                            <input type="text" name="last_name" placeholder="{{$user->last_name}}">
-                            <input type="text" name="email" placeholder="{{$user->email}}">
-                            <input type="text" name="phone_number" placeholder="{{$user->phone_number}}">
-                            <input type="file" name="profile_picture">
 
-                            <button type="submit" class="btn btn-primary">Submit</button>
+                            <label for="first_name" class="form-label">First Name</label>
+                            <input type="text" id="first_name" name="first_name" placeholder="{{$user->first_name}}" class="form-control">
+
+                            <label for="last_name" class="form-label">Last Name</label>
+                            <input type="text" id="last_name" name="last_name" placeholder="{{$user->last_name}}" class="form-control">
+
+                            <label for="email" class="form-label">Email</label>
+                            <input type="text" id="email" name="email" placeholder="{{$user->email}}" class="form-control">
+
+                            <label for="phone_number" class="form-label">Phone Number</label>
+                            <input type="text" id="phone_number" name="phone_number" placeholder="{{$user->phone_number}}" class="form-control">
+
+                            <label for="profile_picture" class="form-label">Profile Picture</label>
+                            <input type="file" id="profile_picture" name="profile_picture" class="form-control">
+
+                            <button type="submit" class="btn btn-primary float-end mt-3">Submit</button>
                         </form>
                     </div>
                     <div class="modal-footer">
@@ -46,27 +56,47 @@
         </div>
             @endforeach
         <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-3">
-        <ul class="list-group">
-                @foreach ($users as $user)
-                    <li class="list-group-item">
-                        {{ $user->id }}) {{ $user->first_name }} {{ $user->last_name }} {{ $user->email }} {{ $user->role_id }}
-                        <form action="{{ route('user.delete') }}" method="POST" style="display: inline">
-                            @csrf
-                            <input type="hidden" name="id" value="{{ $user->id }}">
-                            <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
-                        </form>
-
-                        <form style="display: inline">
-                            @csrf
-                            <input type="hidden" name="id" value="{{ $user->id }}">
-                            <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                                    data-bs-target="#exampleModal{{$user->id}}">
-                                Edit
-                            </button>
-                        </form>
-                    </li>
-                @endforeach
-        </ul>
+            <div class="container" style="width: 80%">
+                <h1 class="display-3">Edit user</h1>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Email</th>
+                            <th scope="col">Role</th>
+                            <th scope="col">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($users as $user)
+                            <tr>
+                                <td>{{$user->id}}</td>
+                                <td>{{$user->first_name}} {{$user->last_name}}</td>
+                                <td>{{$user->email}}</td>
+                                <td>{{$user->role}}</td>
+                                <td>
+                                    <div class="btn-group">
+                                        <form action="{{ route('user.delete') }}" method="POST" style="display: inline">
+                                            @csrf
+                                            <input type="hidden" name="id" value="{{ $user->id }}">
+                                            <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
+                                        </form>
+                                        <form style="display: inline">
+                                            @csrf
+                                            <input type="hidden" name="id" value="{{ $user->id }}">
+                                            <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                                    data-bs-target="#editModal{{$user->id}}">
+                                                Edit
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
         </div>
 @else
     <noscript>You are not supposed to be here :(, go back!</noscript>

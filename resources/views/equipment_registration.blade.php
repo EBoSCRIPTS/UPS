@@ -22,7 +22,7 @@
         </form>
 
     <hr class="hr"/>
-        <p class="h4">Registered equipment</p>
+        <p class="h4">Register equipment</p>
         <form action="{{route('equipment.add_equipment')}}" method="POST">
             @csrf
             <label for="type" class="form-label">Type</label>

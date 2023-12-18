@@ -3,10 +3,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Tasks\TasksParticipantsModel;
+use App\Models\Tasks\TasksProjectModel;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use App\Models\UserModel;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -73,12 +76,28 @@ class UserController extends Controller
     public function getUserInfo(Request $request)
     {
         $user = UserModel::query()->where('id', $request->id)->first();
+        $projects = TasksParticipantsModel::query()->where('employee_id', $request->id)->get();
 
         if($user == null) {
             abort(404);
         }
 
-        return view('profile', ['user' => $user]);
+        return view('profile', ['user' => $user, 'projects' => $projects]);
+    }
+
+    public function changePassword(Request $request)
+    {
+        $user = UserModel::query()->where('id', $request->id)->select('id', 'password')->first();
+
+        if (!Hash::check($request->input('old_password'), $user->password)) {
+            return redirect('/home')->with('error', 'Wrong password!');
+        }
+
+        $user->update([
+            'password' => bcrypt($request->input('new_password')),
+        ]);
+
+        return back()->with('success', 'Password changed!');
     }
 
 }

@@ -33,6 +33,7 @@ Route::get('/login', function () {
 });
 Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::get('/profile/{id}', [UserController::class, 'getUserInfo'])->name('profile');
+Route::post('/profile/change_password/{id}', [UserController::class, 'changePassword'])->name('user.change_password');
 Route::post('/logging_in', [AuthController::class, 'auth'])->name('logging_in');
 
 /* Absence views */

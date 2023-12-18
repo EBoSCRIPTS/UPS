@@ -59,4 +59,9 @@ class UserModel extends Authenticatable
     {
         return $this->belongsTo(EmployeeInformationModel::class, 'id', 'user_id');
     }
+
+    public function role(): BelongsTo
+    {
+        return $this->belongsTo(RolesModel::class, 'role_id', 'id');
+    }
 }
