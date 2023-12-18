@@ -28,10 +28,17 @@ class AccountantController extends Controller
     {
         $showDept = DepartamentsModel::query()->find($request->id);
         $showEmployees = EmployeeInformationModel::query()->where('department_id', $request->id)->get();
+        $logHours = new LogHoursController();
 
         $employeeReports = [];
+        $status = [];
+        $expectedSalary = 0;
+        $realSalary = 0;
 
         foreach ($showEmployees as $employee) {
+            $expectedSalary += $employee->hour_pay * $employee->monthly_hours;
+            $realSalary += $employee->hour_pay * $this->getEmployeeWorkedHoursThisMonth($employee->user_id);
+            $status[$employee->user_id] = $logHours->checkIfClosedMonth($employee->user_id, Carbon::now()->monthName);
             $employeeReports[$employee->user_id] = $this->getEmployeeWorkedHoursThisMonth($employee->user_id);
         }
 
@@ -39,7 +46,10 @@ class AccountantController extends Controller
             ['department' => $showDept,
                 'employees' => $showEmployees,
                 'employeeReports' => $employeeReports,
-                'month' => Carbon::now()->monthName]);
+                'month' => Carbon::now()->monthName,
+                'status' => $status,
+                'expectedPay' => $expectedSalary,
+                'realPay' => $realSalary]);
     }
 
     public function loadEmployeeInformation(Request $request)
@@ -72,6 +82,7 @@ class AccountantController extends Controller
             $time = ceil(($hoursToSeconds + $minutesToSeconds) / 3600);
             $totalHours += $time;
         }
+
         return $totalHours;
     }
 }

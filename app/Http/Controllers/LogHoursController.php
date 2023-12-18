@@ -15,6 +15,19 @@ class LogHoursController extends Controller
        $month = Carbon::now()->monthName;
        $day = Carbon::now()->day;
 
+        $userLogs = LogHoursModel::query()
+            ->where('user_id', Auth::user()->id)
+            ->where('date', '<=', Carbon::now())
+            ->where('date', '>=', Carbon::now()->startOfMonth())
+            ->get();
+
+       if ($this->checkIfClosedMonth(Auth::user()->id, $month))
+       {
+           $datesToFill = [];
+
+           return view('log_worked_hours', ['dates' => $datesToFill, 'month' => $month, 'userLogs' => $userLogs, 'closed' => true]);
+       }
+
        for($i = 0; $i < $day; $i++) {
            $dates[] = Carbon::now()->startOfMonth()->addDays($i)->format('Y-m-d');
        }
@@ -24,11 +37,7 @@ class LogHoursController extends Controller
 
        $datesToFill = array_diff($dates, $getDates);
 
-       $userLogs = LogHoursModel::query()
-           ->where('user_id', Auth::user()->id)
-           ->where('date', '<=', Carbon::now())
-           ->where('date', '>=', Carbon::now()->startOfMonth())
-           ->get();
+
        return view('log_worked_hours', ['dates' => $datesToFill, 'month' => $month, 'userLogs' => $userLogs]);
     }
 
@@ -154,7 +163,7 @@ class LogHoursController extends Controller
             return back()->with('success', 'Monthly report submitted!');
     }
 
-    private function checkIfClosedMonth($user_id, $month): bool
+    public function checkIfClosedMonth($user_id, $month): bool
     {
         $findUser = LoggedHoursSubmittedModel::query()
             ->where('user_id', $user_id)

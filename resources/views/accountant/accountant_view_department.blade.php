@@ -9,6 +9,8 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
             crossorigin="anonymous"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </home>
 
 <body>
@@ -25,6 +27,7 @@
                             <th scope="col">Employee Name</th>
                             <th scope="col">Position</th>
                             <th scope="col">Monthly Hours</th>
+                            <th scope="col">Status</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -33,6 +36,11 @@
                                 <td>{{$employee->user_id}} {{$employee->user->first_name}} {{$employee->user->last_name}}</td>
                                 <td>{{$employee->position}}</td>
                                 <td>{{$employeeReports[$employee->user_id]}}/{{$employee->monthly_hours}}</td>
+                                @if($status[$employee->user_id] == '1')
+                                <td>Closed</td>
+                                @else
+                                    <td>Open</td>
+                                @endif
                             </tr>
                         @endforeach
                     </tbody>
@@ -41,7 +49,10 @@
 
 
             <div class="col-sm-6">
-
+                <p class="h3 text-center">Expected expenses</p>
+                <div class="d-flex" style="height: 90%">
+                    <canvas id="pieChart"></canvas>
+                </div>
             </div>
 
         </div>
@@ -50,3 +61,17 @@
     </div>
 </div>
 </body>
+
+<script>
+    const pieChart = document.getElementById('pieChart');
+
+    new Chart(pieChart, {
+        type: 'pie',
+        data: {
+            labels: ['Expected', 'Actual'],
+            datasets: [{
+                data: [{{$expectedPay}}, {{$realPay}}],
+            }]
+        }
+    })
+</script>

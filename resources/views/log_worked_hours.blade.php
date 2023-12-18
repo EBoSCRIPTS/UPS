@@ -23,6 +23,7 @@
         </form>
         @endif
         </p>
+        @if(!isset($closed))
         <form action="{{ route('loghours.create') }}" method="POST">
             @csrf
             <table class="table">
@@ -76,6 +77,9 @@
         </form>
 
         <hr class="hr"/>
+            @else
+            <p class="h5">You have closed this month</p>
+            @endif
         <p class="h3">My logs this month</p>
             <table class="table">
                 <thead>
