@@ -56,6 +56,7 @@ Route::post('/loghours/previous_month', [LogHoursController::class, 'getPrevious
 Route::get('/loghours/view', [ViewLoggedHoursController::class, 'ViewLogged'])->name('loghours.view');
 Route::post('/loghours/view/user', [ViewLoggedHoursController::class, 'showUserLoggedHours'])->name('loghours.view.user');
 Route::post('/loghours/view/delete', [LogHoursController::class, 'deleteLoggedHours'])->name('loghours.view.delete');
+Route::post('/loghours/close_month', [LoghoursController::class, 'closeMonthlyReport'])->name('loghours.close_month');
 
 /* Departaments */
 Route::get('/departments', [DepartmentsController::class, 'showAllDepartments'])->name('showAllDepartments')->middleware('manager');
@@ -147,3 +148,6 @@ Route::get('/api/get_all_users/', [UserSearchController::class, 'allUsers'])->mi
 Route::get('/api/all_users_json/{first_name}', [UserSearchController::class, 'userSpecific'])->middleware('admin');
 Route::get('/api/get_all_departments', [DepartmentsController::class, 'departmentsApi'])->middleware('manager');
 Route::get('/api/get_all_projects', [TasksController::class, 'projectsApi']);
+
+/* TEST PAGES */
+Route::get('/test_page', [EmployeeInformationController::class, 'getAllEmployees']);

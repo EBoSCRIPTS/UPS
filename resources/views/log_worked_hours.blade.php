@@ -69,6 +69,12 @@
             <input type="submit" class="btn btn-primary" value="Submit" onclick="return confirm('Are you sure?')"/>
         </form>
 
+        <form action="{{route('loghours.close_month')}}" method="POST">
+            @csrf
+            <input type="hidden" name="month" value="{{ $month }}"/>
+            <button type="submit" class="btn btn-primary">Close monthly report and submit</button>
+        </form>
+
         <hr class="hr"/>
         <p class="h3">My logs this month</p>
             <table class="table">

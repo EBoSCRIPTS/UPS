@@ -15,28 +15,38 @@
 <div class="row">
     @include('components.sidebar')
     <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-3">
-        <form action="{{route('accountant_view_department')}}" method="POST">
-            @csrf
-        <select class="form-select" name="employee">
-            <option selected disabled>---</option>
-        @foreach($employees as $employee)
-                <option value="{{$employee->user_id}}">{{$employee->user->first_name}} {{$employee->user->last_name}}</option>
-        @endforeach
-        </select>
-        <button type="submit" class="btn btn-primary">LOAD</button>
-        </form>
-    </ul>
-
-        @if($loadEmployee)
-            <div class="card">
-                <div class="card-body">
-                    <p><b>{{$employeeInformation->user->first_name}} {{$employeeInformation->user->last_name}}</b></p>
-                    <p>{{$employeeInformation->hour_pay}}</p>
-                    <p>Worked hours this month: {{$hours}} / {{$employeeInformation->monthly_hours}} of expected</p>
-                    <p>Expected payout: ${{$expectedPay}}</p>
+        <p class="h2">Department: {{$department->name}} ({{$month}}) summary</p>
+        <div class="row" style="margin-top: 50px">
+            <div class="col-sm-6">
+                <p class="h3 text-center">Department Employees</p>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">Employee Name</th>
+                            <th scope="col">Position</th>
+                            <th scope="col">Monthly Hours</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($employees as $employee)
+                            <tr>
+                                <td>{{$employee->user_id}} {{$employee->user->first_name}} {{$employee->user->last_name}}</td>
+                                <td>{{$employee->position}}</td>
+                                <td>{{$employeeReports[$employee->user_id]}}/{{$employee->monthly_hours}}</td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
             </div>
-        @endif
-    </div>
 
+
+            <div class="col-sm-6">
+
+            </div>
+
+        </div>
+
+
+    </div>
 </div>
 </body>
