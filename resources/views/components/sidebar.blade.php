@@ -1,4 +1,4 @@
-@include('components.scripts_user_search')
+<script src="{{asset('js/userSearch.js')}}"></script>
 @if(isset(Auth::user()->id))
     <div class="container-fluid">
         <div class="row flex-nowrap">
@@ -157,6 +157,8 @@
                     </div>
                 </div>
             </div>
+
 @else
     {{redirect('/login')}}
 @endif
+

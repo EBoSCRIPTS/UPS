@@ -77,4 +77,4 @@
 
 </body>
 
-<script src="{{asset('js/editprojectbuttons.js')}}"></script>
+<script src="{{asset('js/editProjectbuttons.js')}}"></script>
