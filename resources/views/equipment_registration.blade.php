@@ -46,13 +46,15 @@
                 <p class="h4">List of assigned equipment</p>
             </div>
             <div class="col-md-6">
-                <label>Filter by Type:</label>
-                @foreach($types as $type)
-                    <label>
-                        <input type="checkbox" class="type-checkbox" value="{{$type->name}}">
-                        {{$type->name}}
-                    </label>
-                @endforeach
+                    <div class="dropdown">
+                        <button class="btn btn-primary dropdown-toggle float-end" type="button" data-bs-toggle="dropdown">Filter by type
+                            <span class="caret"></span></button>
+                        <ul class="dropdown-menu">
+                        @foreach($types as $type)
+                            <li style="margin-left: 15px"><input type="checkbox" class="type-checkbox" value="{{$type->name}}"> {{$type->name}}</li>
+                        @endforeach
+                        </ul>
+                    </div>
             </div>
         </div>
         <table class="table">
