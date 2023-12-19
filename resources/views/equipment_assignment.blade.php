@@ -53,7 +53,7 @@
         @if(isset($assignments))
             <form action="{{route('equipment.generate_agreement')}}" method="POST">
                 @csrf
-                <input type="hidden" name="employee" value="{{$employee}}">
+                <input type="hidden" name="employee" value="{{$employeeFor}}">
                 <button type="submit" class="btn btn-info btn-sm">Generate PDF Agreement</button>
             </form>
                 </div>

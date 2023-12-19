@@ -14,8 +14,9 @@ class PDFController extends Controller
     public function generateEquipmentAgreement(Request $request)
     {
         $employee = $request->input('employee');
-        $employeeData = json_decode($employee);
-        $getUserEquipment = EquipmentAssignmentModel::query()->where('employee_id', $employeeData->id)->get()->toArray();
+
+        $getUserEquipment = EquipmentAssignmentModel::query()->where('employee_id', $employee)->get()->toArray();
+        $employeeName = EmployeeInformationModel::query()->where('id', $employee)->first();
 
         $userEquipment = [];
 
@@ -33,7 +34,7 @@ class PDFController extends Controller
         $data = [
             'title' => 'Equipment Agreement',
             'date' => Carbon::now(),
-            'employee' => $employeeData->user->first_name . ' ' . $employeeData->user->last_name,
+            'employee' => $employeeName->user->first_name . ' ' . $employeeName->user->last_name,
             'equipment' => $eqName,
         ];
 

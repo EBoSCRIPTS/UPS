@@ -95,7 +95,8 @@ class EquipmentController extends Controller
 
         if($request->has('employee')) {
             $user = EquipmentAssignmentModel::query()->where('employee_id', $request->input('employee'))->get();
-            return view('equipment_assignment', ['employees' => $employee, 'equipments' => $equipment, 'assignments' => $user, 'employee' => $request->input('employee')]);
+
+            return view('equipment_assignment', ['employees' => $employee, 'equipments' => $equipment, 'assignments' => $user, 'employeeFor' => $request->input('employee')]);
         }
 
         return view('equipment_assignment', ['employees' => $employee, 'equipments' => $equipment]);
