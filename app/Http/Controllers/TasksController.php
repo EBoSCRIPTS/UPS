@@ -9,6 +9,7 @@ use App\Models\Tasks\TasksTaskCommentsModel;
 use App\Models\Tasks\TasksTaskModel;
 use App\Models\UserModel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 
 class TasksController extends Controller
@@ -58,7 +59,7 @@ class TasksController extends Controller
             'title' => $request->input('task_name'),
             'description' => $request->input('description'),
             'project_id' => $request->input('project'),
-            'made_by' => $request->input('made_by'),
+            'made_by' => Auth::user()->id,
             'assigned_to' => $request->input('assign_to'),
             'status_id' => $getTaskStatusesForProject[0]['id'],
             'status_key' => 0,
