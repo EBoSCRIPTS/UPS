@@ -22,7 +22,6 @@ async function userSearch() {
             updateResult.innerHTML = data[i].first_name + ' ' + data[i].last_name;
             searchBar.appendChild(updateResult.cloneNode(true));
         }
-        console.log(data.length);
     }
 }
 

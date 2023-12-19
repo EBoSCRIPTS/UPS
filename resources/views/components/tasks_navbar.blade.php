@@ -1,11 +1,11 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <button type="button" class="btn btn-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal"> CREATE A NEW TASK</button>
+    <button type="button" class="btn btn-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#taskModal"> CREATE A NEW TASK</button>
     <select id="project_id" class="form-select" style="width: 10%; margin-left: 10px;">
         <option disabled selected>PROJECTS</option>
     </select>
 </nav>
 
-<div class="modal" id="exampleModal" tabindex="-1">
+<div class="modal" id="taskModal" tabindex="-1">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <form action="{{route('create_new_task')}}" method="POST">
@@ -38,7 +38,7 @@
                     </div>
                     <div class="col-md-6">
                         <label for="assignTo" class="form-label">Assign To</label>
-                        <input id="assign_to" name="assign_to" type="text" class="form-control" placeholder="Search for user" oninput="userSearchDebounced">
+                        <input id="assign_to" name="assign_to" type="text" class="form-control" placeholder="Search for user" oninput="debounce(userSearch(), 500)">
                         <a href="#" id="assignToMe" onclick="assignToMe()"> <small>Assign to me</small></a>
                         <br>
                         <label for="draft">Draft</label>
@@ -58,43 +58,5 @@
     </div>
 </div>
 
-
-<script>
-    async function getProjects(field_id) {
-        const response = await fetch('/api/get_all_projects');
-        let selectField = document.getElementById(field_id);
-        let data = await response.json();
-
-        console.log(data);
-
-        for (let i = 0; i < data.length; i++) {
-            let projectOption = document.createElement('option');
-            projectOption.value = data[i].id;
-            projectOption.text = data[i].name;
-            projectOption.href = data[i].id;
-            selectField.append(projectOption);
-        }
-
-        if(field_id === 'project_id'){
-            selectField.addEventListener('change', function(){
-                const selectedValue = this.value;
-                window.location.href='/tasks/projects/' + selectedValue;
-            })
-        }
-
-    }
-
-    function assignToMe()
-    {
-        const assignToMe = document.getElementById('assign_to');
-        assignToMe.value = '{{ Auth::user()->id }}';
-        assignToMe.text = '{{Auth::user()->first_name}}'
-    }
-
-    window.onload = function() {
-        getProjects('project_id');
-        getProjects('project');
-    }
-
-
-</script>
+<script src="{{asset('js/projectSearch.js')}}"></script>
+<script src="{{asset('js/userSearch.js')}}"></script>
