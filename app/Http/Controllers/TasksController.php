@@ -60,7 +60,7 @@ class TasksController extends Controller
             'description' => $request->input('description'),
             'project_id' => $request->input('project'),
             'made_by' => Auth::user()->id,
-            'assigned_to' => $request->input('assign_to'),
+            'assigned_to' => substr($request->input('assign_to'), 0,1),
             'status_id' => $getTaskStatusesForProject[0]['id'],
             'status_key' => 0,
             'priority' => $request->input('priority'),

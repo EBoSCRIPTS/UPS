@@ -50,7 +50,7 @@
             <div class="col-sm-6">
                 <p class="h3 text-center">Generate payslips</p>
                 @foreach($employees as $employee)
-                    @if($status[$employee->user_id] == '1')
+                    @if($status[$employee->user_id] != null)
                         <div class="card">
                             <div class="card-body">
                                 <h5 class="card-title">{{$employee->user_id}} {{$employee->user->first_name}} {{$employee->user->last_name}}</h5>

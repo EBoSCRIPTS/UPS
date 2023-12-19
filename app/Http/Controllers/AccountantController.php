@@ -39,7 +39,7 @@ class AccountantController extends Controller
         foreach ($showEmployees as $employee) {
             $expectedSalary += $employee->hour_pay * $employee->monthly_hours;
             $realSalary += $employee->hour_pay * $this->getEmployeeWorkedHoursThisMonth($employee->user_id);
-            $status[$employee->user_id] = $logHours->checkIfClosedMonth($employee->user_id, Carbon::now()->monthName);
+            $status[$employee->user_id] = $logHours->getSubmitedAndConfirmed($employee->user_id, Carbon::now()->monthName);
             $employeeReports[$employee->user_id] = $this->getEmployeeWorkedHoursThisMonth($employee->user_id);
         }
 

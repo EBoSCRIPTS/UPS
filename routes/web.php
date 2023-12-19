@@ -73,12 +73,12 @@ Route::post('/employee_information/create', [EmployeeInformationController::clas
 Route::post('/employee_information/delete', [EmployeeInformationController::class, 'deleteEmployee'])->name('employee_information.delete')->middleware('manager');
 
 /* Accountant views */
-Route::get('/accountant', [AccountantController::class, 'showAll'])->name('accountant');
-Route::get('/accountant/{id}', [AccountantController::class, 'showDept'])->name('accountant_view_department');
-Route::post('/accountant/user', [AccountantController::class, 'loadEmployeeInformation'])->name('accountant_view_department');
-Route::get('/accountant/settings/{department_id}', [AccountantController::class, 'getDepartmentSettings'])->name('department_settings');
+Route::get('/accountant', [AccountantController::class, 'showAll'])->name('accountant')->middleware('accountant');
+Route::get('/accountant/{id}', [AccountantController::class, 'showDept'])->name('accountant_view_department')->middleware('accountant');
+Route::post('/accountant/user', [AccountantController::class, 'loadEmployeeInformation'])->name('accountant_view_department')->middleware('accountant');
+Route::get('/accountant/settings/{department_id}', [AccountantController::class, 'getDepartmentSettings'])->name('department_settings')->middleware('accountant');
 
-Route::post('/accountant/settings/{department_id}/add_tax', [AccountantController::class, 'addTax'])->name('accountant.add_tax');
+Route::post('/accountant/settings/{department_id}/add_tax', [AccountantController::class, 'addTax'])->name('accountant.add_tax')->middleware('accountant');
 
 /* Tasks view */
 Route::get('/tasks', [TasksController::class, 'loadMyTasks'])->name('tasks.show');
@@ -151,10 +151,10 @@ Route::post('/equipment/generate_agreement', [PDFController::class, 'generateEqu
 
 
 /* REST API routes */
-Route::get('/api/get_all_users/', [UserSearchController::class, 'allUsers'])->middleware('admin');
-Route::get('/api/all_users_json/{first_name}', [UserSearchController::class, 'userSpecific'])->middleware('admin');
+Route::get('/api/get_all_users/', [UserSearchController::class, 'allUsers'])->middleware('loggedIn');
+Route::get('/api/all_users_json/{first_name}', [UserSearchController::class, 'userSpecific'])->middleware('loggedIn');
 Route::get('/api/get_all_departments', [DepartmentsController::class, 'departmentsApi'])->middleware('manager');
-Route::get('/api/get_all_projects', [TasksController::class, 'projectsApi']);
+Route::get('/api/get_all_projects', [TasksController::class, 'projectsApi'])->middleware('loggedIn');
 
 /* TEST PAGES */
 Route::get('/test_page', [EmployeeInformationController::class, 'getAllEmployees']);

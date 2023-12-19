@@ -45,9 +45,21 @@ class UserModel extends Authenticatable
         return $this->role_id == 1;
     }
 
+
     public function isManager()
     {
-        return $this->role_id == 3;
+        if ($this->role_id == 3) {
+            return true;
+        }
+        return false;
+    }
+
+    public function isAccountant()
+    {
+        if ($this->role_id == 4) {
+            return true;
+        }
+        return false;
     }
 
     public function isWriter()

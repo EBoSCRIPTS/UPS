@@ -37,8 +37,11 @@
                         <input type="number" class="form-select" id="task_points" name="task_points" required min="0" max="100">
                     </div>
                     <div class="col-md-6">
-                        <label for="assignTo" class="form-label">Assign To</label>
-                        <input id="assign_to" name="assign_to" type="text" class="form-control" placeholder="Search for user" oninput="userSearchDebounced()">
+                        <div class="searchAssignee">
+                            <label for="assignTo" class="form-label">Assign To</label>
+                            <input id="assign_to" name="assign_to" type="text" class="form-control" placeholder="Search for user" oninput="userSearchDebounced()">
+                            <a href="#" id="updateAssignees"></a>
+                        </div>
                         <a href="#" id="assignToMe" onclick="assignToMe()"> <small>Assign to me</small></a>
                         <br>
                         <label for="draft">Draft</label>
