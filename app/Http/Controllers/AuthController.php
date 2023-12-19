@@ -21,15 +21,16 @@ class AuthController extends Controller
             return redirect('/');
         }
 
-        return back()->withErrors([
-            'email' => 'The provided credentials do not match our records.',
-        ])->onlyInput('email');
+        return back()->withInput()->withErrors([
+            'email' => 'The email does not match our records',
+            'password' => 'The password is incorrect',
+        ]);
     }
 
     public function logout(Request $request)
     {
         Auth::logout();
 
-        return view('login');
+        return redirect('/login');
     }
 }

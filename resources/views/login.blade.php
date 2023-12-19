@@ -17,6 +17,17 @@
     @else(!isset(Auth::user()->email))
         <div class="position-absolute top-50 start-50 translate-middle" style="width: 500px;">
             <h1 class="text-center">UPS</h1>
+            @if ($errors->has('email') || $errors->has('password'))
+            <div class="alert alert-danger">
+                @if ($errors->has('email') )
+                    <strong>| {{ $errors->first('email')}} |</strong>
+                @endif
+
+                @if ($errors->has('password'))
+                    <strong>{{ $errors->first('password')}} |</strong>
+                @endif
+            </div>
+            @endif
         <form action="{{ route('logging_in') }}" method="POST">
             @csrf
             <div class="form-group mb-3">
@@ -25,8 +36,10 @@
 
             <label for="password">PASSWORD</label>
             <input type="password" name="password" id="password" class="form-control" required>
+
            </div>
             <button class="btn btn-primary w-100" type="submit">Login</button>
+
         </form>
         </div>
 
