@@ -23,7 +23,7 @@
                             <a href="#submenu1" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
                                 <i class="fs-4 bi-speedometer2"></i> <span
                                         class="ms-1 d-none d-sm-inline" style="color: white">DASHBOARD</span> </a>
-                            <ul class="collapse show nav flex-column ms-1" id="submenu1" data-bs-parent="#menu">
+                            <ul class="collapse nav flex-column ms-1" id="submenu1" data-bs-parent="#menu">
                                 <li class="w-100">
                                     <a href="/absence" class="nav-link px-2"> <span class="d-none d-sm-inline" style="color: white">• Request Absence</span>
                                     </a>
@@ -38,7 +38,7 @@
                             <a href="#submenu6" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
                                 <i class="fs-4 bi-speedometer2"></i> <span class="ms-1 d-none d-sm-inline" style="color: white">TASKS</span>
                             </a>
-                            <ul class="collapse show nav flex-column ms-1" id="submenu6" data-bs-parent="#menu">
+                            <ul class="collapse nav flex-column ms-1" id="submenu6" data-bs-parent="#menu">
                                 <li>
                                     <a href="/tasks" class="nav-link px-2"> <span
                                                 class="d-none d-sm-inline" style="color: white">• See Tasks</span> </a>
