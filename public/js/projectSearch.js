@@ -20,13 +20,6 @@ async function getProjects(field_id) {
 
 }
 
-function assignToMe()
-{
-    const assignToMe = document.getElementById('assign_to');
-    assignToMe.value = '{{ Auth::user()->id }}';
-    assignToMe.text = '{{Auth::user()->first_name}}'
-}
-
 window.onload = function() {
     getProjects('project_id');
     getProjects('project');

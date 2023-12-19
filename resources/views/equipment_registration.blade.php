@@ -41,7 +41,20 @@
             <button type="submit" class="btn btn-primary mt-3">Add equipment</button>
         </form>
         <hr class="hr"/>
-        <p class="h4">List of assigned equipment</p>
+        <div class="row">
+            <div class="col-md-6">
+                <p class="h4">List of assigned equipment</p>
+            </div>
+            <div class="col-md-6">
+                <label>Filter by Type:</label>
+                @foreach($types as $type)
+                    <label>
+                        <input type="checkbox" class="type-checkbox" value="{{$type->name}}">
+                        {{$type->name}}
+                    </label>
+                @endforeach
+            </div>
+        </div>
         <table class="table">
             <thead>
                 <tr>
@@ -95,3 +108,29 @@
     </div>
 </div>
 </body>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const checkboxes = document.querySelectorAll('.type-checkbox');
+        const rows = document.querySelectorAll('.table tbody tr');
+
+        checkboxes.forEach(function (checkbox) {
+            checkbox.addEventListener('change', function () {
+                const checkedTypes = Array.from(checkboxes)
+                    .filter(c => c.checked)
+                    .map(c => c.value);
+
+                rows.forEach(function (row) {
+                    const typeCell = row.querySelector('td:first-child');
+                    const typeId = typeCell.textContent.trim();
+
+                    if (checkedTypes.length === 0 || checkedTypes.includes(typeId)) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+            });
+        });
+    });
+</script>

@@ -38,7 +38,7 @@
                     </div>
                     <div class="col-md-6">
                         <label for="assignTo" class="form-label">Assign To</label>
-                        <input id="assign_to" name="assign_to" type="text" class="form-control" placeholder="Search for user" oninput="debounce(userSearch(), 500)">
+                        <input id="assign_to" name="assign_to" type="text" class="form-control" placeholder="Search for user" oninput="userSearchDebounced()">
                         <a href="#" id="assignToMe" onclick="assignToMe()"> <small>Assign to me</small></a>
                         <br>
                         <label for="draft">Draft</label>
@@ -60,3 +60,11 @@
 
 <script src="{{asset('js/projectSearch.js')}}"></script>
 <script src="{{asset('js/userSearch.js')}}"></script>
+<script>
+    function assignToMe()
+    {
+        const assignToMe = document.getElementById('assign_to');
+        assignToMe.value = '{{ Auth::user()->id }}';
+        assignToMe.text = '{{Auth::user()->first_name}}'
+    }
+</script>
