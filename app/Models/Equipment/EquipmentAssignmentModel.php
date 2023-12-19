@@ -2,6 +2,7 @@
 
 namespace App\Models\Equipment;
 
+use App\Models\EmployeeInformationModel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -23,5 +24,10 @@ class EquipmentAssignmentModel extends Model
     public function equipment(): BelongsTo
     {
         return $this->belongsTo(EquipmentItemsModel::class, 'equipment_id', 'id');
+    }
+
+    public function employee(): BelongsTo
+    {
+        return $this->belongsTo(EmployeeInformationModel::class, 'employee_id', 'id');
     }
 }

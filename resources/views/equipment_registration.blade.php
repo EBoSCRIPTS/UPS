@@ -13,6 +13,8 @@
     @include('components.sidebar')
     <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-3">
         <div class="container" style="width: 80%">
+            <div class="row">
+            <div class="col-md-6">
         <p class="h4">Add equipment type</p>
         <form action="{{route('equipment.add_equipment_type')}}" method="POST">
             @csrf
@@ -20,8 +22,9 @@
             <input type="text" name="type" id="type" class="form-control">
             <button type="submit" class="btn btn-primary mt-3">Add type</button></button>
         </form>
+            </div>
 
-    <hr class="hr"/>
+        <div class="col-md-6">
         <p class="h4">Register equipment</p>
         <form action="{{route('equipment.add_equipment')}}" method="POST">
             @csrf
@@ -40,6 +43,8 @@
 
             <button type="submit" class="btn btn-primary mt-3">Add equipment</button>
         </form>
+        </div>
+            </div>
         <hr class="hr"/>
         <div class="row">
             <div class="col-md-6">
@@ -62,6 +67,7 @@
                 <tr>
                     <th scope="col">Type</th>
                     <th scope="col">Name</th>
+                    <th scope="col">Assigned To</th>
                     <th scope="col">Serial Number</th>
                 </tr>
             </thead>
@@ -70,6 +76,7 @@
                     <tr>
                         <td>{{$equipment->type->name}}</td>
                         <td>{{$equipment->name}}</td>
+                        <td>{{$assignedEquipment[$equipment->id]}}</td>
                         <td>{{$equipment->serial_number}}</td>
                     </tr>
                 @endforeach

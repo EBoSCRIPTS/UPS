@@ -17,7 +17,42 @@
 <div class="row">
     @include('components.sidebar')
     <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-3">
+        <div class="container" style="width: 80%">
+            <p class="h3">Review Hours</p>
 
+            <table class="table table-striped" style="max-width: 800px">
+                <thead>
+                    <tr>
+                        <th scope="col">Employee</th>
+                        <th scope="col">Submitted Hours</th>
+                        <th scope="col">Month Name</th>
+                        <th scope="col">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($submits as $submit)
+                        <tr>
+                            <td>
+                                {{$submit->user->first_name}} {{$submit->user->last_name}}
+                            </td>
+                            <td>{{$submit->total_hours}} of {{$monthlyHours[$submit->user_id]}}</td>
+                            <td>{{$submit->month_name}}</td>
+                            <div class="btn-group">
+                                <td>
+                                    <form action="{{route('loghours.review')}}" method="POST">
+                                        @csrf
+                                        <input type="hidden" name="id" value="{{$submit->id}}">
+                                        <button type="submit" class="btn btn-success" name="Approve" value="confirm">Approve</button>
+                                        <button type="submit" class="btn btn-danger" name="Reject" value="reject">Reject</button>
+                                    </form>
+                                </td>
+
+                            </div>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
     </div>
 
 </div>

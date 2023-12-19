@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\EmployeeInformationModel;
 use App\Models\Equipment\EquipmentAssignmentModel;
 use App\Models\Equipment\EquipmentTypeModel;
 use App\Models\Equipment\EquipmentItemsModel;
@@ -13,9 +14,32 @@ class EquipmentController extends Controller
     public function showRegistered()
     {
         $equipment = EquipmentItemsModel::query()->where('is_assigned', 1)->get();
+
         $notAssigned = EquipmentItemsModel::query()->where('is_assigned', 0)->get();
         $type = EquipmentTypeModel::all();
-        return view('equipment_registration', ['equipments' => $equipment, 'types' => $type, 'availableEquipments' => $notAssigned]);
+
+        $assignedArray = [];
+        $nameArray = [];
+        foreach($equipment as $eq)
+        {
+            $assignedTo = EquipmentAssignmentModel::query()->where('equipment_id', $eq->id)
+                ->with('employee.user')
+                ->pluck('employee_id')->first();
+            $assignedArray[$eq->id] = $assignedTo;
+        }
+
+        foreach($assignedArray as $key => $value)
+        {
+            $employeeInformation = EmployeeInformationModel::query()->where('id', $value)->first();
+            $fullName = $employeeInformation->user->first_name . ' ' . $employeeInformation->user->last_name;
+            $nameArray[$key] = $fullName;
+        }
+
+        return view('equipment_registration',
+            ['equipments' => $equipment,
+            'types' => $type,
+            'availableEquipments' => $notAssigned,
+            'assignedEquipment' => $nameArray]);
     }
 
     public function addEquipmentType(Request $request)

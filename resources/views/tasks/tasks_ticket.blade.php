@@ -149,12 +149,13 @@
 
     </div>
 </div>
+</div>
 </body>
 
 <script>
     function populateTextArea()
     {
-        document.getElementById('ticket_description').value = '{{$ticket->description}}';
+        document.getElementById('ticket_description').value = {!! json_encode($ticket->description) !!};
     }
 
     window.onload = function()

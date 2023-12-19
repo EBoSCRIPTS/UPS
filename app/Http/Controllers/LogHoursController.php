@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\EmployeeInformationModel;
 use Illuminate\Http\Request;
 use App\Models\LogHoursModel;
 use App\Models\LoggedHoursSubmittedModel;
@@ -176,5 +177,40 @@ class LogHoursController extends Controller
         }
 
         return true;
+    }
+
+    public function getSubmittedHours(Request $request)
+    {
+        $submittedHours = LoggedHoursSubmittedModel::query()
+            ->where('is_confirmed', 1)
+            ->get();
+
+        $monthlyHours = [];
+
+        foreach($submittedHours as $submittedHour) {
+            $monthlyExpected = EmployeeInformationModel::query()->where('user_id', $submittedHour->user_id)->pluck('monthly_hours')->first();
+            $monthlyHours[$submittedHour->user_id] = $monthlyExpected;
+        };
+
+        return view('loghours_submit_review', ['submits' => $submittedHours, 'monthlyHours' => $monthlyHours]);
+    }
+
+    public function submitHoursReview(Request $request)
+    {
+        $submittedHours = LoggedHoursSubmittedModel::query()
+            ->where('id', $request->input('id'))
+            ->first();
+
+        if($request->has('Approve')) {
+            $submittedHours->update([
+                'is_confirmed' => 2
+            ]);
+        }
+
+        if($request->has('Reject')) {
+            $submittedHours->delete();
+        }
+
+        return back();
     }
 }

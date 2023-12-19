@@ -58,6 +58,9 @@ Route::post('/loghours/view/user', [ViewLoggedHoursController::class, 'showUserL
 Route::post('/loghours/view/delete', [LogHoursController::class, 'deleteLoggedHours'])->name('loghours.view.delete');
 Route::post('/loghours/close_month', [LoghoursController::class, 'closeMonthlyReport'])->name('loghours.close_month');
 
+Route::get('/loghours/review', [LogHoursController::class, 'getSubmittedHours']);
+Route::post('/loghours/review/update', [LogHoursController::class, 'submitHoursReview'])->name('loghours.review');
+
 /* Departaments */
 Route::get('/departments', [DepartmentsController::class, 'showAllDepartments'])->name('showAllDepartments')->middleware('manager');
 Route::post('/departments/create', [DepartmentsController::class, 'addDepartment'])->name('departments.create')->middleware('manager');
