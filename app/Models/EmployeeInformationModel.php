@@ -20,6 +20,9 @@ class EmployeeInformationModel extends Model
         'salary',
         'position',
         'monthly_hours',
+        'bank_name',
+        'bank_account_name',
+        'bank_account'
     ];
 
     public function user(): BelongsTo

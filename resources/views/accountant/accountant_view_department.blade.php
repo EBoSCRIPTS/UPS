@@ -48,28 +48,37 @@
             </div>
 
             <div class="col-sm-6">
-                <p class="h3 text-center">Generate payslips</p>
-                @foreach($employees as $employee)
-                    @if($status[$employee->user_id] != null)
-                        <div class="card">
-                            <div class="card-body">
-                                <h5 class="card-title">{{$employee->user_id}} {{$employee->user->first_name}} {{$employee->user->last_name}}</h5>
-                                <button type="button" class="btn btn-primary">Generate</button>
-                            </div>
+                <p class="h3 text-center">Requested payouts</p>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">Name</th>
+                            <th scope="col">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($employees as $employee)
+                            @if($status[$employee->user_id] != null)
+                                <tr>
+                                    <td>{{$employee->user->first_name}} {{$employee->user->last_name}}</td>
+                                    <td><a href="/accountant/payslip/{{$employee->user_id}}" class="btn btn-primary btn-sm">Generate</a></td>
+                                </tr>
                             @endif
-                            @endforeach
+                        @endforeach
+                    </tbody>
+                </table>
             </div>
 
         </div>
 
-        <div class="row" style="margin-top: 50px">
-            <div class="col-sm-6">
-                <p class="h3 text-center">Expected expenses</p>
-                <div class="d-flex" style="height: 90%">
-                    <canvas id="pieChart"></canvas>
-                </div>
-            </div>
-        </div>
+{{--        <div class="row" style="margin-top: 50px">--}}
+{{--            <div class="col-sm-6">--}}
+{{--                <p class="h3 text-center">Expected expenses</p>--}}
+{{--                <div class="d-flex" style="height: 90%">--}}
+{{--                    <canvas id="pieChart"></canvas>--}}
+{{--                </div>--}}
+{{--            </div>--}}
+{{--        </div>--}}
 
 
     </div>

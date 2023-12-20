@@ -107,4 +107,12 @@ class AccountantController extends Controller
 
         return back()->with('success', 'Tax added!');
     }
+
+    public function getEmployeePayslipDetails(Request $request)
+    {
+        $getTaxes = AccountantDepartmentSettingsModel::query()->where('department_id', $request->department_id)->get();
+        $employee = EmployeeInformationModel::query()->where('user_id', $request->user_id)->first();
+
+        return view('accountant.accountant_payslip', ['taxes' => $getTaxes, 'employee' => $employee]);
+    }
 }

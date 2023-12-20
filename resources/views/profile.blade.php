@@ -13,6 +13,11 @@
     @include('components.sidebar')
         @if(isset(Auth::user()->email))
         <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-3">
+            @if($errors->has('employee_error'))
+                <div class="alert alert-danger">
+                    <p>{{$errors->first('employee_error')}}</p>
+                </div>
+            @endif
             <div class="container mt-3" style="width: 80%">
                 <div class="row flex-nowrap justify-content-center">
                     <div class="col-sm-4 bg-light" style="padding-top: 50px; padding-bottom: 50px"">
@@ -82,6 +87,7 @@
                             <p class="h3 text-center">Actions</p>
                             <div class="btn-group">
                                 <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#changePassword">Change password</button>
+                                <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#bankDetails">Bank details</button>
 
                                 <div class="modal fade" id="changePassword" tabindex="-1" aria-labelledby="changePassword" aria-hidden="true">
                                     <div class="modal-dialog">
@@ -90,7 +96,7 @@
                                                 <h5 class="modal-title text-center" id="changePassword">Change password</h5>
                                             </div>
                                             <div class="modal-body">
-                                                <form action="{{route('user.change_password', $user->id)}}" method="POST" id="changePasswordForm">
+                                                <form action="{{route('user.change_password', Auth::user()->id)}}" method="POST" id="changePasswordForm">
                                                     @csrf
                                                     <label for="old_password" class="form-label">Old Password</label>
                                                     <input type="password" id="old_password" name="old_password" class="form-control" required>
@@ -107,6 +113,33 @@
                                         </div>
                                     </div>
                                 </div>
+
+
+                                <div class="modal fade" id="bankDetails" tabindex="-1" aria-labelledby="bankDetails" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title text-center" id="bankDetails">Bank Details</h5>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form action="{{route('user.update_banking', Auth::user()->id)}}" method="POST" id="bankDetailsForm">
+                                                    @csrf
+                                                    <label for="bank_name" class="form-label">Bank Name</label>
+                                                    <input type="text" id="bank_name" name="bank_name" class="form-control" required>
+
+                                                    <label for="account_name" class="form-label">Account Name</label>
+                                                    <input type="text" id="account_name" name="account_name" class="form-control" required>
+
+                                                    <label for="account_number" class="form-label">Account Number</label>
+                                                    <input type="text" id="account_number" name="account_number" class="form-control" required>
+
+                                                    <button type="submit" class="btn btn-success mt-3 float-end">Save changes</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
                             </div>
                         @endif
                     </div>

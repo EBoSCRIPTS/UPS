@@ -26,7 +26,7 @@
                 <hr class="hr"/>
 
                 <input type="hidden" name="editorContent" id="editorContent">
-                <div id="editor">
+                <div id="editor" style="min-height: 300px">
                 </div>
 
                 <label for="about">About</label>

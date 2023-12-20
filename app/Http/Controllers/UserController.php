@@ -3,8 +3,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\EmployeeInformationModel;
 use App\Models\Tasks\TasksParticipantsModel;
-use App\Models\Tasks\TasksProjectModel;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use App\Models\UserModel;
@@ -113,6 +113,26 @@ class UserController extends Controller
         ]);
 
         return back()->with('success', 'Password changed!');
+    }
+
+    public function updateBanking(Request $request)
+    {
+
+        $employee = EmployeeInformationModel::query()->where('user_id', $request->id)->first();
+
+        if($employee == null) {
+            return back()->withInput()->withErrors([
+                'employee_error' => 'You aren\'t registered as an employee yet!'
+            ]);
+        }
+
+        $employee->update([
+           'bank_name' => $request->input('bank_name'),
+            'bank_account_name' => $request->input('account_name'),
+            'bank_account' => $request->input('account_number'),
+        ]);
+
+        return back()->with('success', 'Banking details updated!');
     }
 
 }

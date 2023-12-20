@@ -58,19 +58,69 @@ class LogHoursController extends Controller
             }
         }
 
+        $nightHoursStart = strtotime('22:00');
+        $midnight = strtotime('24:00');
+        $sameDay = strtotime('00:00');
+        $nightHoursEnd = strtotime('06:00');
+
         foreach ($dates as $date) {
             if ($request->input($date . '_start_time') != null && $request->input($date . '_end_time') != null) {
+
+                $firstPart = 0;
+                $secondPart = 0;
+                $difference = 0;
+
+                $shiftStartTime = strtotime($request->input($date . '_start_time'));
+                $shiftEndTime = strtotime($request->input($date . '_end_time'));
+
+                //if the employee starts shift after 22:00 and ends the next day
+                if($shiftStartTime >= $nightHoursStart){
+                    $firstPart = $midnight - $shiftStartTime;
+                    $secondPart = ($shiftEndTime - $midnight) + 86400;
+
+                    if($shiftEndTime > $nightHoursEnd) {
+                        $difference = $shiftEndTime - $nightHoursEnd;
+                    }
+
+                    $nightHoursCalculate = ($firstPart + $secondPart - $difference) / 3600;
+                }
+
+                //if starts and ends on the same night(before midnight)
+                else if($shiftStartTime <= $nightHoursStart && $shiftEndTime < $midnight)
+                {
+                    $nightHoursCalculate = ($shiftEndTime - $nightHoursStart) / 3600;
+                }
+
+                //if the employee starts past midnight and ends any time next day
+                else if($shiftStartTime < $sameDay && $shiftEndTime >= $nightHoursEnd)
+                {
+                    $nightHoursCalculate = ($nightHoursEnd - $shiftStartTime)/3600;
+                }
+
+                //if the employee starts earlier than 22:00 and ends before or at 06:00
+                else if($shiftStartTime < $nightHoursStart){
+                    $firstPart = $midnight - $nightHoursStart;
+                    $secondPart = ($shiftEndTime - $midnight) + 86400;
+
+                    if($shiftEndTime > $nightHoursEnd) {
+                        $difference = $shiftEndTime - $nightHoursEnd;
+                    }
+
+                    $nightHoursCalculate = ($firstPart + $secondPart - $difference) / 3600;
+                }
+
                 $loggedHours = new LogHoursModel([
                     'user_id' => $request->input('user_id'),
                     'start_time' => $request->input($date . '_start_time'),
                     'end_time' => $request->input($date . '_end_time'),
                     'total_hours' => $request->input($date . '_total_hours'),
+                    'night_hours' => $nightHoursCalculate,
                     'date' => $request->input($date . '_date'),
                 ]);
+
                 $loggedHours->save();
             }
-        }
-
+    }
         return redirect('/loghours')->with('success', 'Hours inserted!');
     }
 

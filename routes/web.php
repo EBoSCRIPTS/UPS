@@ -33,7 +33,8 @@ Route::get('/login', function () {
 });
 Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::get('/profile/{id}', [UserController::class, 'getUserInfo'])->name('profile');
-Route::post('/profile/change_password/{id}', [UserController::class, 'changePassword'])->name('user.change_password');
+Route::post('/profile/{id}/change_password', [UserController::class, 'changePassword'])->name('user.change_password');
+Route::post('/profile/{id}/update_banking', [UserController::class, 'updateBanking'])->name('user.update_banking');
 Route::post('/logging_in', [AuthController::class, 'auth'])->name('logging_in');
 
 /* Absence views */
@@ -69,7 +70,7 @@ Route::post('/departments/delete', [DepartmentsController::class, 'deleteDeparta
 
 /* Employee information  */
 Route::get('/employee_information', [EmployeeInformationController::class, 'getData'])->name('employee_information')->middleware('manager');
-Route::post('/employee_information/create', [EmployeeInformationController::class, 'insertEmployeeInformation'])->name('employee_information.create')->middleware('manager');
+Route::post('/employee_information/create', [EmployeeInformationController::class, 'insertEmployeeInfoarmation'])->name('employee_information.create')->middleware('manager');
 Route::post('/employee_information/delete', [EmployeeInformationController::class, 'deleteEmployee'])->name('employee_information.delete')->middleware('manager');
 
 /* Accountant views */
@@ -77,6 +78,7 @@ Route::get('/accountant', [AccountantController::class, 'showAll'])->name('accou
 Route::get('/accountant/{id}', [AccountantController::class, 'showDept'])->name('accountant_view_department')->middleware('accountant');
 Route::post('/accountant/user', [AccountantController::class, 'loadEmployeeInformation'])->name('accountant_view_department')->middleware('accountant');
 Route::get('/accountant/settings/{department_id}', [AccountantController::class, 'getDepartmentSettings'])->name('department_settings')->middleware('accountant');
+Route::get('/accountant/payslip/{user_id}', [AccountantController::class, 'getEmployeePayslipDetails']);
 
 Route::post('/accountant/settings/{department_id}/add_tax', [AccountantController::class, 'addTax'])->name('accountant.add_tax')->middleware('accountant');
 

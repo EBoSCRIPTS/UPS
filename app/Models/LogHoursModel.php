@@ -18,6 +18,7 @@ class LogHoursModel extends Model
         'end_time',
         'break_time',
         'total_hours',
+        'night_hours',
         'date'
     ];
 
