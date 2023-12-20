@@ -14,7 +14,18 @@
     <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-3">
     <div class="row" style="margin: 50px;">
         <div class="col-lg-6">
-        <p class="h2">{{$ticket->title}}</p>
+            <div class="row">
+                <div class="col-md-8">
+                    <p id="ticket_title" class="h2">{{$ticket->title}}</p>
+                </div>
+                <div class="col-md-4">
+                    <button type="button" id="edit_title" class="btn float-end" onclick="editTitle()">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
+                            <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
         <hr class="hr"/>
         <form action="{{route('tasks.update_description')}} " method="POST">
             @csrf
@@ -158,9 +169,54 @@
         document.getElementById('ticket_description').value = {!! json_encode($ticket->description) !!};
     }
 
+    function editTitle()
+    {
+        document.getElementById('ticket_title').contentEditable = true;
+
+        const ticketTitle = document.getElementById('ticket_title');
+        const editTitleButton = document.getElementById('edit_title');
+        const acceptEdit = document.createElement('button');
+
+        acceptEdit.setAttribute('type', 'submit');
+        acceptEdit.setAttribute('class', 'btn btn-success btn-sm');
+        acceptEdit.setAttribute('onclick', 'acceptEdit()');
+        acceptEdit.innerHTML = '✅';
+        editTitleButton.innerText = '';
+
+        editTitleButton.append(acceptEdit);
+    }
+
+    function acceptEdit()
+    {
+        document.getElementById('ticket_title').contentEditable = false;
+        const formCreate = document.createElement('form');
+        const editTitleButton = document.getElementById('edit_title');
+
+        formCreate.append(editTitleButton)
+        formCreate.setAttribute('method', 'POST');
+        formCreate.setAttribute('action', "{{route('tasks.update_title', ['ticket_id' => $ticket->id])}}");
+
+        const hiddenInput = document.createElement('input');
+        hiddenInput.setAttribute('type', 'hidden');
+        hiddenInput.setAttribute('name', '_token');
+        hiddenInput.setAttribute('value', '{{ csrf_token() }}');
+
+        const titleValue = document.createElement('input');
+        titleValue.setAttribute('type', 'text');
+        titleValue.setAttribute('name', 'title');
+        titleValue.setAttribute('value', document.getElementById('ticket_title').innerText);
+        formCreate.append(hiddenInput);
+        formCreate.append(titleValue);
+
+        document.body.append(formCreate);
+        formCreate.submit();
+    }
+
     window.onload = function()
     {
         populateTextArea();
     }
+
+
 
 </script>

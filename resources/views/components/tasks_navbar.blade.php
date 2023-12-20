@@ -1,3 +1,4 @@
+
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <button type="button" class="btn btn-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#taskModal"> CREATE A NEW TASK</button>
     <select id="project_id" class="form-select" style="width: 10%; margin-left: 10px;">
@@ -49,6 +50,23 @@
                         <br>
                         <hr>
                         <small>If the task is draft, it won't be placed in the board but can be found under project-tasks section and undrafted</small>
+                        <hr>
+                        <div class="row">
+                            <small>Task Labels</small>
+                            <div class="col-sm-4">
+                                <input type="radio" id="label_feature" name="task_label" value="feature">
+                                <label for="feature"><span class="badge bg-success">Feature</span></label>
+                            </div>
+                            <div class="col-sm-4">
+                                <input type="radio" id="label_bug" name="task_label" value="bug">
+                                <label for="bug"><span class="badge bg-warning">Bug</span></label>
+                            </div>
+                            <div class="col-sm-4">
+                                <input type="radio" id="label_ticket" name="task_label" value="Ticket">
+                                <label for="ticket"><span class="badge bg-info">Ticket</span></label>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </div>
@@ -67,7 +85,10 @@
     function assignToMe()
     {
         const assignToMe = document.getElementById('assign_to');
-        assignToMe.value = '{{ Auth::user()->id }}';
-        assignToMe.text = '{{Auth::user()->first_name}}'
+        assignToMe.value = '{{ Auth::user()->id }} {{ Auth::user()->first_name }} {{ Auth::user()->last_name }}';
     }
+
+    const label_feature = document.getElementById('label_feature');
+    const label_bug = document.getElementById('label_bug');
+    const label_ticket = document.getElementById('label_ticket');
 </script>

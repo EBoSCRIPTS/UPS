@@ -23,6 +23,7 @@ class TasksTaskModel extends Model
         'status_key',
         'priority',
         'task_points',
+        'label',
         'is_completed',
         'is_draft',
     ];

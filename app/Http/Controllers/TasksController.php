@@ -55,6 +55,19 @@ class TasksController extends Controller
     {
         $getTaskStatusesForProject = TasksStatusModel::query()->where('project_id', $request->input('project'))->select('id')->get()->toArray();
 
+        if ($request->input('task_label') == 'feature')
+        {
+            $label = '<span class="badge bg-success">Feature</span>';
+        }
+        elseif ($request->input('task_label') == 'bug')
+        {
+            $label = '<span class="badge bg-warning">Bug</span>';
+        }
+        elseif ($request->input('task_label') == 'ticket')
+        {
+            $label = '<span class="badge bg-info">Ticket</span>';
+        }
+
         $newTask = new TasksTaskModel([
             'title' => $request->input('task_name'),
             'description' => $request->input('description'),
@@ -64,6 +77,7 @@ class TasksController extends Controller
             'status_id' => $getTaskStatusesForProject[0]['id'],
             'status_key' => 0,
             'priority' => $request->input('priority'),
+            'label' => $label,
             'is_draft' => $request->input('is_draft') ?? 0,
             'task_points' => $request->input('task_points'),
         ]);
@@ -280,6 +294,16 @@ class TasksController extends Controller
         }
 
         return back()->with('success', 'Priority updated!');
+    }
 
+    public function updateTitle(Request $request)
+    {
+        $task = TasksTaskModel::query()->where('id', $request->ticket_id)->first();
+
+        $task->update([
+            'title' => $request->input('title')
+        ]);
+
+        return back()->with('success', 'Title updated!');
     }
 }

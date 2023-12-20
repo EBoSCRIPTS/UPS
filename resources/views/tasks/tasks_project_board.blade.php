@@ -64,6 +64,8 @@
                                             @endif
                                         <br>
                                         <small>Task priority: {{$task->priority}}</small>
+                                        <br>
+                                        {!! $task->label !!}
                                     </div>
                                 </div>
                                 </a>

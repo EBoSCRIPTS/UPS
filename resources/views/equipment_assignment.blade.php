@@ -20,7 +20,7 @@
             <select name="employee" id="employee" class="form-select">
                 @foreach($employees as $employee)
                     <option value="{{$employee->id}}">{{$employee->user->first_name}} {{$employee->user->last_name}}</option>
-            @endforeach
+                @endforeach
             </select>
 
             <label for="equipment" class="form-label">Equipment</label>
