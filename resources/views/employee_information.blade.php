@@ -78,6 +78,7 @@
                         <th scope="col">Hour Pay</th>
                         <th scope="col">Salary</th>
                         <th scope="col">Position</th>
+                        <th scope="col">Bank Details</th>
                         <th scope="col">Actions</th>
                     </tr>
                 </thead>
@@ -89,6 +90,12 @@
                         <td>{{$employee->hour_pay}}</td>
                         <td>{{$employee->salary}}</td>
                         <td style="max-width: 20px">{{$employee->position}}</td>
+                        <td style="max-width: 20px;overflow-x: auto">
+                            @if(isset($employee->bank_account))
+                                 {{$employee->bank_account}}
+                                {{$employee->bank_account_name}}
+                            @endif
+                        </td>
                         <td>
                         <form action="{{route('employee_information.delete')}}" method="POST">
                             @csrf
