@@ -16,7 +16,8 @@
     <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-3">
         @include('components.tasks_navbar')
         <div class="container" style="width: 80%">
-        <div class="myTasks" style="border: 1px solid; border-radius: 10px; margin-top: 10px">
+        <div class="myTasks" style="border: 1px solid; border-radius: 10px;
+        margin-top: 10px; max-height: 250px; overflow-y: auto; margin: 0 auto">
             <div class="myTasks_box" style="margin: 5px">
                 <p class="h3 text-center">My tasks</p>
                     @foreach($tasks as $task)
