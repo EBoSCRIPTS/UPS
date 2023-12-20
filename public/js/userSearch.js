@@ -16,7 +16,7 @@ async function userSearch() {
         updateResult = document.createElement('a');
         updateResult.id = 'updateResult';
         updateResult.className = 'row';
-        updateResult.style = 'background-color: white; text-transform: uppercase; text-decoration: none; color: black';
+        updateResult.style = 'background-color: white; text-transform: uppercase; text-decoration: none; color: black; margin: 0 auto';
 
         for (let i = 0; i < data.length; i++) {
             updateResult.href = '/profile/' + data[i].id;
@@ -36,19 +36,26 @@ async function userSearch() {
         const response = await fetch('/api/all_users_json/' + document.getElementById('assign_to').value);
         let data = await response.json();
 
-        assigneeResult = document.createElement('a');
-        assigneeResult.id = 'assigneeResult';
-        assigneeResult.className = 'row';
-        assigneeResult.style = 'background-color: #d3d3d3; text-transform: uppercase; text-decoration: none; color: black; border: 1px solid; border-radius: 5px; border-color: gray; ';
 
         for (let i = 0; i < data.length; i++) {
+            let assigneeResult = document.createElement('a');
+            assigneeResult.className = 'row';
+            assigneeResult.id = 'assigneeResult';
+            assigneeResult.style =
+                'background-color: #d3d3d3; text-transform: uppercase; ' +
+                'text-decoration: none; ' +
+                'color: black; border: 1px solid; border-radius: 5px; ' +
+                'border-color: gray; margin: 0 auto';
             assigneeResult.href = '#';
             assigneeResult.innerHTML = data[i].id + ' ' + data[i].first_name + ' ' + data[i].last_name;
-            searchBar.appendChild(assigneeResult.cloneNode(true));
+
+            assigneeResult.addEventListener('click', (event) => {
+                event.preventDefault();
+                document.getElementById('assign_to').value = assigneeResult.innerHTML;
+            });
+
+            searchBar.appendChild(assigneeResult);
         }
-        document.getElementById('assigneeResult').addEventListener('click', () => {
-            document.getElementById('assign_to').value = assigneeResult.innerHTML;
-        });
 
     }
 
