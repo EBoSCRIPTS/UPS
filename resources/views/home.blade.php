@@ -19,11 +19,11 @@
     @include('components.sidebar')
         <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4" style="margin-top: 100px">
             <div class="container" style="width: 80%">
-                <p class="h2 text-center mb-5">HOME PAGE</p>
+                <p class="h4 text-center"> NEWS </p>
             <div class="d-flex flex-wrap justify-content-center">
                 <div class="p-2 ml-5 justify-content-center">
                     <a href="/news/view_topic/{{$topics[0]['id']}}">
-                        <img src="{{asset($topics[0]['news_image'])}}" class=" rounded d-block mx-auto" alt="..." width="400" height="200">
+                        <img src="{{asset($topics[0]['news_image'])}}" class=" rounded d-block img-fluid" alt="..." width="400" height="200">
                         <p class="text-center">{{$topics[0]['topic']}}</p>
                     </a>
                 </div>
@@ -34,7 +34,7 @@
 
                 <div class="p-2 justify-content-center">
                     <a href="/news/view_topic/{{$topics[1]['id']}}">
-                    <img src="{{asset($topics[1]['news_image'])}}" class=" rounded d-block mx-auto" alt="..." width="400" height="200">
+                    <img src="{{asset($topics[1]['news_image'])}}" class=" rounded d-block img-fluid" alt="..." width="400" height="200">
                         <p class="text-center">{{$topics[1]['topic']}}</p>
                     </a>
                 </div>
@@ -43,17 +43,17 @@
             <div class="p-2 mt-5">
                 <div class="row">
                     <a href="/news/view_topic/{{$topics[2]['id']}}" class="col-lg-4">
-                        <img src="{{asset($topics[2]['news_image'])}}" class="rounded d-block" alt="..." width="400" height="200">
+                        <img src="{{asset($topics[2]['news_image'])}}" class="rounded d-block img-fluid" alt="..." width="400" height="200">
                         <p class="text-center">{{$topics[2]['topic']}}</p>
                     </a>
 
                     <a href="/news/view_topic/{{$topics[3]['id']}}" class="col-lg-4">
-                        <img src="{{asset($topics[3]['news_image'])}}" class="rounded d-block" alt="..." width="400" height="200">
+                        <img src="{{asset($topics[3]['news_image'])}}" class="rounded d-block img-fluid" alt="..." width="400" height="200">
                         <p class="text-center">{{$topics[3]['topic']}}</p>
                     </a>
 
                     <a href="/news/view_topic/{{$topics[4]['id']}}" class="col-lg-4">
-                        <img src="{{asset($topics[4]['news_image'])}}" class="rounded d-block" alt="..." width="400" height="200">
+                        <img src="{{asset($topics[4]['news_image'])}}" class="rounded d-block img-fluid" alt="..." width="400" height="200">
                         <p class="text-center">{{$topics[4]['topic']}}</p>
                     </a>
                 </div>
