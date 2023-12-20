@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\VacationPointsModel;
 use Illuminate\Http\Request;
 use App\Models\DepartamentsModel;
 use App\Models\EmployeeInformationModel;
+use App\Models\EmployeeVacationsModel;
 use App\Models\UserModel;
 
 class EmployeeInformationController extends Controller
@@ -39,6 +41,13 @@ class EmployeeInformationController extends Controller
             'monthly_hours' => $request->input('hours'),
         ]);
         $information->save();
+
+        $vacation = new VacationPointsModel([
+            'user_id' => $request->input('employee_id'),
+            'vacation_points' => 0
+        ]);
+
+        $vacation->save();
 
         return redirect('/employee_information');
     }

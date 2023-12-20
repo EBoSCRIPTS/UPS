@@ -16,6 +16,8 @@ use App\Http\Controllers\MailController;
 use App\Http\Controllers\EquipmentController;
 use App\Http\Controllers\PDFController;
 use App\Http\Controllers\NewsController;
+use App\Http\Controllers\VacationsController;
+
 
 /* Home view */
 Route::get('/', [NewsController::class, 'loadAllTopics']);
@@ -40,6 +42,7 @@ Route::post('/logging_in', [AuthController::class, 'auth'])->name('logging_in');
 /* Absence views */
 Route::get('/absence', [AbsenceController::class, 'userAbsences'])->name('absence');
 Route::get('/absence/review', [AbsenceController::class, 'showAbsenceReview'])->name('absence.review')->middleware('manager');
+Route::get('/absence/vacation/{absence_id}', [VacationsController::class, 'getUserVacationInfo'])->name('absence.vacation');
 Route::post('/absence/create', [AbsenceController::class, 'addAbsence'])->name('absence.create');
 Route::post('/absence/update', [AbsenceController::class, 'updateAbsence'])->name('absence.update');
 Route::post('/absence/delete', [AbsenceController::class, 'deleteAbsence'])->name('absence.delete');
@@ -70,7 +73,7 @@ Route::post('/departments/delete', [DepartmentsController::class, 'deleteDeparta
 
 /* Employee information  */
 Route::get('/employee_information', [EmployeeInformationController::class, 'getData'])->name('employee_information')->middleware('manager');
-Route::post('/employee_information/create', [EmployeeInformationController::class, 'insertEmployeeInfoarmation'])->name('employee_information.create')->middleware('manager');
+Route::post('/employee_information/create', [EmployeeInformationController::class, 'insertEmployeeInformation'])->name('employee_information.create')->middleware('manager');
 Route::post('/employee_information/delete', [EmployeeInformationController::class, 'deleteEmployee'])->name('employee_information.delete')->middleware('manager');
 
 /* Accountant views */

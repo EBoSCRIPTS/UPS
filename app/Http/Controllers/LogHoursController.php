@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\EmployeeInformationModel;
+use App\Models\VacationPointsModel;
 use Illuminate\Http\Request;
 use App\Models\LogHoursModel;
 use App\Models\LoggedHoursSubmittedModel;
+
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 
@@ -108,6 +110,7 @@ class LogHoursController extends Controller
 
                     $nightHoursCalculate = ($firstPart + $secondPart - $difference) / 3600;
                 }
+                $nightHoursCalculate = round($nightHoursCalculate);
 
                 $loggedHours = new LogHoursModel([
                     'user_id' => $request->input('user_id'),
@@ -171,21 +174,24 @@ class LogHoursController extends Controller
                 ->where('user_id', Auth::user()->id)
                 ->where('date', '<=', Carbon::now())
                 ->where('date', '>=', Carbon::now()->startOfMonth())
-                ->pluck('total_hours')
-                ->toArray();
+                ->select('total_hours', 'night_hours')
+                ->get()->toArray();
         } else if ($request->input('month') == Carbon::now()->subMonth()->monthName) {
             $logHours = LogHoursModel::query()
                 ->where('user_id', Auth::user()->id)
                 ->where('date', '<=', Carbon::now()->subMonth()->endOfMonth())
                 ->where('date', '>=', Carbon::now()->subMonth()->startOfMonth())
-                ->pluck('total_hours')
-                ->toArray();
+                ->select('total_hours', 'night_hours')
+                ->get();
         }
 
         $totalHours = [];
+        $nightHours = [];
 
         for ($i = 0; $i < sizeof($logHours); $i++) {
-            $time = $logHours[$i];
+            $nightHours[$i] = $logHours[$i]['night_hours'];
+
+            $time = $logHours[$i]['total_hours'];
             $time = explode(':', $time);
             $hoursToSeconds = $time[0] * 3600;
             $minutesToSeconds = $time[1] * 60;
@@ -194,10 +200,13 @@ class LogHoursController extends Controller
         }
 
         $totalHours = array_sum($totalHours);
+        $nightHours = array_sum($nightHours);
+
 
         $insertHours = new LoggedHoursSubmittedModel([
             'user_id' => Auth::user()->id,
             'total_hours' => $totalHours,
+            'night_hours' => $nightHours,
             'month_name' => $request->input('month'),
             'created_at' => Carbon::now(),
         ]);
@@ -243,7 +252,18 @@ class LogHoursController extends Controller
             ->where('id', $request->input('id'))
             ->first();
 
+
         if ($request->has('Approve')) {
+            $employeeVacation = VacationPointsModel::query()
+                ->where('user_id', $submittedHours->user_id)
+                ->first();
+
+            $vp = $submittedHours->total_hours * 0.0021;
+
+            $employeeVacation->update([
+                'vacation_points' => $employeeVacation->vacation_points + $vp
+            ]);
+
             $submittedHours->update([
                 'is_confirmed' => 2
             ]);

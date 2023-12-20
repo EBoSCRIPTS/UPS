@@ -15,6 +15,7 @@ class LoggedHoursSubmittedModel extends Model
     protected $fillable = [
        'user_id',
        'total_hours',
+        'night_hours',
         'month_name',
        'created_at',
         'is_confirmed'

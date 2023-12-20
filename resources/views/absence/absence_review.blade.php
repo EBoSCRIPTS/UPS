@@ -26,7 +26,12 @@
                         <div class="card-body">
                         <input type="hidden" name="id" value="{{ $absence->id }}">
                         <p>Requested by: {{ $absence->user->first_name }} {{ $absence->user->last_name }}  {{ $absence->user->email }} {{ $absence->user->phone_number }}</p>
+                        <p>From {{ $absence->start_date }} till {{ $absence->end_date }}</p>
+                            @if($absence->type == 'Vacation')
+                                <p><strong> <a href="/absence/vacation/{{ $absence->id }}">Type: {{$absence->type}} </a></strong></p>
+                            @else
                             <p><strong>Type: {{$absence->type}}</strong></p>
+                            @endif
                         <p>Comment: {{ $absence->reason }}</p>
                         <input type="submit" class="btn btn-danger" name="status" value="DENY">
                         <input type="submit" class="btn btn-success" name="status" value="APPROVE">
