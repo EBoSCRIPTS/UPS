@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\EmployeeVacationsModel;
 use Illuminate\Http\Request;
 use App\Models\AbsenceModel;
 use Illuminate\Support\Facades\Auth;
@@ -84,7 +85,20 @@ class AbsenceController extends Controller
 
     public function updateAbsence(Request $request)
     {
-        $absence = AbsenceModel::query()->find($request->input('id'));
+        $absence = AbsenceModel::query()->where('id', $request->input('id'))->first();
+
+        if ($absence->type == 'Vacation'){
+            $logVacation = new EmployeeVacationsModel([
+                'employee_id' => $absence->user_id,
+                'date_from' => $absence->start_date,
+                'date_to' => $absence->end_date,
+                'is_paid' => $request->input('is_paid') ?? 1,
+                'absence_req_id' => $absence->id,
+            ]);
+
+            $logVacation->save();
+        }
+
         $absence->update([
             'status' => $request->input('status'),
             'approver_id' => $request->input('approver_id'),

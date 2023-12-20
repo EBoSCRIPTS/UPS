@@ -29,6 +29,7 @@
                         <p>From {{ $absence->start_date }} till {{ $absence->end_date }}</p>
                             @if($absence->type == 'Vacation')
                                 <p><strong> <a href="/absence/vacation/{{ $absence->id }}">Type: {{$absence->type}} </a></strong></p>
+                                <p>Is paid: <input type="checkbox" name="is_paid" value="1"></p>
                             @else
                             <p><strong>Type: {{$absence->type}}</strong></p>
                             @endif

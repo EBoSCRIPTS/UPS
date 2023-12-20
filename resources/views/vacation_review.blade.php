@@ -33,13 +33,17 @@
                     <div class="card">
                         <div class="card-body">
                             <p class="h2 text-center">Previous Vacations</p>
-                            @if(isset($previous->date_from) && isset($previous->date_to))
-                                @foreach($previous as $prev)
-                                    <p>From {{$prev->date_from}} till {{$prev->date_to}} | Status: {{$prev->is_paid}}</p>
-                                @endforeach
-                            @endif
 
-                            {{$previous}}
+                                @foreach($previous as $prev)
+                                    <p>From {{$prev->date_from}} till {{$prev->date_to}} | Status:
+                                        @if($prev->is_paid == '1')
+                                        Paid</p>
+                                        @else
+                                            Unpaid
+                                   @endif
+                                @endforeach
+
+
                         </div>
                     </div>
                 </div>
@@ -48,9 +52,19 @@
                     <div class="col-md-6">
                         <small>One day = 0.20 VP</small>
                         <br>
-                        <label for="calculate_balance">Calculate Spending Points</label>
-                        <input type="number" id="calculate_balance" name="calculate_balance" placeholder="Workdays spent">
-                        <button type="button" onclick="calculatePoints()">Calculate</button>
+                       <div class="row">
+                        <div class="col-sm-5">
+                            <label for="calculate_balance">Calculate Spending Points:</label>
+                        </div>
+                        <div class="col-sm-4">
+                            <input type="number" id="calculate_balance" name="calculate_balance" placeholder="Workdays spent">
+                        </div>
+                        <div class="col-sm-2">
+                            <button type="button" onclick="calculatePoints()">Calculate</button>
+                        </div>
+                       </div>
+
+
                         <p id="result_points"></p>
 
                         <form action="{{route('loghours.update_balance', $employeeDetails->user_id)}}" method="POST">
@@ -58,7 +72,7 @@
                             <input type="hidden" id="employee_id" name="employee_id" value="{{$employeeDetails->user_id}}">
                             <label for="balance">Revoke points</label>
                             <input type="text" id="balance" name="balance" placeholder="revoke_points">
-                            <button type="submit" class="btn btn-danger btn-sm">Revoke</button>
+                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('By revoking you approve the vacation')">Revoke</button>
                         </form>
                     </div>
                 </div>
@@ -77,6 +91,8 @@
         const result = document.getElementById('result_points');
         result.innerText = 'To spend: ' + balance * 0.2 + ' points'
 
+        const revokeField = document.getElementById('balance');
+        revokeField.value = balance * 0.2
 
 
     }

@@ -15,7 +15,7 @@ class VacationsController extends Controller
         $getRequest = AbsenceModel::query()->where('id', $request->absence_id)->first();
         $employeeDetails = EmployeeInformationModel::query()->where('user_id', $getRequest->user_id)->first();
         $vps = VacationPointsModel::query()->where('user_id', $getRequest->user_id)->pluck('vacation_points')->first();
-        $previous = $this->getPreviousVacations($employeeDetails->id);
+        $previous = $this->getPreviousVacations($employeeDetails->user_id);
 
         return view('vacation_review', ['request' => $getRequest, 'employeeDetails' => $employeeDetails, 'previous' => $previous, 'vps' => $vps]);
     }
