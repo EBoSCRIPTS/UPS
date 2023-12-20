@@ -64,6 +64,7 @@ Route::post('/loghours/close_month', [LoghoursController::class, 'closeMonthlyRe
 
 Route::get('/loghours/review', [LogHoursController::class, 'getSubmittedHours']);
 Route::post('/loghours/review/update', [LogHoursController::class, 'submitHoursReview'])->name('loghours.review');
+Route::post('/loghours/review/update_balance/{user_id}', [VacationsController::class, 'updateBalance'])->name('loghours.update_balance');
 
 /* Departaments */
 Route::get('/departments', [DepartmentsController::class, 'showAllDepartments'])->name('showAllDepartments')->middleware('manager');

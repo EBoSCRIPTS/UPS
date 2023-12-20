@@ -20,6 +20,22 @@ class VacationsController extends Controller
         return view('vacation_review', ['request' => $getRequest, 'employeeDetails' => $employeeDetails, 'previous' => $previous, 'vps' => $vps]);
     }
 
+    public function updateBalance(Request $request)
+    {
+        $getBalance = VacationPointsModel::query()
+            ->where('user_id', $request->input('employee_id'))
+            ->first();
+        $vp = floatval($request->input('balance'));
+
+        if ($getBalance->vacation_points < $vp) {
+            return back()->with('error', 'Insufficient balance');
+        }
+
+        $getBalance->update([
+            'vacation_points' => $getBalance->vacation_points - $vp
+        ]);
+    }
+
     private function getPreviousVacations($employee_id)
     {
         $vacations = EmployeeVacationsModel::query()->where('employee_id', $employee_id)->get();

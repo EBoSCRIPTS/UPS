@@ -23,7 +23,8 @@
                             <p class="h2 text-center">Vacation review page</p>
                             {{$employeeDetails->user->first_name}} {{$employeeDetails->user->last_name}}
                             <br>
-                            VP: {{$vps}}
+                            <p>VP balance: {{$vps}}</p>
+                            <p>Date: {{$request->start_date}} ->  {{$request->end_date}}</p>
                         </div>
                     </div>
                 </div>
@@ -45,7 +46,20 @@
 
                 <div class="row">
                     <div class="col-md-6">
-                        <p>One day = 0.25VP</p>
+                        <small>One day = 0.20 VP</small>
+                        <br>
+                        <label for="calculate_balance">Calculate Spending Points</label>
+                        <input type="number" id="calculate_balance" name="calculate_balance" placeholder="Workdays spent">
+                        <button type="button" onclick="calculatePoints()">Calculate</button>
+                        <p id="result_points"></p>
+
+                        <form action="{{route('loghours.update_balance', $employeeDetails->user_id)}}" method="POST">
+                            @csrf
+                            <input type="hidden" id="employee_id" name="employee_id" value="{{$employeeDetails->user_id}}">
+                            <label for="balance">Revoke points</label>
+                            <input type="text" id="balance" name="balance" placeholder="revoke_points">
+                            <button type="submit" class="btn btn-danger btn-sm">Revoke</button>
+                        </form>
                     </div>
                 </div>
 
@@ -58,6 +72,12 @@
 
 <script>
     function calculatePoints(){
+        const balance = document.getElementById('calculate_balance').value;
+        console.log(parseInt(balance));
+        const result = document.getElementById('result_points');
+        result.innerText = 'To spend: ' + balance * 0.2 + ' points'
+
+
 
     }
 </script>
