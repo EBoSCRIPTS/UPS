@@ -79,6 +79,7 @@
                         <th scope="col">Salary</th>
                         <th scope="col">Position</th>
                         <th scope="col">Bank Details</th>
+                        <th scope="col">Monthly hours</th>
                         <th scope="col">Actions</th>
                     </tr>
                 </thead>
@@ -96,6 +97,7 @@
                                 {{$employee->bank_account_name}}
                             @endif
                         </td>
+                        <td>{{$employee->monthly_hours}}</td>
                         <td>
                         <form action="{{route('employee_information.delete')}}" method="POST">
                             @csrf

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\LoggedHoursSubmittedModel;
 use App\Models\LogHoursModel;
 use Illuminate\Http\Request;
 use App\Models\DepartamentsModel;
@@ -10,6 +11,7 @@ use App\Models\EmployeeInformationModel;
 use App\Models\AccountantDepartmentSettingsModel;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
+use App\Models\AccountantFulfilledPayslipsModel;
 
 
 class AccountantController extends Controller
@@ -25,6 +27,7 @@ class AccountantController extends Controller
         return view('accountant.accountant_view', ['departments' => $departments, 'departmentCounts' => $departmentCounts]);
     }
 
+    //returns information to accoutant department view
     public function showDept(Request $request)
     {
         $showDept = DepartamentsModel::query()->find($request->id);
@@ -90,9 +93,8 @@ class AccountantController extends Controller
     public function getDepartmentSettings(Request $request)
     {
         $settings = AccountantDepartmentSettingsModel::query()->where('department_id', $request->department_id)->get();
-        $department = $request->department_id;
 
-        return view('accountant.accountant_department_settings', ['settings' => $settings, 'department' => $department] );
+        return view('accountant.accountant_department_settings', ['settings' => $settings, 'department' => $request->department_id] );
     }
 
     public function addTax(Request $request)
@@ -101,6 +103,7 @@ class AccountantController extends Controller
             'department_id' => $request->department_id,
             'tax_name' => $request->input('tax_name'),
             'tax_rate' => $request->input('tax_rate'),
+            'tax_salary_from' => $request->input('tax_salary_from'),
         ]);
 
         $newTax->save();
@@ -108,11 +111,126 @@ class AccountantController extends Controller
         return back()->with('success', 'Tax added!');
     }
 
+    public function deleteTax(Request $request)
+    {
+        $tax = AccountantDepartmentSettingsModel::query()->find($request->tax_id);
+        $tax->delete();
+
+        return back()->with('success', 'Deleted successfully');
+    }
+
+
     public function getEmployeePayslipDetails(Request $request)
     {
-        $getTaxes = AccountantDepartmentSettingsModel::query()->where('department_id', $request->department_id)->get();
         $employee = EmployeeInformationModel::query()->where('user_id', $request->user_id)->first();
+        $getHours = LoggedHoursSubmittedModel::query()
+            ->where('user_id', $request->user_id)
+            ->where('month_name', $request->month)
+            ->first();
 
-        return view('accountant.accountant_payslip', ['taxes' => $getTaxes, 'employee' => $employee]);
+        if ($employee->hour_pay != null){
+            $overtimeHours = 0;
+            if($employee->monthly_hours < $getHours->total_hours)
+            {
+                $overtimeHours = $getHours->total_hours - $employee->monthly_hours;
+            }
+
+            if (AccountantFulfilledPayslipsModel::query()->where('loghours_submitted_id', $getHours->id)->first() != null)
+            {
+                $isFullfilled = true;
+            }
+            else{
+                $isFullfilled = false;
+            }
+
+            $baseWithoutNights = $getHours->total_hours - $getHours->night_hours - $overtimeHours;
+            $baseSalary = $employee->hour_pay * $baseWithoutNights;
+            $nightPay = ($employee->hour_pay * $getHours->night_hours) * 1.5;
+
+            $getTaxes = AccountantDepartmentSettingsModel::query()->where('department_id', $request->department_id)
+                ->where('tax_salary_from', '<=', $baseSalary + $nightPay + $overtimeHours)
+                ->orderBy('tax_salary_from', 'desc')
+                ->get()
+                ->toArray();
+
+            $uniqueTaxes = [];
+
+            $employeeTaxes = array_filter($getTaxes, function ($item) use (&$uniqueTaxes) {
+                $taxName = $item['tax_name'];
+                if (!in_array($taxName, $uniqueTaxes)) {
+                    $uniqueTaxes[] = $taxName;
+                    return true;
+                }
+                return false;
+            });
+
+            $totalTaxPrec = 0;
+            foreach($employeeTaxes as $tax)
+            {
+                $totalTaxPrec += $tax['tax_rate'];
+            }
+            $totalTaxPrec = $totalTaxPrec / 100;
+
+            return view('accountant.accountant_payslip', ['taxes' => $employeeTaxes, 'employee' => $employee,
+                'hours' => $getHours,
+                'month' => $request->month,
+                'baseSalary' => $baseSalary,
+                'overtimeHours' => $overtimeHours,
+                'overtimeSalary' => $overtimeHours * $employee->hour_pay * 1.5,
+                'nightSalary' => $nightPay,
+                'totalTaxPrec' => $totalTaxPrec,
+                'isFullfilled' => $isFullfilled]);
+        }
+        else if ($employee->salary != null) {
+            $getTaxes = AccountantDepartmentSettingsModel::query()->where('department_id', $request->department_id)
+                ->where('tax_salary_from', '<=', $employee->salary)
+                ->orderBy('tax_salary_from', 'desc')
+                ->get()
+                ->toArray();
+
+            $uniqueTaxes = [];
+
+            $employeeTaxes = array_filter($getTaxes, function ($item) use (&$uniqueTaxes) {
+                $taxName = $item['tax_name'];
+                if (!in_array($taxName, $uniqueTaxes)) {
+                    $uniqueTaxes[] = $taxName;
+                    return true;
+                }
+                return false;
+            });
+
+            $totalTaxPrec = 0;
+            foreach ($employeeTaxes as $tax) {
+                $totalTaxPrec += $tax['tax_rate'];
+            }
+            $totalTaxPrec = $totalTaxPrec / 100;
+
+
+            return view('accountant.accountant_payslip', ['taxes' => $employeeTaxes, 'employee' => $employee,
+                'hours' => $getHours,
+                'month' => $request->month,
+                'baseSalary' => $employee->salary,
+                'nightSalary' => 0,
+                'overtimeHours' => 0,
+                'overtimeSalary' => 0,
+                'totalTaxPrec' => $totalTaxPrec]);
+        }
+    }
+
+    public function employeePayslipFulfill(Request $request)
+    {
+        $fulfill = new AccountantFulfilledPayslipsModel([
+            'employee_id' => $request->employee_id,
+            'month' => $request->month,
+            'department_id' => $request->department_id,
+            'loghours_submitted_id' => $request->hours_id
+        ]);
+
+        if (AccountantFulfilledPayslipsModel::query()->where('loghours_submitted_id', $request->hours_id)->first()) {
+            return back()->with('error', 'Already fulfilled');
+        }
+        $fulfill->save();
+
+        return back()->with('success', 'Fulfilled successfully');
     }
 }

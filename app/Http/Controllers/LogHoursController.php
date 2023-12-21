@@ -112,6 +112,10 @@ class LogHoursController extends Controller
                 }
                 $nightHoursCalculate = round($nightHoursCalculate);
 
+                if ($nightHoursCalculate < 0) {
+                    $nightHoursCalculate = 0;
+                }
+
                 $loggedHours = new LogHoursModel([
                     'user_id' => $request->input('user_id'),
                     'start_time' => $request->input($date . '_start_time'),

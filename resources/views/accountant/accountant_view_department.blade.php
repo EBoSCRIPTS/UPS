@@ -63,7 +63,9 @@
                             @if($status[$employee->user_id] != null)
                                 <tr>
                                     <td>{{$employee->user->first_name}} {{$employee->user->last_name}}</td>
-                                    <td><a href="/accountant/payslip/{{$employee->user_id}}" class="btn btn-primary btn-sm">Generate</a></td>
+                                    <td>
+                                        <a href="/accountant/payslip/{{$department->id}}/{{$employee->user_id}}/{{$month}}" class="btn btn-primary btn-sm">Generate</a>
+                                    </td>
                                 </tr>
                             @endif
                         @endforeach

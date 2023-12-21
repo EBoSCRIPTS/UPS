@@ -5,16 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class AccountantDepartmentSettingsModel extends Model
+class AccountantFulfilledPayslipsModel extends Model
 {
     use HasFactory;
 
-    protected $table = 'accountant_department_settings';
+    protected $table = 'accountant_fulfilled_payslips';
 
     protected $fillable = [
+        'employee_id',
         'department_id',
-        'tax_name',
-        'tax_rate',
-        'tax_salary_from'
+        'month',
+        'loghours_submitted_id',
     ];
 }

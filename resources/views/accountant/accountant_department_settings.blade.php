@@ -31,6 +31,9 @@
                     <label for="tax_rate" class="form-label">Tax rate</label>
                     <input type="text" class="form-control" id="tax_rate" name="tax_rate">
 
+                    <label for="tax_salary_from" class="form-label">Tax from salary that starts from: </label>
+                    <input type="text" class="form-control" id="tax_salary_from" name="tax_salary_from">
+
                     <button type="submit" class="btn btn-primary mt-3 float-end">Submit</button>
                 </form>
             </div>
@@ -41,6 +44,8 @@
                         <tr>
                             <th>Tax Name</th>
                             <th>Tax Rate</th>
+                            <th>Starts from</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -48,6 +53,8 @@
                         <tr>
                             <td>{{$setting->tax_name}}</td>
                             <td>{{$setting->tax_rate}}%</td>
+                            <td>{{$setting->tax_salary_from}}</td>
+                            <td><a href="/accountant/settings/{{$department}}/delete_tax/{{$setting->id}}">Delete</a></td>
                         </tr>
                         @endforeach
                     </tbody>
