@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 17, 2023 at 01:31 PM
+-- Generation Time: Dec 21, 2023 at 09:44 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -20,6 +20,38 @@ SET time_zone = "+00:00";
 --
 -- Database: `ups`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `accountant_department_settings`
+--
+
+CREATE TABLE `accountant_department_settings` (
+  `id` int(11) NOT NULL,
+  `department_id` int(11) NOT NULL COMMENT 'refers to departments id ',
+  `tax_name` varchar(500) NOT NULL,
+  `tax_rate` decimal(10,2) NOT NULL,
+  `tax_salary_from` decimal(10,2) NOT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime DEFAULT NULL ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `accountant_fulfilled_payslips`
+--
+
+CREATE TABLE `accountant_fulfilled_payslips` (
+  `id` int(11) NOT NULL,
+  `employee_Id` int(11) NOT NULL,
+  `department_id` int(11) NOT NULL,
+  `loghours_submitted_id` int(11) NOT NULL,
+  `month` varchar(100) NOT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -49,8 +81,28 @@ CREATE TABLE `employee_information` (
   `salary` decimal(10,2) DEFAULT NULL,
   `monthly_hours` int(11) NOT NULL,
   `position` text NOT NULL,
+  `bank_name` varchar(100) DEFAULT NULL,
+  `bank_account_name` varchar(100) DEFAULT NULL,
+  `bank_account` varchar(100) DEFAULT NULL,
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
   `updated_at` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `employee_vacations`
+--
+
+CREATE TABLE `employee_vacations` (
+  `id` int(11) NOT NULL,
+  `employee_Id` int(11) NOT NULL,
+  `date_from` date NOT NULL,
+  `date_to` date NOT NULL,
+  `is_paid` enum('0','1','','') NOT NULL,
+  `absence_req_id` int(11) NOT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -104,10 +156,27 @@ CREATE TABLE `logged_hours` (
   `user_id` int(11) NOT NULL COMMENT 'goes to user table',
   `start_time` time NOT NULL,
   `end_time` time NOT NULL,
+  `night_hours` text NOT NULL,
   `total_hours` text NOT NULL,
   `date` date NOT NULL,
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
   `updated_at` datetime DEFAULT NULL ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `logged_hours_submitted`
+--
+
+CREATE TABLE `logged_hours_submitted` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL COMMENT 'refers to user table id',
+  `total_hours` int(11) NOT NULL,
+  `night_hours` int(11) DEFAULT NULL,
+  `month_name` varchar(30) NOT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `is_confirmed` enum('0','1','','') NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -134,8 +203,10 @@ CREATE TABLE `news_comments` (
 CREATE TABLE `news_comments_rating` (
   `id` int(11) NOT NULL,
   `comment_id` int(11) NOT NULL COMMENT 'relates to news comments',
-  `agree` int(11) NOT NULL COMMENT 'relates to news comments',
-  `disagree` int(11) NOT NULL COMMENT 'relates to news comments',
+  `news_topic_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `agree` int(11) DEFAULT NULL COMMENT 'relates to news comments',
+  `disagree` int(11) DEFAULT NULL COMMENT 'relates to news comments',
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
   `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -152,6 +223,25 @@ CREATE TABLE `news_topic` (
   `text` text NOT NULL,
   `about` text NOT NULL,
   `news_image` varchar(500) DEFAULT NULL COMMENT 'uploaded image location',
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `performance_reports`
+--
+
+CREATE TABLE `performance_reports` (
+  `id` int(11) NOT NULL,
+  `employee_Id` int(11) NOT NULL,
+  `employee_name` varchar(100) NOT NULL,
+  `project_id` int(11) NOT NULL,
+  `rating_text` text NOT NULL,
+  `rating` tinyint(4) NOT NULL,
+  `year` int(11) NOT NULL,
+  `month` varchar(100) NOT NULL,
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
   `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -211,7 +301,8 @@ CREATE TABLE `tasks_participants` (
 CREATE TABLE `tasks_project` (
   `id` int(11) NOT NULL,
   `name` varchar(100) NOT NULL,
-  `department_id` int(11) NOT NULL
+  `department_id` int(11) NOT NULL,
+  `leader_employee_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -241,7 +332,8 @@ CREATE TABLE `tasks_task` (
   `status_key` int(11) NOT NULL COMMENT 'key for retrieving values from statuses names json',
   `priority` varchar(50) NOT NULL,
   `task_points` decimal(4,1) DEFAULT NULL,
-  `is_draft` tinyint(1) NOT NULL DEFAULT 0,
+  `label` varchar(50) DEFAULT NULL,
+  `is_draft` tinyint(1) DEFAULT 0,
   `project_id` int(11) NOT NULL,
   `is_completed` tinyint(1) NOT NULL DEFAULT 0,
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
@@ -283,9 +375,33 @@ CREATE TABLE `users` (
   `profile_picture` text NOT NULL DEFAULT 'uploads/default_pfp.png'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `vacation_points`
+--
+
+CREATE TABLE `vacation_points` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `vacation_points` decimal(10,6) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `accountant_department_settings`
+--
+ALTER TABLE `accountant_department_settings`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `accountant_fulfilled_payslips`
+--
+ALTER TABLE `accountant_fulfilled_payslips`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `departaments`
@@ -299,6 +415,12 @@ ALTER TABLE `departaments`
 ALTER TABLE `employee_information`
   ADD PRIMARY KEY (`id`),
   ADD KEY `fk_dept_id` (`department_id`);
+
+--
+-- Indexes for table `employee_vacations`
+--
+ALTER TABLE `employee_vacations`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `equipment_assignment`
@@ -326,6 +448,12 @@ ALTER TABLE `logged_hours`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `logged_hours_submitted`
+--
+ALTER TABLE `logged_hours_submitted`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `news_comments`
 --
 ALTER TABLE `news_comments`
@@ -342,6 +470,12 @@ ALTER TABLE `news_comments_rating`
 -- Indexes for table `news_topic`
 --
 ALTER TABLE `news_topic`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `performance_reports`
+--
+ALTER TABLE `performance_reports`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -396,8 +530,26 @@ ALTER TABLE `users`
   ADD UNIQUE KEY `phone_number` (`phone_number`);
 
 --
+-- Indexes for table `vacation_points`
+--
+ALTER TABLE `vacation_points`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
+
+--
+-- AUTO_INCREMENT for table `accountant_department_settings`
+--
+ALTER TABLE `accountant_department_settings`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `accountant_fulfilled_payslips`
+--
+ALTER TABLE `accountant_fulfilled_payslips`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `departaments`
@@ -409,6 +561,12 @@ ALTER TABLE `departaments`
 -- AUTO_INCREMENT for table `employee_information`
 --
 ALTER TABLE `employee_information`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `employee_vacations`
+--
+ALTER TABLE `employee_vacations`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
@@ -436,6 +594,12 @@ ALTER TABLE `logged_hours`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `logged_hours_submitted`
+--
+ALTER TABLE `logged_hours_submitted`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `news_comments`
 --
 ALTER TABLE `news_comments`
@@ -451,6 +615,12 @@ ALTER TABLE `news_comments_rating`
 -- AUTO_INCREMENT for table `news_topic`
 --
 ALTER TABLE `news_topic`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `performance_reports`
+--
+ALTER TABLE `performance_reports`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
@@ -499,6 +669,12 @@ ALTER TABLE `tasks_task_comments`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `vacation_points`
+--
+ALTER TABLE `vacation_points`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
