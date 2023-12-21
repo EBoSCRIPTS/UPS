@@ -32,16 +32,18 @@
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
-                                        <input type="hidden" name="date" value="{{Carbon\Carbon::now()}}">
+                                        <form action="{{ route('tasks.performance_report_create', ['project_id' => $projectId]) }}" method="post">
+                                            @Csrf
+                                            <input type="hidden" name="date" value="{{Carbon\Carbon::now()}}">
 
-                                        <textarea class="form-control" name="performance_report" id="performance_report" col="30" rows="10"></textarea>
-                                        <input class="form-select mt-3" type="number" name="performance_rating" id="performance_rating" min="1" max="100" placeholder="1-100">
+                                            <textarea class="form-control" name="performance_report" id="performance_report" col="30" rows="10"></textarea>
+                                            <input class="form-select mt-3" type="number" name="performance_rating" id="performance_rating" min="1" max="100" placeholder="1-100">
 
-                                        <input type="hidden" name="employee_id" id="employee_id">
+                                            <input type="hidden" name="employee_id" id="employee_id" value="{{$employee->id}}">
+                                            <button type="submit" class="btn btn-primary float-end mt-3">Save changes</button>
+                                        </form>
                                     </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-primary">Save changes</button>
-                                    </div>
+
                                 </div>
                             </div>
                         </div>
@@ -52,6 +54,8 @@
                     @endforeach
                 </tbody>
             </table>
+
+            <a href="/tasks/projects/{{$projectId}}/performance_report/generate_xlsx" class="btn btn-success">Generate XLSX</a>
         </div>
     </div>
 </div>
