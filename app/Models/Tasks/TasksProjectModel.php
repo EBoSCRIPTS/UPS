@@ -16,6 +16,7 @@ class TasksProjectModel extends Model
     protected $fillable = [
       'name',
       'department_id',
+        'leader_employee_id',
     ];
 
     public $timestamps = false;

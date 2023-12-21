@@ -38,7 +38,7 @@
             @foreach($projectUsers as $projectUser)
                 <form action="{{route('tasks.project_remove_user')}}" method="POST">
                     @csrf
-                    <li class="list-group-item">{{$projectUser->employee->first_name}} {{$projectUser->employee->last_name}}
+                    <li class="list-group-item">{{$projectUser->employee->user->first_name}} {{$projectUser->employee->user->last_name}}
                     <button type="submit" class="btn btn-danger btn-sm float-end">Remove</button>
                         <input type="hidden" name="project_id" value="{{$project->id}}">
                         <input type="hidden" name="user_id" value="{{$projectUser->employee_id}}">

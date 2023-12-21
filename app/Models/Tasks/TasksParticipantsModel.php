@@ -2,6 +2,7 @@
 
 namespace App\Models\Tasks;
 
+use App\Models\EmployeeInformationModel;
 use App\Models\UserModel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -22,7 +23,7 @@ class TasksParticipantsModel extends Model
 
     public function employee(): BelongsTo
     {
-        return $this->belongsTo(UserModel::class, 'employee_id', 'id');
+        return $this->belongsTo(EmployeeInformationModel::class, 'employee_id', 'id');
     }
 
     public function projectName(): belongsTo

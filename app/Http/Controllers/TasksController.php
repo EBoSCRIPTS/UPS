@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\EmployeeInformationModel;
 use App\Models\Tasks\TasksParticipantsModel;
 use App\Models\Tasks\TasksProjectModel;
 use App\Models\Tasks\TasksStatusModel;
@@ -14,12 +15,21 @@ use Carbon\Carbon;
 
 class TasksController extends Controller
 {
+
+    public function createNewProjectPage() {
+        $users = UserModel::query()->select('id', 'first_name', 'last_name')->get();
+        $employees = EmployeeInformationModel::query()->select('id', 'user_id')->get();
+
+        return view('tasks.tasks_create_project', ['users' => $users, 'employees' => $employees]);
+    }
     public function createNewProject(Request $request)
     {
         $newProject = new TasksProjectModel([
             'name' => $request->input('project_name'),
             'department_id' => $request->input('department_id'),
+            'leader_employee_id' => $request->input('project_manager_id'),
         ]);
+
         $newProject->save();
 
         $statuses= [];
@@ -31,7 +41,17 @@ class TasksController extends Controller
             'project_id' => $newProject->id,
             'statuses' => json_encode($statuses),
         ]);
+
         $projectStatusFields->save();
+
+        foreach($request->input('project_members') as $pm){
+            $projectMember = new TasksParticipantsModel([
+                'project_id' => $newProject->id,
+                'employee_id' => $pm,
+            ]);
+
+            $projectMember->save();
+        }
 
         return redirect('/tasks/create_new_project');
     }

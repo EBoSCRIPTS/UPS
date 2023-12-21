@@ -14,82 +14,63 @@
 <div class="row">
     @include('components.sidebar')
     <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-3">
-        <p class="h2">Create a project</p>
-        <form action="{{route('create_new_project')}}" method="POST">
-            @csrf
-            <label for="project_name">Project name:</label>
-            <input class="form-control" type="text" name="project_name" placeholder="Project name.." required>
+            <div class="container" style="width: 80%">
+                <p class="h2">Create a project</p>
+                <form action="{{route('create_new_project')}}" method="POST">
+                    @csrf
+                    <label for="project_name">Project name:</label>
+                    <input class="form-control" type="text" name="project_name" placeholder="Project name.." required>
 
-            <select id="department_id" name="department_id" class="form-control mt-1">
-                <option disabled selected>Select a department</option>
-            </select>
+                    <select id="department_id" name="department_id" class="form-control mt-1">
+                        <option disabled selected>Select a department</option>
+                    </select>
 
-            <button type="button" class="btn btn-primary mt-1" data-bs-toggle="collapse" data-bs-target="#projectSettings" aria-expanded="false" aria-controls="projectSettings">Create a new project</button>
-        <hr class="hr"/>
+                    <button type="button" class="btn btn-primary mt-1" data-bs-toggle="collapse" data-bs-target="#projectSettings" aria-expanded="false" aria-controls="projectSettings">Create a new project</button>
+                <hr class="hr"/>
 
-            <div class="collapse" id="projectSettings">
-        <div class="project-settings">
-            <p class="h3">Project settings</p>
-                <div class="project-status-fields">
-                <p class="h4">Project status fields: </p>
+                    <div class="collapse" id="projectSettings">
+                <div class="project-settings">
                     <div class="row">
-                    <small>The status order must be from top-to-bottom</small>
+                        <div class="col-md-6">
+                            <p class="h3">Project settings</p>
+                                <div class="project-status-fields">
+                                <p class="h4">Project status fields: </p>
+                                    <div class="row">
+                                    <small>The status order must be from top-to-bottom</small>
+                                    </div>
+                                     <button type="button" class="btn btn-primary mt-2" onclick="addField()">Add field</button>
+                                </div>
+                        </div>
+                        <div class="col-md-6">
+                            <p class="h3">Project manager</p>
+                            <select id="project_manager_id" name="project_manager_id" class="form-control mt-1" size="5">
+                                <option disabled selected>Select a project manager</option>
+                                @foreach($users as $user)
+                                    <option value="{{$user->id}}">{{$user->first_name}} {{$user->last_name}}</option>
+                                @endforeach
+                            </select>
+                            <button type="submit" class="btn btn-primary mt-5 float-end" onclick="return confirm('Are you sure?')">Submit</button>
+                        </div>
                     </div>
-                     <button type="button" class="btn btn-primary mt-2" onclick="addField()">Add field</button>
+                    <hr>
+                    <div class="row">
+                        <p class="h4">Add employees</p>
+                        <div class="col-md-6">
+                            <select id="project_members" name="project_members[]" class="form-control mt-1" style="max-width: 300px" multiple size="10">
+                                @foreach($employees as $employee)
+                                    <option value="{{$employee->id}}">{{$employee->id}} {{$employee->user->first_name}} {{$employee->user->last_name}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
                 </div>
-            <button type="submit" class="btn btn-primary mt-2" onclick="return confirm('Are you sure?')">Submit</button>
-        </div>
-            </div>
+                    </div>
 
-        </form>
+                </form>
+            </div>
     </div>
 
 </div>
 </body>
 
-<script>
-    async function getDepartments() {
-        const response = await fetch('/api/get_all_departments');
-        const selectField = document.getElementById('department_id');
-        let data = await response.json();
-
-        console.log(data);
-
-        for (let i = 0; i < data.length; i++) {
-            let departmentOption = document.createElement('option');
-            departmentOption.value = data[i].id;
-            departmentOption.text = data[i].name;
-            selectField.append(departmentOption);
-        }
-    }
-
-    window.onload = function() {
-        getDepartments();
-        sessionStorage.clear()
-        sessionStorage.setItem('count', 0);
-    }
-
-    function addField()
-    {
-        let count = sessionStorage.getItem('count');
-        count = Number(count);
-        count = count + 1;
-        sessionStorage.setItem('count', count);
-        const projectStatusFields = document.getElementsByClassName('project-status-fields');
-        const inputField = document.createElement('input');
-        const counter = document.createElement('input');
-        inputField.type = 'text';
-        inputField.name = 'project_status_field' + count;
-        inputField.className = 'form-control mt-2';
-        inputField.placeholder = 'Status field name...';
-
-        projectStatusFields[0].appendChild(inputField);
-
-        counter.type = 'hidden';
-        counter.name = 'counter';
-        counter.value = count;
-        projectStatusFields[0].appendChild(counter);
-
-    }
-
-</script>
+<script src="{{asset('js/createproject.js')}}"></script>
