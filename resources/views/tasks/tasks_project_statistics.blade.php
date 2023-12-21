@@ -44,24 +44,49 @@
             <small>Drafted tasks don't count towards the statistics</small>
 
             <hr>
-            <button type="button" class="btn btn-success">Download XLSX</button>
-            <hr class="hr"/>
 
-            <p class="h4">Generate statistics for a different time period</p>
             <div class="row mb-3">
+                <div class="col-md-6">
+                    <p class="h4">Generate statistics for a different time period</p>
                 <form action="{{route('tasks.projects.statistics.generate_for_period',  $project_id)}}" method="POST">
                         @csrf
-                    <div class="col-md-4">
-                        <input type="date" class="form-control" name="startDate" required>
-                    </div>
-                    <div class="col-md-4">
-                        <input type="date" class="form-control" name="endDate" required>
-                    </div>
-                    <div class="col-md-4">
-                        <input type="hidden" name="project_id" value="{{$project_id}}">
-                        <button type="submit" class="btn btn-primary">Generate for the specific period</button>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <label for="startDate">Start Date:</label>
+                            <input style="width: 200px" type="date" class="form-control" name="startDate" required>
+                        </div>
+                        <div class="col-sm-4">
+                            <label for="startDate">End Date:</label>
+                            <input style="width: 200px" type="date" class="form-control" name="endDate" required>
+                        </div>
+                        <div class="col-sm-4">
+                            <input type="hidden" name="project_id" value="{{$project_id}}">
+
+                            <button type="submit" class="btn btn-primary mt-4">Generate for period</button>
+                        </div>
                     </div>
                 </form>
+                </div>
+                <div class="col-md-6">
+                    <p class="h4">Generate excel</p>
+                    <form action="{{route('tasks.project.generate_xlsx',  $project_id)}}" method="POST">
+                        @csrf
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <label for="startDate">Start Date:</label>
+                                <input type="date" class="form-control" id="startDate" name="startDate" required>
+                            </div>
+                            <div class="col-sm-4">
+                                <label for="endDate">End Date:</label>
+                                <input type="date" class="form-control" id="endDate" name="endDate" required>
+                            </div>
+                            <div class="col-sm-4">
+                                <input type="hidden" name="project_id" value="{{$project_id}}">
+                                <button type="submit" class="btn btn-success mt-4">Generate XLSX</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
 

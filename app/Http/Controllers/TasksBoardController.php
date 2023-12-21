@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\ExcelExport\TaskExport;
 use App\Models\Tasks\TasksParticipantsModel;
 use App\Models\Tasks\TasksProjectModel;
 use App\Models\Tasks\TasksStatusModel;
@@ -9,6 +10,8 @@ use App\Models\Tasks\TasksTaskModel;
 use App\Models\UserModel;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Excel;
+use Maatwebsite\Excel\Facades\Excel as MaatwebsiteExcel;
 
 class TasksBoardController extends Controller
 {
@@ -180,5 +183,10 @@ class TasksBoardController extends Controller
                 'tasksCompleted' => $tasksCompleted,
                 'tasksDrafted' => $tasksDrafted
             ]);
+    }
+
+    public function generateExcelForProjectStatistics(Request $request)
+    {
+        return MaatwebsiteExcel::download(new TaskExport($request->input('startDate'), $request->input('endDate'), $request->input('project_id')), 'project_statistics.xlsx',\Maatwebsite\Excel\Excel::XLSX);
     }
 }

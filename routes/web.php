@@ -94,6 +94,7 @@ Route::get('/tasks/projects/{project_id}', [TasksController::class, 'loadProject
 Route::get('/tasks/projects/{project_id}/all_tasks', [TasksBoardController::class, 'loadAllProjectTasks'])->name('tasks.projects.all_tasks');
 Route::get('/tasks/projects/{project_id}/statistics', [TasksBoardController::class, 'getProjectStatistics'])->name('tasks.projects.statistics');
 Route::post('/tasks/projects/{project_id}/statistics/generate_period', [TasksBoardController::class, 'getStatisticsForPeriod'])->name('tasks.projects.statistics.generate_for_period');
+Route::post('/tasks/projects/{project_id}/statistics/generate_excel', [TasksBoardController::class, 'generateExcelForProjectStatistics'])->name('tasks.project.generate_xlsx');
 
 Route::get('/tasks/create_new_project', function(){
    return view('tasks.tasks_create_project');
