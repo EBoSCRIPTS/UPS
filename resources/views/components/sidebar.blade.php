@@ -46,7 +46,7 @@
                                 @if(isset(Auth::user()->role_id) && Auth::user()->role_id == 1 || Auth::user()->role_id == 3)
                                 <li>
                                     <a href="/tasks/create_new_project" class="nav-link px-2"> <span
-                                                class="d-none d-sm-inline" style="color: white">• Create</span> </a>
+                                                class="d-none d-sm-inline" style="color: white">• Create new project</span> </a>
                                 </li>
                                 @endif
                             </ul>
