@@ -163,7 +163,7 @@ class TasksController extends Controller
         $projectTasks = TasksTaskModel::query()->where('project_id', $request->project_id)->where('is_completed', 0)->where('is_draft', 0)->get();
         $myTasks = TasksTaskModel::query()->where('assigned_to', $request->user()->id)->get();
         $projectStatus = TasksStatusModel::query()->where('project_id', $request->project_id)->select('statuses')->get()->toArray();
-        $projectName = TasksProjectModel::query()->where('id', $request->project_id)->select('id','name')->first();
+        $projectName = TasksProjectModel::query()->where('id', $request->project_id)->select('id','name', 'leader_employee_id')->first();
 
         $projectStatus = json_decode($projectStatus['0']['statuses']);
 
@@ -174,7 +174,11 @@ class TasksController extends Controller
             $currentStatus = null;
         }
 
-        return view('tasks.tasks_project_board', ['tasks' => $projectTasks, 'my_tasks' => $myTasks, 'statuses' => $projectStatus, 'project_name' => $projectName, 'currentStatus' => $currentStatus]);
+        return view('tasks.tasks_project_board', ['tasks' => $projectTasks,
+            'my_tasks' => $myTasks,
+            'statuses' => $projectStatus,
+            'project_name' => $projectName,
+            'currentStatus' => $currentStatus]);
     }
 
     public function updateStatus(Request $request)

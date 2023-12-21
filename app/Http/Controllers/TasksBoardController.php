@@ -9,6 +9,7 @@ use App\Models\Tasks\TasksProjectModel;
 use App\Models\Tasks\TasksStatusModel;
 use App\Models\Tasks\TasksTaskModel;
 use App\Models\UserModel;
+Use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Excel;
@@ -135,6 +136,10 @@ class TasksBoardController extends Controller
 
     public function getProjectSettings(Request $request)
     {
+        if ($this->checkIfHasPerms($request->project_id) == false) {
+            return redirect('/');
+        }
+
         $project = TasksProjectModel::query()->where('id', $request->project_id)->first();
         $projectStatuses = TasksStatusModel::query()->where('project_id', $request->project_id)->select('statuses')->get()->toArray();
         $projectUsers = TasksParticipantsModel::query()->where('project_id', $request->project_id)->select('employee_id')->get();
@@ -186,8 +191,34 @@ class TasksBoardController extends Controller
             ]);
     }
 
+    public function updateProjectLeader(Request $request)
+    {
+        $project = TasksProjectModel::query()->where('id', $request->project_id)->first();
+        $project->update([
+            'leader_employee_id' => $request->input('project_leader')
+        ]);
+
+        return redirect('/tasks/project_settings/');
+    }
+
+
     public function generateExcelForProjectStatistics(Request $request)
     {
         return MaatwebsiteExcel::download(new TaskExport($request->input('startDate'), $request->input('endDate'), $request->input('project_id')), 'project_statistics.xlsx',\Maatwebsite\Excel\Excel::XLSX);
+    }
+
+    //use this to check if user is either manager/admin project leader
+    private function checkIfHasPerms($project_id): bool
+    {
+        if (Auth::user()->role_id == 1 || Auth::user()->role_id == 3) {
+            return true;
+        }
+
+        if (TasksProjectModel::query()->where('id', $project_id)->pluck('leader_employee_id')->first() == Auth::user()->id) {
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 }

@@ -50,6 +50,19 @@
                 Add participants
             </button>
 
+            <hr>
+            <p class="h4">Change project leader</p>
+            <form action="{{route('tasks.change_project_leader', $project->id)}}" method="POST">
+                @csrf
+                <select class="form-select" name="project_leader">
+                    <option disabled selected></option>
+                    @foreach($employees as $employee)
+                        <option value="{{$employee->user_id}}">{{$employee->user->first_name}} {{$employee->user->last_name}}</option>
+                    @endforeach
+                </select>
+                <button type="submit" class="btn btn-primary mt-2">Change</button>
+            </form>
+
             <div class="modal fade" id="addParticipants" tabindex="-1" aria-labelledby="addParticipantsLabel" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
