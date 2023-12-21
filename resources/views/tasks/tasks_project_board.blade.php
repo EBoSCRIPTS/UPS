@@ -35,7 +35,7 @@
             @if(Auth::user()->id == $project_name->leader_employee_id || Auth::user()->role_id == 1 || Auth::user()->role_id == 3)
             <a href="/tasks/project_settings/{{$project_name->id}}">Settings</a>
                 |
-                <a href="/tasks/project_settings/{{$project_name->id}}/performance_report">Performance Report</a>
+                <a href="/tasks/projects/{{$project_name->id}}/performance_report">Performance Report</a>
             @endif
         </p>
         <table class="table table-striped">

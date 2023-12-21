@@ -16,6 +16,7 @@ use App\Http\Controllers\MailController;
 use App\Http\Controllers\EquipmentController;
 use App\Http\Controllers\PDFController;
 use App\Http\Controllers\NewsController;
+use App\Http\Controllers\ProjectPerformanceController;
 use App\Http\Controllers\VacationsController;
 
 
@@ -105,6 +106,8 @@ Route::post('/tasks/project_settings/add_user', [TasksBoardController::class, 'a
 Route::post('/tasks/project_settings/remove_user', [TasksBoardController::class, 'removeUserFromProject'])->name('tasks.project_remove_user');
 Route::post('/tasks/project_settings/project_edit/{project_id}', [TasksBoardController::class, 'editProject'])->name('tasks.project_edit');
 Route::post('/tasks/project_settings/update_leader/{project_id}', [TasksBoardController::class, 'updateProjectLeader'])->name('tasks.change_project_leader');
+
+Route::get('/tasks/projects/{project_id}/performance_report', [ProjectPerformanceController::class, 'loadProjectPerformance']);
 
 Route::post('/tasks/create_new_project/insert', [TasksController::class, 'createNewProject'])->name('create_new_project')->middleware('manager');
 
