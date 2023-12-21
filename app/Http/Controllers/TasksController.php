@@ -69,9 +69,12 @@ class TasksController extends Controller
 
     public function projectsApi()
     {
-        $projects = TasksParticipantsModel::where('employee_id', 7)
+        $getEmployeeId = EmployeeInformationModel::query()->where('user_id', Auth::user()->id)->pluck('id')->first();
+        $projects = TasksParticipantsModel::query()
+            ->where('employee_id', $getEmployeeId )
             ->join('tasks_project', 'tasks_project.id', '=', 'tasks_participants.project_id')
             ->get();
+
         return response()->json($projects);
     }
 
