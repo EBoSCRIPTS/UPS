@@ -15,6 +15,7 @@ use Carbon\Carbon;
 
 class TasksController extends Controller
 {
+    //gotta change name to load project page
 
     public function createNewProjectPage() {
         $users = UserModel::query()->select('id', 'first_name', 'last_name')->get();
@@ -55,6 +56,9 @@ class TasksController extends Controller
 
         return redirect('/tasks/create_new_project');
     }
+
+
+    //this method loads in all projects in project_settings view
 
     public function loadAvailableProjects()
     {
@@ -107,10 +111,13 @@ class TasksController extends Controller
         return redirect('/tasks/ticket/' . $newTask->id);
     }
 
+
+    //loads in user projects
     public function loadMyTasks(Request $request)
     {
+        $getEmployeeId = EmployeeInformationModel::query()->where('user_id', $request->user()->id)->pluck('id')->first();
         $myTasks = TasksTaskModel::query()->where('assigned_to', $request->user()->id)->get();
-        $myProjects = TasksParticipantsModel::query()->where('employee_id', $request->user()->id)->select('project_id')->get();
+        $myProjects = TasksParticipantsModel::query()->where('employee_id', $getEmployeeId)->select('project_id')->get();
 
         return view('tasks.tasks_landing', ['tasks' => $myTasks, 'myProjects' => $myProjects]);
     }

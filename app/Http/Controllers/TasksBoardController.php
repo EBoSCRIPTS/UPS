@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\ExcelExport\TaskExport;
+use App\Models\EmployeeInformationModel;
 use App\Models\Tasks\TasksParticipantsModel;
 use App\Models\Tasks\TasksProjectModel;
 use App\Models\Tasks\TasksStatusModel;
@@ -137,7 +138,7 @@ class TasksBoardController extends Controller
         $project = TasksProjectModel::query()->where('id', $request->project_id)->first();
         $projectStatuses = TasksStatusModel::query()->where('project_id', $request->project_id)->select('statuses')->get()->toArray();
         $projectUsers = TasksParticipantsModel::query()->where('project_id', $request->project_id)->select('employee_id')->get();
-        $allUsers = UserModel::query()->select('id', 'first_name', 'last_name')->get();
+        $allUsers = EmployeeInformationModel::query()->select('id', 'user_id')->get();
 
         $projectStatuses = json_decode($projectStatuses[0]['statuses']);
 
@@ -145,7 +146,7 @@ class TasksBoardController extends Controller
             [   'project' => $project,
                 'statuses' => $projectStatuses,
                 'projectUsers' => $projectUsers,
-                'users' => $allUsers]);
+                'employees' => $allUsers]);
     }
 
     public function loadAllProjectTasks(Request $request)

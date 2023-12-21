@@ -62,8 +62,8 @@
                                 @csrf
                                 <input type="hidden" name="project_id" value="{{$project->id}}">
                                 <select class="form-select" name="participants[]" multiple>
-                                    @foreach($users as $user)
-                                        <option value="{{$user->id}}">{{$user->first_name}} {{$user->last_name}}</option>
+                                    @foreach($employees as $employee)
+                                        <option value="{{$employee->id}}">{{$employee->user->first_name}} {{$employee->user->last_name}}</option>
                                     @endforeach
                                 </select>
                                 <button type="submit" class="btn btn-primary mt-2">Add</button>

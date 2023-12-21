@@ -31,6 +31,8 @@
             <a href="{{route('tasks.projects.all_tasks', ['project_id' => $project_name->id])}}">See all tasks</a>
             |
             <a href="{{route('tasks.projects.statistics', ['project_id' => $project_name->id])}}">See statistics</a>
+            |
+            <a href="/tasks/project_settings/{{$project_name->id}}">TEST</a>
         </p>
         <table class="table table-striped">
             <thead>
