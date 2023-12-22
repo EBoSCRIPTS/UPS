@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Equipment\EquipmentAssignmentModel;
 use App\Models\VacationPointsModel;
 use FontLib\TrueType\Collection;
 use Illuminate\Http\RedirectResponse;
@@ -56,9 +57,31 @@ class EmployeeInformationController extends Controller
     public function deleteEmployee(Request $request): RedirectResponse
     {
         $employee = EmployeeInformationModel::query()->find($request->input('employee_id'));
+
+        if  (EquipmentAssignmentModel::query()->where('employee_id', $request->input('employee_id'))->get() != null)
+        {
+            return back()->withInput()->withErrors([
+                'equipment' => 'This employee has equipment assigned. Please remove it before deleting.'
+            ]);
+        }
+
         $employee->delete();
 
         return redirect('/employee_information');
+    }
+
+    public function editEmployee(Request $request): RedirectResponse
+    {
+        $employee = EmployeeInformationModel::query()->where('id', $request->input('employee_id'))->first();
+
+        $employee->update([
+            'hour_pay' => $request->input('hour_pay') ?? $employee->hour_pay,
+            'salary' => $request->input('salary') ?? $employee->salary,
+            'position' => $request->input('position') ?? $employee->position,
+            'monthly_hours' => $request->input('hours') ?? $employee->monthly_hours
+        ]);
+
+        return back()->with('success', 'Employee updated successfully');
     }
 
     public function getAllEmployees(): \Illuminate\Database\Eloquent\Collection

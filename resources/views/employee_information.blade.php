@@ -20,6 +20,11 @@
     @include('components.sidebar')
     <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-3">
         <div class="container" style="width: 80%">
+            @if($errors->has('equipment'))
+            <div class="alert alert-danger">
+                <strong>{{ $errors->first('equipment')}}</strong>
+            </div>
+            @endif
         <form action="{{route('employee_information.create')}}" method="POST">
             @csrf
             <label for="employee_name" class="form-label">Unassigned Employee Name</label>
@@ -99,14 +104,51 @@
                         </td>
                         <td>{{$employee->monthly_hours}}</td>
                         <td>
-                        <form action="{{route('employee_information.delete')}}" method="POST">
-                            @csrf
-                            <input type="hidden" name="employee_id" value="{{ $employee->id }}">
-                            <button type="submit" class="btn btn-danger">Delete</button>
-                        </form>
+                            <div class="btn-group">
+                            <form action="{{route('employee_information.delete')}}" method="POST">
+                                @csrf
+                                <input type="hidden" name="employee_id" value="{{ $employee->id }}">
+                                <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this employee?')">Delete</button>
+                            </form>
+                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal{{$employee->id}}">Edit</button>
+                            </div>
                         </td>
                     </tr>
                @endif
+                <div class="modal fade" id="editModal{{$employee->id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="editModal{{$employee->id}}">Modal title</h5>
+                            </div>
+                            <div class="modal-body">
+                                <form action="{{route('employee_information.update')}}" method="POST">
+                                    @csrf
+                                    <input type="hidden" name="employee_id" value="{{ $employee->id }}">
+
+                                    <label for="hour_pay" class="form-label">Hour Pay</label>
+                                    <input type="text" class="form-control" id="hour_pay" name="hour_pay" placeholder="{{$employee->hour_pay}}"/>
+
+                                    <label for="salary" class="form-label">Salary</label>
+                                    <input type="text" class="form-control" id="salary" name="salary" placeholder="{{$employee->salary}}"/>
+
+                                    <label for="position" class="form-label">Position</label>
+                                    <input type="text" class="form-control" id="position" name="position" placeholder="{{$employee->position}}"/>
+
+                                    <label for="hours" class="form-label">Monthly Hours</label>
+                                    <input type="text" class="form-control" id="hours" name="hours" placeholder="{{$employee->monthly_hours}}"/>
+
+                                    <button type="submit" class="btn btn-primary mt-3">Save</button>
+                                </form>
+
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary">Save changes</button>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                </div>
              @endforeach
             </tbody>
                 </table>

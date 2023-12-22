@@ -162,7 +162,13 @@ class TasksController extends Controller
 
     public function loadProjectTasks(Request $request): \Illuminate\View\View //used in project board page
     {
-        $projectTasks = TasksTaskModel::query()->where('project_id', $request->project_id)->where('is_completed', 0)->where('is_draft', 0)->get();
+        $projectTasks = TasksTaskModel::query()
+            ->where('project_id', $request->project_id)
+            ->where('is_completed', 0)
+            ->where('is_draft', 0)
+            ->orderBy('priority', 'asc')
+            ->get();
+
         $myTasks = TasksTaskModel::query()->where('assigned_to', $request->user()->id)->get();
         $projectStatus = TasksStatusModel::query()->where('project_id', $request->project_id)->select('statuses')->get()->toArray();
         $projectName = TasksProjectModel::query()->where('id', $request->project_id)->select('id','name', 'leader_employee_id')->first();

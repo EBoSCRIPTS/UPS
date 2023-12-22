@@ -81,6 +81,8 @@ Route::get('/departments/my/ticket_register/{ticket_id}', [SubmittedTicketsContr
 Route::get('/employee_information', [EmployeeInformationController::class, 'getEmployeeInformationData'])->name('employee_information')->middleware('manager');
 Route::post('/employee_information/create', [EmployeeInformationController::class, 'insertEmployeeInformation'])->name('employee_information.create')->middleware('manager');
 Route::post('/employee_information/delete', [EmployeeInformationController::class, 'deleteEmployee'])->name('employee_information.delete')->middleware('manager');
+Route::post('/employee_information/update', [EmployeeInformationController::class, 'editEmployee'])->name('employee_information.update')->middleware('manager');
+
 
 /* Accountant views */
 Route::get('/accountant', [AccountantController::class, 'showAll'])->name('accountant')->middleware('accountant');
