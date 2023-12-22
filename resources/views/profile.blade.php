@@ -87,10 +87,11 @@
                         <hr>
                         @if(Auth::user()->id == $user->id)
                             <p class="h3 text-center">Actions</p>
-                            <div class="btn-group">
+                            <div class="btn-group d-flex justify-content-center">
                                 <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#changePassword">Change password</button>
                                 <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#bankDetails">Bank details</button>
                                 <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#employmentInformation" onclick="return confirmAccess()">Employment information</button>
+                                <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#submitTicket">Submit ticket</button>
 
                                 <div class="modal fade" id="changePassword" tabindex="-1" aria-labelledby="changePassword" aria-hidden="true">
                                     <div class="modal-dialog">
@@ -167,6 +168,36 @@
                                                     <p><strong>Current rating score: {{$performanceReport->rating}}%</strong></p>
                                                     <p><strong>Rating description: {{$performanceReport->rating_text}}</strong></p>
                                                 @endif
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="modal fade" id="submitTicket" tabindex="-1" aria-labelledby="submitTicket" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title text-center" id="submitTicket">Employment information</h5>
+                                            </div>
+                                            <div class="modal-body">
+                                               <form action="{{route('user.send_ticket', Auth::user()->id)}}" method="POST">
+                                                    @csrf
+                                                   <label for="department_id" class="form-label">Send to department:</label>
+                                                   <select id="department_id" name="department_id" class="form-select">
+                                                       <option disabled selected>Pick a department</option>
+                                                       @foreach($departments as $department)
+                                                           <option value="{{$department->id}}">{{$department->name}}</option>
+                                                       @endforeach
+                                                   </select>
+
+                                                   <label for="title" class="form-label">Title</label>
+                                                   <input type="text" id="title" name="title" class="form-control" required>
+
+                                                   <label for="description" class="form-label">Describe the issue</label>
+                                                   <textarea name="description" class="form-control" required></textarea>
+
+                                                   <button type="submit" class="btn btn-success mt-3 float-end" onclick="return confirm('Make sure all the info you input is correct!')">Submit a ticket</button>
+                                               </form>
                                             </div>
                                         </div>
                                     </div>

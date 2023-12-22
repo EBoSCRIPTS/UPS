@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\ExcelExport\TaskExport;
 use App\Models\EmployeeInformationModel;
+use App\Models\PerformanceReportsModel;
 use App\Models\Tasks\TasksParticipantsModel;
 use App\Models\Tasks\TasksProjectModel;
 use App\Models\Tasks\TasksStatusModel;
@@ -61,6 +62,8 @@ class TasksBoardController extends Controller
             ->where('created_at', '<=', Carbon::now())
             ->where('created_at', '>=', Carbon::now()->startOfMonth())->get()->toArray();
 
+        $avgPerformanceScore = $this->checkAverageRating($request->project_id);
+
         $completedThisMonth = 0;
         $completedTaskPoints = 0;
         $allTasksPoints = 0;
@@ -79,7 +82,8 @@ class TasksBoardController extends Controller
                 'month' => $currentMonth,
                 'completedTaskPoints' => $completedTaskPoints,
                 'allTasksPoints' => $allTasksPoints,
-                'project_id' => $request->project_id]);
+                'project_id' => $request->project_id,
+                'avgPerformanceScore' => $avgPerformanceScore]);
     }
 
     public function addUserToProject(Request $request): RedirectResponse
@@ -219,5 +223,14 @@ class TasksBoardController extends Controller
         else {
             return false;
         }
+    }
+
+    private function checkAverageRating($project_id): int
+    {
+        return PerformanceReportsModel::query()->where('project_id', $project_id)
+            ->where('month', Carbon::now()->monthName)
+            ->orWhere('month', Carbon::now()->subMonth()->monthName)
+            ->where('year', Carbon::now()->year)
+            ->avg('rating');
     }
 }

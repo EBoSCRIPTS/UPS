@@ -18,6 +18,7 @@ use App\Http\Controllers\PDFController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\ProjectPerformanceController;
 use App\Http\Controllers\VacationsController;
+use App\Http\Controllers\SubmittedTicketsController;
 
 
 /* Home view */
@@ -38,6 +39,7 @@ Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::get('/profile/{id}', [UserController::class, 'getUserInfo'])->name('profile');
 Route::post('/profile/{id}/change_password', [UserController::class, 'changePassword'])->name('user.change_password');
 Route::post('/profile/{id}/update_banking', [UserController::class, 'updateBanking'])->name('user.update_banking');
+Route::post('/profile/send_ticket', [SubmittedTicketsController::class, 'submitTicket'])->name('user.send_ticket');
 Route::post('/logging_in', [AuthController::class, 'auth'])->name('logging_in');
 
 /* Absence views */
@@ -71,6 +73,8 @@ Route::post('/loghours/review/update_balance/{user_id}', [VacationsController::c
 Route::get('/departments', [DepartmentsController::class, 'showAllDepartments'])->name('showAllDepartments')->middleware('manager');
 Route::post('/departments/create', [DepartmentsController::class, 'addDepartment'])->name('departments.create')->middleware('manager');
 Route::post('/departments/delete', [DepartmentsController::class, 'deleteDepartament'])->name('departments.delete')->middleware('manager');
+Route::get('/departments/my', [DepartmentsController::class, 'loadUserDepartment'])->name('my_department');
+Route::get('/departments/my/ticket_register/{ticket_id}', [SubmittedTicketsController::class, 'ticketRegistrationUpdate'])->name('register_ticket');
 
 
 /* Employee information  */

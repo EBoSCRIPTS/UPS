@@ -88,6 +88,11 @@
                     </form>
                 </div>
             </div>
+            <hr>
+            <p class="lead">Project average performance rating: </p>
+            <div class="horizontalBar" style="height: 150px">
+                <canvas id="horizontalBarChart"></canvas>
+            </div>
         </div>
 
     </div>
@@ -96,8 +101,8 @@
 </body>
 
 <script>
-    let tasksDoughnutValues = [{{$createdTasksCount}}, {{$completedThisMonth}}];
-    let tasksDoughnutLabels = ['All tasks', 'Completed tasks'];
+    let tasksDoughnutValues = [{{$createdTasksCount-$completedThisMonth}}, {{$completedThisMonth}}];
+    let tasksDoughnutLabels = ['Tasks left', 'Completed tasks'];
     let colorsDoughnut = ['#FF0000', '#0000FF'];
 
     const doughnutChart = new Chart('doughnutChart', {
@@ -110,6 +115,7 @@
             }]
         },
         options: {
+            responsive: true,
             title: {
                 display: true,
                 text: 'Tasks statistics'
@@ -132,11 +138,49 @@
             }]
         },
         options: {
+            responsive: true,
             legend: {display: false},
             scales: {
                 y: { minBarLength: 0 }
             }
         }
+    });
+
+    function getColor(value)
+    {
+        if (value < 45){
+            return '#FF0000';
+        }
+        else if (value < 75){
+            return '#FFA500';
+        }
+        else {
+            return '#008000';
+        }
+    }
+
+    let tasksHorizontalBarValues = [{{$avgPerformanceScore}}];
+    let tasksHorizontalBarLabels = ['Average performance'];
+    let colorsHorizontalBar = tasksHorizontalBarValues.map(getColor);
+
+    const horizontalBarChart = new Chart('horizontalBarChart', {
+        type: 'bar',
+        data: {
+            labels: tasksHorizontalBarLabels,
+            datasets: [{
+                backgroundColor: colorsHorizontalBar,
+                data: tasksHorizontalBarValues,
+            }]
+        },
+        options: {
+            maintainAspectRatio: false,
+            responsive: true,
+            indexAxis: 'y',
+            x: {
+                min: 0,
+                max: 100,
+            }
+        },
     });
 
 </script>

@@ -3,6 +3,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\DepartamentsModel;
 use App\Models\EmployeeInformationModel;
 use App\Models\PerformanceReportsModel;
 use App\Models\Tasks\TasksParticipantsModel;
@@ -103,17 +104,23 @@ class UserController extends Controller
                 ->where('user_id', Auth::user()->id)
                 ->orderBy('created_at', 'desc')
                 ->first();
+            $departments = DepartamentsModel::query()->select('id', 'name')->get();
         }
         else {
             $performanceReport = null;
             $employeeInformation = null;
+            $departments = null;
         }
 
         if($user == null) {
             abort(404);
         }
 
-        return view('profile', ['user' => $user, 'projects' => $projects, 'employeeInformation' => $employeeInformation, 'performanceReport' => $performanceReport]);
+        return view('profile', ['user' => $user,
+            'projects' => $projects,
+            'employeeInformation' => $employeeInformation,
+            'performanceReport' => $performanceReport,
+            'departments' => $departments]);
     }
 
     public function changePassword(Request $request): RedirectResponse
@@ -134,7 +141,7 @@ class UserController extends Controller
     public function updateBanking(Request $request): RedirectResponse
     {
 
-        $employee = EmployeeInformationModel::query()->where('user_id', $request->id)->first();
+        $employee = EmployeeInformationModel::query()->where('user_id', Auth::user()->id)->first();
 
         if($employee == null) { //as we store this in employee table we can't update info if users not registered as an employee yet
             return back()->withInput()->withErrors([
@@ -150,5 +157,4 @@ class UserController extends Controller
 
         return back()->with('success', 'Banking details updated!');
     }
-
 }

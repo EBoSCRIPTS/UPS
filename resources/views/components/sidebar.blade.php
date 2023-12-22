@@ -32,6 +32,10 @@
                                     <a href="/loghours" class="nav-link px-2"> <span class="d-none d-sm-inline" style="color: white">• Log Hours</span>
                                     </a>
                                 </li>
+                                <li>
+                                    <a href="/departments/my" class="nav-link px-2"> <span class="d-none d-sm-inline" style="color: white">• My department</span>
+                                    </a>
+                                </li>
                             </ul>
                         </li>
                         <li>
@@ -64,6 +68,11 @@
                                         <a href="/loghours/view" class="nav-link px-0"> <span
                                                     class="d-none d-sm-inline">View Logged Hours</span></a>
                                     </li>
+                                    <li>
+                                        <a href="/loghours/review" class="nav-link px-0"> <span
+                                                    class="d-none d-sm-inline">Review Submitted Log Hours</span></a>
+                                    </li>
+
                                     <li>
                                         <a href="/departments" class="nav-link px-0"> <span class="d-none d-sm-inline">Departments</span></a>
                                     </li>

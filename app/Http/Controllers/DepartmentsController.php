@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\EmployeeInformationModel;
+use App\Models\SubmittedTicketsModel;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use App\Models\DepartamentsModel;
@@ -33,5 +35,25 @@ class DepartmentsController extends Controller
         $departament->delete();
 
         return redirect('/departaments');
+    }
+
+    public function loadUserDepartment(Request $request): \Illuminate\View\View
+    {
+        $employeeDept = EmployeeInformationModel::query()->where('user_id', $request->user()->id)->pluck('department_id')->first();
+        $department = DepartamentsModel::query()->find($employeeDept)->select('id', 'name')->first();
+
+        $getAllDeptEmployees = EmployeeInformationModel::query()
+            ->where('department_id', $department->id)
+            ->select('id', 'user_id', 'position')
+            ->orderBy('position', 'desc')
+            ->get();
+
+        $getTickets = SubmittedTicketsModel::query()->where('department_id', $department->id)
+            ->where('is_registered', 0)
+            ->get();
+
+        return view('my_department', ['department' => $department,
+            'employees' => $getAllDeptEmployees,
+            'tickets' => $getTickets]);
     }
 }

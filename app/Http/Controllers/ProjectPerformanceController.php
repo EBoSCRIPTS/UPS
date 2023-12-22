@@ -29,6 +29,13 @@ class ProjectPerformanceController extends Controller
         $getName = UserModel::query()->where('id', $getEmployeeId)->select('id', 'first_name', 'last_name')->first();
 
 
+        if (PerformanceReportsModel::query()->where('user_id' , $request->input('employee_id'))
+            ->where('month' , Carbon::now()->monthName)
+            ->where('year' , Carbon::now()->year)
+            ->exists()) {
+            return back()->with('error', 'Performance report already exists!');
+        }
+
         $report = new PerformanceReportsModel([
             'project_id' => $request->project_id,
             'user_id' => $getName->id,
