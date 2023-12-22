@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use App\Models\UserModel;
 
 class UserSearchController extends Controller
 {
-    public function userSpecific(Request $request): RedirectResponse
+    public function userSpecific(Request $request): JsonResponse
     {
         $users = UserModel::query()
             ->whereRaw('LOWER(first_name) LIKE ?', ['%' . strtolower($request->first_name) . '%'])
