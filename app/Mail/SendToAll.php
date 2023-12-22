@@ -25,6 +25,7 @@ class SendToAll extends Mailable
 
     public function build()
     {
-        return $this->subject($this->content['subject'])->view('mail_send_to_all', ['content' => $this->content]);
+        return $this->subject($this->content['subject'])->view('mail_send_to_all', ['content' => $this->content])->attach($this->content['attachments']);
     }
+
 }

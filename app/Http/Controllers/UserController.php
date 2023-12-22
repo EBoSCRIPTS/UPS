@@ -15,7 +15,7 @@ class UserController extends Controller
 {
     public function register(Request $request): RedirectResponse
     {
-        if ($request->hasFile('profile_picture')) {
+        if ($request->hasFile('profile_picture')) { //store image in storage
             $image = $request->file('profile_picture');
             $imageName = time().'.'.$image->getClientOriginalExtension();
             $image->move(public_path('uploads'), $imageName);
@@ -54,16 +54,17 @@ class UserController extends Controller
         return view('user_manage.user_edit', ['users' => $users]);
     }
 
-    public function deleteUser(Request $request)
+    public function deleteUser(Request $request): RedirectResponse
     {
         $user = UserModel::query()->find($request->input('id'));
         $user->delete();
         return redirect('/mng/edit')->with('success', 'User deleted!');
     }
 
-    public function editUser(Request $request)
+    public function editUser(Request $request): RedirectResponse
     {
         $user = UserModel::query()->find($request->input('id'));
+
         if($request->hasFile('profile_picture'))
         {
             $image = $request->file('profile_picture');
@@ -78,7 +79,7 @@ class UserController extends Controller
 
 
         $user->update([
-            'first_name' => $request->input('first_name') ?? $user->first_name,
+            'first_name' => $request->input('first_name') ?? $user->first_name, //we POST everything so its important to keep fallbacks
             'last_name' => $request->input('last_name') ?? $user->last_name,
             'email' => $request->input('email') ?? $user->email,
             'phone_number' => $request->input('phone_number') ?? $user->phone_number,
@@ -88,7 +89,7 @@ class UserController extends Controller
         return redirect('/mng/edit')->with('success', 'User edited!');
     }
 
-    public function getUserInfo(Request $request)
+    public function getUserInfo(Request $request): View
     {
         $user = UserModel::query()->where('id', $request->id)->first();
         $projects = TasksParticipantsModel::query()->where('employee_id', $request->id)->get();
@@ -100,11 +101,11 @@ class UserController extends Controller
         return view('profile', ['user' => $user, 'projects' => $projects]);
     }
 
-    public function changePassword(Request $request)
+    public function changePassword(Request $request): RedirectResponse
     {
         $user = UserModel::query()->where('id', $request->id)->select('id', 'password')->first();
 
-        if (!Hash::check($request->input('old_password'), $user->password)) {
+        if (!Hash::check($request->input('old_password'), $user->password)) { //if passwords don't match force user back
             return redirect('/home')->with('error', 'Wrong password!');
         }
 
@@ -115,12 +116,12 @@ class UserController extends Controller
         return back()->with('success', 'Password changed!');
     }
 
-    public function updateBanking(Request $request)
+    public function updateBanking(Request $request): RedirectResponse
     {
 
         $employee = EmployeeInformationModel::query()->where('user_id', $request->id)->first();
 
-        if($employee == null) {
+        if($employee == null) { //as we store this in employee table we can't update info if users not registered as an employee yet
             return back()->withInput()->withErrors([
                 'employee_error' => 'You aren\'t registered as an employee yet!'
             ]);

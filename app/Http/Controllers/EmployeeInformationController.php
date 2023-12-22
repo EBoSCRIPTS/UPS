@@ -11,13 +11,13 @@ use App\Models\UserModel;
 
 class EmployeeInformationController extends Controller
 {
-    public function getData()
+    public function getEmployeeInformationData()
     {
         $users = UserModel::all();
         $departments = DepartamentsModel::all();
         $employees = EmployeeInformationModel::all();
 
-        $getNotSigned = [];
+        $getNotSigned = []; //keep value of those users that are not registered as employees
 
         foreach ($users as $user) {
             if(in_array($user->id, $employees->pluck('user_id')->toArray())) {
@@ -25,7 +25,6 @@ class EmployeeInformationController extends Controller
             }
             $getNotSigned[] = $user;
         }
-
 
         return view('employee_information', ['users' => $getNotSigned, 'departments' => $departments, 'employees' => $employees]);
     }

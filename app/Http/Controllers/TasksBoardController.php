@@ -33,14 +33,14 @@ class TasksBoardController extends Controller
             }
         }
 
-        $editStatus = json_encode($editStatus);
+        $editStatus = json_encode($editStatus); //store it in json
 
         $projectStatuses->update([
             'statuses' => $editStatus
         ]);
 
         $loadAllProjectTasks = TasksTaskModel::query()->where('project_id', $request->project_id)->get();
-        foreach($loadAllProjectTasks as $loadAllProjectTask) {
+        foreach($loadAllProjectTasks as $loadAllProjectTask) { //update all status keys to 0 to avoid any conflicts when editing
             $loadAllProjectTask->update([
                 'status_key' => 0
             ]);
@@ -59,9 +59,7 @@ class TasksBoardController extends Controller
             ->where('created_at', '<=', Carbon::now())
             ->where('created_at', '>=', Carbon::now()->startOfMonth())->get()->toArray();
 
-        $createdTasksCount = sizeof($tasksThisMonth);
         $completedThisMonth = 0;
-
         $completedTaskPoints = 0;
         $allTasksPoints = 0;
 
@@ -74,7 +72,7 @@ class TasksBoardController extends Controller
         }
 
         return view('tasks.tasks_project_statistics',
-            ['createdTasksCount' => $createdTasksCount,
+            ['createdTasksCount' => sizeof($tasksThisMonth),
                 'completedThisMonth' => $completedThisMonth,
                 'month' => $currentMonth,
                 'completedTaskPoints' => $completedTaskPoints,
@@ -101,7 +99,7 @@ class TasksBoardController extends Controller
         return redirect('/tasks/project_settings/' . $request->input('project_id'));
     }
 
-    public function getStatisticsForPeriod(Request $request)
+    public function getStatisticsForPeriod(Request $request) //if we want to load in a specific period
     {
         $currentMonth = Carbon::now()->monthName;
 
@@ -111,7 +109,6 @@ class TasksBoardController extends Controller
             ->where('created_at', '>=', $request->input('startDate'))
             ->where('created_at', '<=', $request->input('endDate'))->get()->toArray();
 
-        $createdTasksCount = sizeof($tasksThisMonth);
         $completedThisMonth = 0;
 
         $completedTaskPoints = 0;
@@ -126,7 +123,7 @@ class TasksBoardController extends Controller
         }
 
         return view('tasks.tasks_project_statistics',
-            ['createdTasksCount' => $createdTasksCount,
+            ['createdTasksCount' => sizeof($tasksThisMonth),
                 'completedThisMonth' => $completedThisMonth,
                 'month' => $currentMonth,
                 'completedTaskPoints' => $completedTaskPoints,
@@ -136,7 +133,7 @@ class TasksBoardController extends Controller
 
     public function getProjectSettings(Request $request)
     {
-        if ($this->checkIfHasPerms($request->project_id) == false) {
+        if ($this->checkIfHasPerms($request->project_id) == false) { //check if user is either manager/admin project leader
             return redirect('/');
         }
 
@@ -210,7 +207,7 @@ class TasksBoardController extends Controller
     //use this to check if user is either manager/admin project leader
     private function checkIfHasPerms($project_id): bool
     {
-        if (Auth::user()->role_id == 1 || Auth::user()->role_id == 3) {
+        if (Auth::user()->role_id == 1 || Auth::user()->role_id == 3) { //admin and manager should always be able to edit
             return true;
         }
 

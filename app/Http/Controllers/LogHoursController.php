@@ -68,7 +68,7 @@ class LogHoursController extends Controller
         foreach ($dates as $date) {
             if ($request->input($date . '_start_time') != null && $request->input($date . '_end_time') != null) {
 
-                $firstPart = 0;
+                $firstPart = 0; //variables for calculating night hours
                 $secondPart = 0;
                 $difference = 0;
 
@@ -78,7 +78,7 @@ class LogHoursController extends Controller
                 //if the employee starts shift after 22:00 and ends the next day
                 if($shiftStartTime >= $nightHoursStart){
                     $firstPart = $midnight - $shiftStartTime;
-                    $secondPart = ($shiftEndTime - $midnight) + 86400;
+                    $secondPart = ($shiftEndTime - $midnight) + 86400; //add 24hours, otherwise next days are considered as todays
 
                     if($shiftEndTime > $nightHoursEnd) {
                         $difference = $shiftEndTime - $nightHoursEnd;
@@ -113,7 +113,7 @@ class LogHoursController extends Controller
                 $nightHoursCalculate = round($nightHoursCalculate);
 
                 if ($nightHoursCalculate < 0) {
-                    $nightHoursCalculate = 0;
+                    $nightHoursCalculate = 0; //if we mysterically get lower than 0(doesn't happen when dealing with normal nighthours)
                 }
 
                 $loggedHours = new LogHoursModel([
@@ -133,7 +133,10 @@ class LogHoursController extends Controller
 
     public function deleteLoggedHours(Request $request)
     {
-        $loggedHours = LogHoursModel::query()->find($request->input('id'));
+        $loggedHours = LogHoursModel::query()
+            ->where('id', $request->input('id'))
+            ->where('user_id', Auth::user()->id)->first();
+
         $loggedHours->delete();
 
         return redirect('/loghours')->with('success', 'Hours deleted!');
@@ -173,7 +176,7 @@ class LogHoursController extends Controller
 
     public function closeMonthlyReport(Request $request)
     {
-        if ($request->input('month') == Carbon::now()->monthName) {
+        if ($request->input('month') == Carbon::now()->monthName) { //check for which month we close the report for
             $logHours = LogHoursModel::query()
                 ->where('user_id', Auth::user()->id)
                 ->where('date', '<=', Carbon::now())
@@ -192,7 +195,7 @@ class LogHoursController extends Controller
         $totalHours = [];
         $nightHours = [];
 
-        for ($i = 0; $i < sizeof($logHours); $i++) {
+        for ($i = 0; $i < sizeof($logHours); $i++) {      //get hours from rows
             $nightHours[$i] = $logHours[$i]['night_hours'];
 
             $time = $logHours[$i]['total_hours'];
@@ -234,7 +237,7 @@ class LogHoursController extends Controller
         return true;
     }
 
-    public function getSubmittedHours(Request $request)
+    public function getSubmittedHours(Request $request) //if user has closed their hours report we call this method
     {
         $submittedHours = LoggedHoursSubmittedModel::query()
             ->where('is_confirmed', 1)
@@ -258,10 +261,10 @@ class LogHoursController extends Controller
 
 
         if ($request->has('Approve')) {
-            $employeeVacation = VacationPointsModel::query()
+            $employeeVacation = VacationPointsModel::query() //on confirm we automatically add vacation points
                 ->where('user_id', $submittedHours->user_id)
                 ->first();
-
+            //idea is that one day costs 0.2VP, in the span of 3 worked months averaging 160hours employee will be able to automatically earn 1 month of paid vacation
             $vp = $submittedHours->total_hours * 0.0021;
 
             $employeeVacation->update([
@@ -280,7 +283,7 @@ class LogHoursController extends Controller
         return back();
     }
 
-    public function getSubmitedAndConfirmed($user_id, $month)
+    public function getSubmitedAndConfirmed($user_id, $month) //for accountant view
     {
         $submittedHours = LoggedHoursSubmittedModel::query()
             ->where('is_confirmed', 2)

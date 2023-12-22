@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 
 class NewsController extends Controller
 {
-    public function createTopic()
+    public function createTopic() //for creating new topics and editing old ones
     {
         $topics = NewsTopicModel::all();
         return view('news_creation', ['topics' => $topics]);
@@ -65,7 +65,7 @@ class NewsController extends Controller
         return view('news_all_news', ['topics' => NewsTopicModel::query()->orderBy('id', 'desc')->get()]);
     }
 
-    public function loadEditNewsTopic(Request $request)
+    public function loadEditNewsTopic(Request $request) //get all the data about specific topic
     {
         $topic = NewsTopicModel::query()->where('id', $request->topic_id)->first();
         return view('news_edit', ['topic' => $topic]);
@@ -126,7 +126,7 @@ class NewsController extends Controller
 
     public function rateTopicComment(Request $request)
     {
-        if (NewsCommentsRatingModel::query()->where('news_topic_id', $request->topic_id)
+        if (NewsCommentsRatingModel::query()->where('news_topic_id', $request->topic_id) //check if user hasn't already rated this comment before
             ->where('comment_id', $request->comment_id)
             ->where('user_id', auth()->user()->id)
             ->exists()) {

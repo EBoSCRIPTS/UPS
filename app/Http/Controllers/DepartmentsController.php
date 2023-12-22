@@ -18,6 +18,7 @@ class DepartmentsController extends Controller
 
         return view('departaments');
     }
+
     public function showAllDepartments()
     {
         $departments = DepartamentsModel::all();
@@ -30,11 +31,5 @@ class DepartmentsController extends Controller
         $departament->delete();
 
         return redirect('/departaments');
-    }
-
-    public function departmentsApi()
-    {
-        $departments = DepartamentsModel::query()->select('id', 'name')->get();
-        return response()->json($departments);
     }
 }

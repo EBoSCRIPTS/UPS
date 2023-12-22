@@ -15,6 +15,7 @@ class AbsenceController extends Controller
         $this->middleware('auth');
     }
 
+    //loads in the absence review page
     public function showAbsenceReview(Request $request)
     {
         $absences = $this->reviewAbsence($request);
@@ -23,6 +24,7 @@ class AbsenceController extends Controller
         return view('absence.absence_review', ['absences' => $absences, 'reviewedAbsences' => $reviewedAbsences]);
     }
 
+    //for user himself
     public function userAbsences()
     {
         $showSent = $this->getUserAbsence();
@@ -72,7 +74,7 @@ class AbsenceController extends Controller
         return AbsenceModel::query()->where('user_id', Auth::id())->where('status', 'Approve')->orWhere('status', 'Deny')->orderBy('created_at', 'desc')->get();
     }
 
-    /* absence review page */
+    /* absence review page(for all) */
     public function reviewAbsence()
     {
         return AbsenceModel::query()->where('status', 'Sent')->orderBy('created_at', 'desc')->get();

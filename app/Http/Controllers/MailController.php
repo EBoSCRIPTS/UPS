@@ -10,19 +10,26 @@ use App\Models\UserModel;
 
 class MailController extends Controller
 {
-    public function sendMail(Request $request)
+    public function sendMailToAll(Request $request)
     {
         $getAllEmails = UserModel::query()->select('email')->get()->toArray();
+
+        $file = $request->file('attachments');
+        $localUpload = app_path() . '/public/mail_all';
+        $ext = $file->getClientOriginalExtension();
+        $file->move($localUpload, $file->getClientOriginalName() . '.' . $ext);
 
         $content = [
             'subject' => $request->input('subject'),
             'body' => $request->input('message'),
-            'attachments' => $request->input('attachments'),
+            'attachments' => $localUpload . '/' . $file->getClientOriginalName() . '.' . $ext,
         ];
 
         foreach ($getAllEmails as $email) {
             Mail::to($email['email'])->send(new SendToAll($content));
+            sleep(3); // sleep for 3 seconds after sending out each mail, otherwise we might overwhelm the mail server
         }
+
         return back()->with('success', 'Email sent successfully!');
     }
 }

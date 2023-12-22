@@ -86,6 +86,7 @@ class EquipmentController extends Controller
         return back()->with('success', 'Equipment assigned successfully');
     }
 
+    //method used in equipment_assignment page
     public function loadAssignables(Request $request)
     {
         $employee = new EmployeeInformationController();
@@ -93,7 +94,7 @@ class EquipmentController extends Controller
 
         $equipment = EquipmentItemsModel::query()->where('is_assigned', 0)->get();
 
-        if($request->has('employee')) {
+        if($request->has('employee')) { //instead of making a new method we handle equipment for user request her(get equipment for user section)
             $user = EquipmentAssignmentModel::query()->where('employee_id', $request->input('employee'))->get();
 
             return view('equipment_assignment', ['employees' => $employee, 'equipments' => $equipment, 'assignments' => $user, 'employeeFor' => $request->input('employee')]);

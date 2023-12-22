@@ -17,12 +17,13 @@ class TasksController extends Controller
 {
     //gotta change name to load project page
 
-    public function createNewProjectPage() {
+    public function loadNewProjectsPage() {
         $users = UserModel::query()->select('id', 'first_name', 'last_name')->get();
         $employees = EmployeeInformationModel::query()->select('id', 'user_id')->get();
 
         return view('tasks.tasks_create_project', ['users' => $users, 'employees' => $employees]);
     }
+
     public function createNewProject(Request $request)
     {
         $newProject = new TasksProjectModel([
@@ -58,7 +59,7 @@ class TasksController extends Controller
     }
 
 
-    //this method loads in all projects in project_settings view
+    //this method loads in all projects in project_settings view (only called for higher roles)
 
     public function loadAvailableProjects()
     {
@@ -67,7 +68,7 @@ class TasksController extends Controller
     }
 
 
-    public function projectsApi()
+    public function projectsApi() //important to keep this, helps reduce amount of code needed for loading data for each page that requires if user is assigned information
     {
         $getEmployeeId = EmployeeInformationModel::query()->where('user_id', Auth::user()->id)->pluck('id')->first();
         $projects = TasksParticipantsModel::query()
@@ -82,7 +83,7 @@ class TasksController extends Controller
     {
         $getTaskStatusesForProject = TasksStatusModel::query()->where('project_id', $request->input('project'))->select('id')->get()->toArray();
 
-        if ($request->input('task_label') == 'feature')
+        if ($request->input('task_label') == 'feature') //store html values to reduce cluster in blade
         {
             $label = '<span class="badge bg-success">Feature</span>';
         }
@@ -100,7 +101,7 @@ class TasksController extends Controller
             'description' => $request->input('description'),
             'project_id' => $request->input('project'),
             'made_by' => Auth::user()->id,
-            'assigned_to' => substr($request->input('assign_to'), 0,1),
+            'assigned_to' => substr($request->input('assign_to'), 0,1), //get the ID value from input field
             'status_id' => $getTaskStatusesForProject[0]['id'],
             'status_key' => 0,
             'priority' => $request->input('priority'),
@@ -135,7 +136,6 @@ class TasksController extends Controller
         $decoded = json_decode($statuses['0']['statuses']);
         $statusKeyDecoded = $decoded[$statusKey];
 
-
         $getComments = $this->loadCommentsForTicket($request->ticket_id);
 
         return view('tasks.tasks_ticket',
@@ -158,7 +158,7 @@ class TasksController extends Controller
     }
 
 
-    public function loadProjectTasks(Request $request)
+    public function loadProjectTasks(Request $request) //used in project board page
     {
         $projectTasks = TasksTaskModel::query()->where('project_id', $request->project_id)->where('is_completed', 0)->where('is_draft', 0)->get();
         $myTasks = TasksTaskModel::query()->where('assigned_to', $request->user()->id)->get();
@@ -190,7 +190,7 @@ class TasksController extends Controller
 
         $currentStatus = $ticket->status_key;
 
-        if ($request->next && $currentStatus < sizeof($stats) - 1) {
+        if ($request->next && $currentStatus < sizeof($stats) - 1) { //check if we can hop forward
             $status = $currentStatus + 1;
 
             $ticket->update([
@@ -199,7 +199,7 @@ class TasksController extends Controller
 
             return redirect('/tasks/ticket/' . $request->ticket_id);
         }
-        if ($request->back && $currentStatus > 0){
+        if ($request->back && $currentStatus > 0){ //check if we can hop backwards
             $status = $currentStatus - 1;
 
             $ticket->update([
@@ -293,7 +293,7 @@ class TasksController extends Controller
         $task = TasksTaskModel::query()->where('id', $request->input('ticket_id'))->first();
         $priorities = ['low', 'medium', 'high', 'critical'];
 
-        if ($request->input('back') && $task->priority != 'low')
+        if ($request->input('back') && $task->priority != 'low') //check if we can hop backwards because we all priorities are hardcoded
         {
             $curPriority = $task->priority;
 
@@ -310,7 +310,7 @@ class TasksController extends Controller
             }
         }
 
-        if ($request->input('next') && $task->priority != 'critical')
+        if ($request->input('next') && $task->priority != 'critical') //check if we can hop forward
         {
             $curPriority = $task->priority;
 

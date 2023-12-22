@@ -18,16 +18,10 @@ class AccountantController extends Controller
 {
     public function showAll()
     {
-        $departments  = DepartamentsModel::all();
-        $departmentCounts = [];
-        foreach ($departments as $department) {
-            $departmentCounts[$department->name] = $department->employeeInformation()->count();
-        }
-
-        return view('accountant.accountant_view', ['departments' => $departments, 'departmentCounts' => $departmentCounts]);
+        return view('accountant.accountant_view', ['departments' => DepartamentsModel::all()]);
     }
 
-    //returns information to accoutant department view
+    //returns information to accountant department view
     public function showDept(Request $request)
     {
         $showDept = DepartamentsModel::query()->find($request->id);
@@ -68,6 +62,7 @@ class AccountantController extends Controller
 
     }
 
+    //handles currently logged hours for current month(not associated with submitted hours)
     private function getEmployeeWorkedHoursThisMonth($userId)
     {
         $logHours = LogHoursModel::query()
@@ -120,6 +115,7 @@ class AccountantController extends Controller
     }
 
 
+    //calculations for payslips, we also handle taxes here, could try to combine 2 ifs
     public function getEmployeePayslipDetails(Request $request)
     {
         $employee = EmployeeInformationModel::query()->where('user_id', $request->user_id)->first();
@@ -149,13 +145,13 @@ class AccountantController extends Controller
 
             $getTaxes = AccountantDepartmentSettingsModel::query()->where('department_id', $request->department_id)
                 ->where('tax_salary_from', '<=', $baseSalary + $nightPay + $overtimeHours)
-                ->orderBy('tax_salary_from', 'desc')
+                ->orderBy('tax_salary_from', 'desc') //important to sort descending, otherwise employee might get with the same tax more than once
                 ->get()
                 ->toArray();
 
             $uniqueTaxes = [];
 
-            $employeeTaxes = array_filter($getTaxes, function ($item) use (&$uniqueTaxes) {
+            $employeeTaxes = array_filter($getTaxes, function ($item) use (&$uniqueTaxes) { //filter out so we keep first unique values from taxes
                 $taxName = $item['tax_name'];
                 if (!in_array($taxName, $uniqueTaxes)) {
                     $uniqueTaxes[] = $taxName;
@@ -181,6 +177,7 @@ class AccountantController extends Controller
                 'totalTaxPrec' => $totalTaxPrec,
                 'isFullfilled' => $isFullfilled]);
         }
+
         else if ($employee->salary != null) {
             $getTaxes = AccountantDepartmentSettingsModel::query()->where('department_id', $request->department_id)
                 ->where('tax_salary_from', '<=', $employee->salary)
@@ -217,8 +214,13 @@ class AccountantController extends Controller
         }
     }
 
+    //function that checks if accountant has already fulfilled specific payslip
     public function employeePayslipFulfill(Request $request)
     {
+        if (AccountantFulfilledPayslipsModel::query()->where('loghours_submitted_id', $request->hours_id)->first()) {
+            return back()->with('error', 'Already fulfilled');
+        }
+
         $fulfill = new AccountantFulfilledPayslipsModel([
             'employee_id' => $request->employee_id,
             'month' => $request->month,
@@ -226,9 +228,6 @@ class AccountantController extends Controller
             'loghours_submitted_id' => $request->hours_id
         ]);
 
-        if (AccountantFulfilledPayslipsModel::query()->where('loghours_submitted_id', $request->hours_id)->first()) {
-            return back()->with('error', 'Already fulfilled');
-        }
         $fulfill->save();
 
         return back()->with('success', 'Fulfilled successfully');

@@ -14,7 +14,7 @@ use Maatwebsite\Excel\Facades\Excel as MaatwebsiteExcel;
 
 class ProjectPerformanceController extends Controller
 {
-    public function loadProjectPerformance(Request $request)
+    public function loadProjectPerformance(Request $request) //loads page for project performance(specific project)
     {
         $projectMembers = TasksParticipantsModel::query()->where('project_id', $request->project_id)->get();
 

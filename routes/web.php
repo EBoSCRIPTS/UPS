@@ -74,7 +74,7 @@ Route::post('/departments/delete', [DepartmentsController::class, 'deleteDeparta
 
 
 /* Employee information  */
-Route::get('/employee_information', [EmployeeInformationController::class, 'getData'])->name('employee_information')->middleware('manager');
+Route::get('/employee_information', [EmployeeInformationController::class, 'getEmployeeInformationData'])->name('employee_information')->middleware('manager');
 Route::post('/employee_information/create', [EmployeeInformationController::class, 'insertEmployeeInformation'])->name('employee_information.create')->middleware('manager');
 Route::post('/employee_information/delete', [EmployeeInformationController::class, 'deleteEmployee'])->name('employee_information.delete')->middleware('manager');
 
@@ -97,7 +97,7 @@ Route::get('/tasks/projects/{project_id}/statistics', [TasksBoardController::cla
 Route::post('/tasks/projects/{project_id}/statistics/generate_period', [TasksBoardController::class, 'getStatisticsForPeriod'])->name('tasks.projects.statistics.generate_for_period');
 Route::post('/tasks/projects/{project_id}/statistics/generate_excel', [TasksBoardController::class, 'generateExcelForProjectStatistics'])->name('tasks.project.generate_xlsx');
 
-Route::get('/tasks/create_new_project', [TasksController::class, 'createNewProjectPage']);
+Route::get('/tasks/create_new_project', [TasksController::class, 'loadNewProjectsPage']);
 
 
 Route::get('/tasks/project_settings', [TasksController::class, 'loadAvailableProjects'])->middleware('manager');
@@ -159,16 +159,14 @@ Route::post('/news/topic/delete/{topic_id}', [NewsController::class, 'deleteNews
 Route::get('/send_mail', function(){
     return view('send_mail');
 })->middleware('manager');
-Route::post('/send_mail/submit', [MailController::class, 'sendMail'])->name('send_mail')->middleware('manager');
+Route::post('/send_mail/submit', [MailController::class, 'sendMailToAll'])->name('send_mail')->middleware('manager');
 
 /* PDF creation views */
 Route::post('/equipment/generate_agreement', [PDFController::class, 'generateEquipmentAgreement'])->name('equipment.generate_agreement');
 
 
 /* REST API routes */
-Route::get('/api/get_all_users/', [UserSearchController::class, 'allUsers'])->middleware('loggedIn');
 Route::get('/api/all_users_json/{first_name}', [UserSearchController::class, 'userSpecific'])->middleware('loggedIn');
-Route::get('/api/get_all_departments', [DepartmentsController::class, 'departmentsApi'])->middleware('manager');
 Route::get('/api/get_all_projects', [TasksController::class, 'projectsApi'])->middleware('loggedIn');
 
 /* TEST PAGES */
