@@ -90,6 +90,7 @@
                             <div class="btn-group">
                                 <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#changePassword">Change password</button>
                                 <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#bankDetails">Bank details</button>
+                                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#employmentInformation" onclick="return confirmAccess()">Employment information</button>
 
                                 <div class="modal fade" id="changePassword" tabindex="-1" aria-labelledby="changePassword" aria-hidden="true">
                                     <div class="modal-dialog">
@@ -116,7 +117,6 @@
                                     </div>
                                 </div>
 
-
                                 <div class="modal fade" id="bankDetails" tabindex="-1" aria-labelledby="bankDetails" aria-hidden="true">
                                     <div class="modal-dialog">
                                         <div class="modal-content">
@@ -127,16 +127,46 @@
                                                 <form action="{{route('user.update_banking', Auth::user()->id)}}" method="POST" id="bankDetailsForm">
                                                     @csrf
                                                     <label for="bank_name" class="form-label">Bank Name</label>
-                                                    <input type="text" id="bank_name" name="bank_name" class="form-control" required>
+                                                    <input type="text" id="bank_name" name="bank_name" class="form-control" required placeholder="{{$employeeInformation->bank_name}}">
 
                                                     <label for="account_name" class="form-label">Account Name</label>
-                                                    <input type="text" id="account_name" name="account_name" class="form-control" required>
+                                                    <input type="text" id="account_name" name="account_name" class="form-control" required placeholder="{{$employeeInformation->bank_account_name}}">
 
                                                     <label for="account_number" class="form-label">Account Number</label>
-                                                    <input type="text" id="account_number" name="account_number" class="form-control" required>
+                                                    <input type="text" id="account_number" name="account_number" class="form-control" required placeholder="{{$employeeInformation->bank_account}}">
 
                                                     <button type="submit" class="btn btn-success mt-3 float-end">Save changes</button>
                                                 </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="modal fade" id="employmentInformation" tabindex="-1" aria-labelledby="employmentInformation" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title text-center" id="employmentInformation">Employment information</h5>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p class="h5">Department: {{$employeeInformation->department->name}}</p>
+                                                <hr>
+                                                <p class="h5">Job title: {{$employeeInformation->position}}</p>
+                                                <hr>
+                                                <p class="h5">Monthly hours: {{$employeeInformation->monthly_hours}}</p>
+                                                <hr>
+                                                @if($employeeInformation->hour_pay != null)
+                                                    <p class="h5">Hourly rate: ${{$employeeInformation->hour_pay}}</p>
+                                                @else
+                                                    <p class="h5">Salary: {{$employeeInformation->salary}}</p>
+                                                @endif
+                                                <hr>
+                                                @if($performanceReport != null)
+                                                    <p class="h5 text-center">Performance report</p>
+                                                    <p><strong>Current rating score: {{$performanceReport->rating}}%</strong></p>
+                                                    <p><strong>Rating description: {{$performanceReport->rating_text}}</strong></p>
+                                                @endif
                                             </div>
                                         </div>
                                     </div>
@@ -165,6 +195,12 @@
         else
         {
             document.getElementById("changePasswordForm").submit();
+        }
+    }
+
+    function confirmAccess() {
+        if(confirm('You are about to access sensitive information, continue?') === false){
+            window.location.reload();
         }
     }
 </script>

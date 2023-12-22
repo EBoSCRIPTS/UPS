@@ -13,7 +13,7 @@ class PerformanceReportsModel extends Model
 
     protected $fillable = [
         'project_id',
-        'employee_id',
+        'user_id',
         'employee_name',
         'rating_text',
         'rating',

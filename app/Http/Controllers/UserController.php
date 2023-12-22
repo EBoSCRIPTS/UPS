@@ -4,18 +4,20 @@
 namespace App\Http\Controllers;
 
 use App\Models\EmployeeInformationModel;
+use App\Models\PerformanceReportsModel;
 use App\Models\Tasks\TasksParticipantsModel;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use App\Models\UserModel;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
     public function register(Request $request): RedirectResponse
     {
-        if ($request->hasFile('profile_picture')) { //store image in storage
+        if ($request->hasFile('profile_picture')) { //store image in server storage
             $image = $request->file('profile_picture');
             $imageName = time().'.'.$image->getClientOriginalExtension();
             $image->move(public_path('uploads/profile_pictures/'), $imageName);
@@ -92,13 +94,26 @@ class UserController extends Controller
     public function getUserInfo(Request $request): View
     {
         $user = UserModel::query()->where('id', $request->id)->first();
-        $projects = TasksParticipantsModel::query()->where('employee_id', $request->id)->get();
+        $employeeId = EmployeeInformationModel::query()->where('user_id', $request->id)->pluck('id')->first();
+        $projects = TasksParticipantsModel::query()->where('employee_id', $employeeId)->get();
+
+        if($request->id == Auth::user()->id) { //only return this sensitive info if the user profile is user himself
+            $employeeInformation = EmployeeInformationModel::query()->where('user_id', Auth::user()->id)->first();
+            $performanceReport = PerformanceReportsModel::query()
+                ->where('user_id', Auth::user()->id)
+                ->orderBy('created_at', 'desc')
+                ->first();
+        }
+        else {
+            $performanceReport = null;
+            $employeeInformation = null;
+        }
 
         if($user == null) {
             abort(404);
         }
 
-        return view('profile', ['user' => $user, 'projects' => $projects]);
+        return view('profile', ['user' => $user, 'projects' => $projects, 'employeeInformation' => $employeeInformation, 'performanceReport' => $performanceReport]);
     }
 
     public function changePassword(Request $request): RedirectResponse

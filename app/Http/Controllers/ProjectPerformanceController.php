@@ -25,10 +25,13 @@ class ProjectPerformanceController extends Controller
 
     public function makeReport(Request $request): RedirectResponse
     {
-        $getName = UserModel::query()->where('id', $request->input('employee_id'))->select('first_name', 'last_name')->first();
+        $getEmployeeId = EmployeeInformationModel::query()->where('id', $request->input('employee_id'))->pluck('user_id')->first();
+        $getName = UserModel::query()->where('id', $getEmployeeId)->select('id', 'first_name', 'last_name')->first();
+
+
         $report = new PerformanceReportsModel([
             'project_id' => $request->project_id,
-            'employee_id' => $request->input('employee_id'),
+            'user_id' => $getName->id,
             'employee_name' => $getName->first_name . ' ' . $getName->last_name,
             'rating_text' => $request->input('performance_report'),
             'rating' => $request->input('performance_rating'),

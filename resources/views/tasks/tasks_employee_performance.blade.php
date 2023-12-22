@@ -24,11 +24,11 @@
                 </thead>
                 <tbody>
                     @foreach($projectMembers as $employee)
-                        <div class="modal fade" id="performanceReportModal{{$employee->id}}" tabindex="-1" aria-labelledby="performanceReportModal" aria-hidden="true">
+                        <div class="modal fade" id="performanceReportModal{{$employee->employee_id}}" tabindex="-1" aria-labelledby="performanceReportModal" aria-hidden="true">
                             <div class="modal-dialog">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title" id="performanceReportModal{{$employee->id}}">{{$employee->employee->user->first_name}} {{$employee->employee->user->last_name}} performance report</h5>
+                                        <h5 class="modal-title" id="performanceReportModal{{$employee->employee_id}}">{{$employee->employee->user->first_name}} {{$employee->employee->user->last_name}} performance report</h5>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
@@ -39,7 +39,7 @@
                                             <textarea class="form-control" name="performance_report" id="performance_report" col="30" rows="10"></textarea>
                                             <input class="form-select mt-3" type="number" name="performance_rating" id="performance_rating" min="1" max="100" placeholder="1-100">
 
-                                            <input type="hidden" name="employee_id" id="employee_id" value="{{$employee->id}}">
+                                            <input type="hidden" name="employee_id" id="employee_id" value="{{$employee->employee_id}}">
                                             <button type="submit" class="btn btn-primary float-end mt-3">Save changes</button>
                                         </form>
                                     </div>
@@ -49,7 +49,7 @@
                         </div>
                         <tr>
                             <td>{{$employee->employee->user->first_name}} {{$employee->employee->user->last_name}}</td>
-                            <td><button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#performanceReportModal{{$employee->id}}">Edit</button></td>
+                            <td><button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#performanceReportModal{{$employee->employee_id}}">Edit</button></td>
                         </tr>
                     @endforeach
                 </tbody>
