@@ -22,6 +22,7 @@
         <div class="container" style="width: 80%">
             <p class="h3">Review Hours</p>
 
+            @if(count($submits) > 0)
             <table class="table table-striped" style="max-width: 800px">
                 <thead>
                     <tr>
@@ -54,6 +55,9 @@
                     @endforeach
                 </tbody>
             </table>
+            @else
+                <p>Nothing to review</p>
+            @endif
         </div>
     </div>
 

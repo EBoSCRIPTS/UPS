@@ -228,6 +228,7 @@ class TasksBoardController extends Controller
     private function checkAverageRating($project_id): int
     {
         return PerformanceReportsModel::query()->where('project_id', $project_id)
+            ->where('soft_deleted', 0)
             ->where('month', Carbon::now()->monthName)
             ->orWhere('month', Carbon::now()->subMonth()->monthName)
             ->where('year', Carbon::now()->year)

@@ -114,6 +114,7 @@ Route::post('/tasks/project_settings/update_leader/{project_id}', [TasksBoardCon
 Route::get('/tasks/projects/{project_id}/performance_report', [ProjectPerformanceController::class, 'loadProjectPerformance']);
 Route::post('/tasks/projects/{project_id}/performance_report/make', [ProjectPerformanceController::class, 'makeReport'])->name('tasks.performance_report_create');
 Route::get('/tasks/projects/{project_id}/performance_report/generate_xlsx', [ProjectPerformanceController::class, 'generatePerformanceReportXlsx']);
+Route::get('/tasks/projects/{project_id}/performance_report/soft_delete/{report_id}', [ProjectPerformanceController::class, 'softDeleteReport']);
 
 Route::post('/tasks/create_new_project/insert', [TasksController::class, 'createNewProject'])->name('create_new_project')->middleware('manager');
 

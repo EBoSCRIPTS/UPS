@@ -19,22 +19,40 @@ class ProjectPerformanceController extends Controller
     public function loadProjectPerformance(Request $request): \Illuminate\View\View //loads page for project performance(specific project)
     {
         $projectMembers = TasksParticipantsModel::query()->where('project_id', $request->project_id)->get();
+        $reportedMonthPerformance = PerformanceReportsModel::query()->where('project_id', $request->project_id)
+            ->where('soft_deleted', 0)
+            ->orderBy('created_at', 'desc')
+            ->get();
 
-        return view('tasks.tasks_employee_performance', ['projectId' => $request->project_id, 'projectMembers' => $projectMembers]);
+        $userPerformance = [];
+        $addedValuesCount= [];
+
+        foreach($reportedMonthPerformance as $performance){
+            if(!isset($userPerformance[$performance->user_id]) && !isset($addedValuesCount[$performance->user_id])){
+                $userPerformance[$performance->user_id] = $performance->rating;
+                $addedValuesCount[$performance->user_id] = 1;
+            }
+            else {
+                $userPerformance[$performance->user_id] += $performance->rating;
+                $addedValuesCount[$performance->user_id]++;
+            }
+        }
+
+        foreach($userPerformance as $key => $value){
+            $userPerformance[$key] = $value / $addedValuesCount[$key];
+            $userPerformance[$key] = intval($userPerformance[$key], 0);
+        }
+
+        return view('tasks.tasks_employee_performance', ['projectId' => $request->project_id,
+            'projectMembers' => $projectMembers,
+            'reportedMonthPerformance' => $reportedMonthPerformance,
+            'userPerformance' => $userPerformance]);
     }
 
     public function makeReport(Request $request): RedirectResponse
     {
         $getEmployeeId = EmployeeInformationModel::query()->where('id', $request->input('employee_id'))->pluck('user_id')->first();
         $getName = UserModel::query()->where('id', $getEmployeeId)->select('id', 'first_name', 'last_name')->first();
-
-
-        if (PerformanceReportsModel::query()->where('user_id' , $request->input('employee_id'))
-            ->where('month' , Carbon::now()->monthName)
-            ->where('year' , Carbon::now()->year)
-            ->exists()) {
-            return back()->with('error', 'Performance report already exists!');
-        }
 
         $report = new PerformanceReportsModel([
             'project_id' => $request->project_id,
@@ -49,6 +67,17 @@ class ProjectPerformanceController extends Controller
         $report->save();
 
         return back()->with('success', 'Performance report created successfully!');
+    }
+
+    public function softDeleteReport(Request $request): RedirectResponse
+    {
+        $getReport = PerformanceReportsModel::query()->where('id', $request->report_id)->first();
+
+        $getReport->update([
+            'soft_deleted' => 1
+        ]);
+
+        return back()->with('success', 'Performance report deleted successfully!');
     }
 
     public function generatePerformanceReportXlsx(Request $request): BinaryFileResponse

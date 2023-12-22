@@ -27,6 +27,7 @@ class PerformanceExport implements FromCollection, WithHeadings
     public function collection()
     {
         return PerformanceReportsModel::query()->where('project_id', $this->project_id)
+            ->where('soft_deleted', 0)
             ->where('year', Carbon::now()->year)
             ->where('month', Carbon::now()->monthName)
             ->select('employee_name', 'rating_text', 'rating')

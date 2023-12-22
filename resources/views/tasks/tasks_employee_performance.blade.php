@@ -15,11 +15,15 @@
     @include('components.sidebar')
     <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-3">
         <div class="container" style="width: 80%">
+            <p class="h3">Create performance report</p>
+            <p class="h5">In the month {{Carbon\Carbon::now()->monthName}}</p>
+
             <table class="table">
                 <thead>
                     <tr>
                         <th scope="col">Name</th>
                         <th scope="col">Actions</th>
+                        <th scope="col">Average rating</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -49,14 +53,87 @@
                         </div>
                         <tr>
                             <td>{{$employee->employee->user->first_name}} {{$employee->employee->user->last_name}}</td>
-                            <td><button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#performanceReportModal{{$employee->employee_id}}">Edit</button></td>
+                            <td><button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#performanceReportModal{{$employee->employee_id}}">Create a performance report</button></td>
+                            @if(isset($userPerformance[$employee->employee->user->id]))
+                            <td>{{$userPerformance[$employee->employee->user->id]}}</td>
+                            @else
+                                <td></td>
+                            @endif
                         </tr>
                     @endforeach
                 </tbody>
             </table>
 
             <a href="/tasks/projects/{{$projectId}}/performance_report/generate_xlsx" class="btn btn-success">Generate XLSX</a>
+            <hr>
+            <div class="row">
+                <div class="col-md-6">
+                    <h3>Previous ratings</h3>
+                </div>
+                <div class="col-md-6">
+                    <div class="dropdown">
+                        <button class="btn btn-primary dropdown-toggle float-end" type="button" data-bs-toggle="dropdown">Filter by name
+                            <span class="caret"></span></button>
+                        <ul class="dropdown-menu">
+                            @foreach($projectMembers as $employee)
+                                <li style="margin-left: 15px"><input type="checkbox" class="type-checkbox" value="{{$employee->employee->user->first_name}} {{$employee->employee->user->last_name}}">{{$employee->employee->user->first_name}} {{$employee->employee->user->last_name}}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <table class="table table-striped" id="tableRatings">
+                 <thead>
+                    <tr>
+                        <th scope="col">Employee Name</th>
+                        <th scope="col">Rating description</th>
+                        <th scope="col">Rating</th>
+                        <th scope="col">Month(year)</th>
+                        <th scope="col">Action</th>
+                    </tr>
+                 </thead>
+                <tbody>
+                    @foreach($reportedMonthPerformance as $performance)
+                        <tr>
+                            <td>{{$performance->user->first_name}} {{$performance->user->last_name}}</td>
+                            <td>{{$performance->rating_text}}</td>
+                            <td>{{$performance->rating}}</td>
+                            <td>{{$performance->month}} ({{$performance->year}})</td>
+                            <td><a href="/tasks/projects/{{$projectId}}/performance_report/soft_delete/{{$performance->id}}" class="btn btn-danger">Delete</a></td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
         </div>
     </div>
 </div>
 </body>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const checkboxes = document.querySelectorAll('.type-checkbox');
+        const rows = document.querySelectorAll('#tableRatings tbody tr');
+        console.log(rows);
+
+        checkboxes.forEach(function (checkbox) {
+            checkbox.addEventListener('change', function () {
+                const checkedTypes = Array.from(checkboxes)
+                    .filter(c => c.checked)
+                    .map(c => c.value);
+
+                rows.forEach(function (row) {
+                    const typeCell = row.querySelector('td:first-child');
+                    const typeId = typeCell.textContent.trim();
+
+                    if (checkedTypes.length === 0 || checkedTypes.includes(typeId)) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+            });
+        });
+    });
+
+</script>
