@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Mail\SendToAll;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Mail\Mailables\Envelope;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Mail;
 use App\Models\UserModel;
 
@@ -16,7 +16,7 @@ class MailController extends Controller
         $getAllEmails = UserModel::query()->select('email')->get()->toArray();
 
         $file = $request->file('attachments');
-        $localUpload = app_path() . '/public/mail_all';
+        $localUpload = app_path() . '/public/uploads/mail_all';
         $ext = $file->getClientOriginalExtension();
         $file->move($localUpload, $file->getClientOriginalName() . '.' . $ext);
 
@@ -30,6 +30,8 @@ class MailController extends Controller
             Mail::to($email['email'])->send(new SendToAll($content));
             sleep(3); // sleep for 3 seconds after sending out each mail, otherwise we might overwhelm the mail server
         }
+
+        File::delete($localUpload . '/' . $file->getClientOriginalName() . '.' . $ext); //get rid of the attached email file
 
         return back()->with('success', 'Email sent successfully!');
     }

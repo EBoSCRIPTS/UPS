@@ -13,15 +13,13 @@
 </head>
 
 <body>
-    @if(isset(Auth::user()->email))
-        {{redirect('/home')}}
-
-    @else(!isset(Auth::user()->email))
-        <div class="position-absolute top-50 start-50 translate-middle" style="width: 500px;">
-            <h1 class="text-center">UPS</h1>
-            @if ($errors->has('email') || $errors->has('password'))
+@if(isset(Auth::user()->email))
+    {{ redirect('/home') }}
+@else
+    <div class="container d-flex align-items-center justify-content-center" style="height: 100vh;">
+        @if ($errors->has('email') || $errors->has('password'))
             <div class="alert alert-danger">
-                @if ($errors->has('email') )
+                @if ($errors->has('email'))
                     <strong>| {{ $errors->first('email')}} |</strong>
                 @endif
 
@@ -29,21 +27,20 @@
                     <strong>{{ $errors->first('password')}} |</strong>
                 @endif
             </div>
-            @endif
-        <form action="{{ route('logging_in') }}" method="POST">
+        @endif
+
+        <form action="{{ route('logging_in') }}" method="POST" class="col-12 col-md-6">
             @csrf
-            <div class="form-group mb-3">
-            <label for="email">EMAIL</label>
-            <input type="email" name="email" id="email" class="form-control" required>
+            <div class="form-group mb-3 text-center">
+                <h1>UPS</h1>
+                <label for="email">EMAIL</label>
+                <input type="email" name="email" id="email" class="form-control" required>
 
-            <label for="password">PASSWORD</label>
-            <input type="password" name="password" id="password" class="form-control" required>
-
-           </div>
+                <label for="password">PASSWORD</label>
+                <input type="password" name="password" id="password" class="form-control" required>
+            </div>
             <button class="btn btn-primary w-100" type="submit">Login</button>
-
         </form>
-        </div>
-
-    @endif
+    </div>
+@endif
 </body>

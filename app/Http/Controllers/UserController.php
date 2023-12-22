@@ -18,10 +18,10 @@ class UserController extends Controller
         if ($request->hasFile('profile_picture')) { //store image in storage
             $image = $request->file('profile_picture');
             $imageName = time().'.'.$image->getClientOriginalExtension();
-            $image->move(public_path('uploads'), $imageName);
-            $imageName = public_path('uploads/'.$imageName);
+            $image->move(public_path('uploads/profile_pictures/'), $imageName);
+            $imageName = public_path('uploads/profile_pictures/'.$imageName);
 
-            $uploadFolder = 'uploads/';
+            $uploadFolder = 'uploads/profile_pictures/';
             $imageName = baseName($imageName);
             $imageName = $uploadFolder.$imageName;
         }
@@ -69,10 +69,10 @@ class UserController extends Controller
         {
             $image = $request->file('profile_picture');
             $imageName = time().'.'.$image->getClientOriginalExtension();
-            $image->move(public_path('uploads'), $imageName);
-            $imageName = public_path('uploads/'.$imageName);
+            $image->move(public_path('uploads/profile_pictures/'), $imageName);
+            $imageName = public_path('uploads/profile_pictures/'.$imageName);
 
-            $uploadFolder = 'uploads/';
+            $uploadFolder = 'uploads/profile_pictures/';
             $imageName = baseName($imageName);
             $imageName = $uploadFolder.$imageName;
         }

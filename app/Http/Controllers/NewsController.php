@@ -21,10 +21,10 @@ class NewsController extends Controller
         if ($request->hasFile('coverPhoto')) {
             $image = $request->file('coverPhoto');
             $imageName = time().'.'.$image->getClientOriginalExtension();
-            $image->move(public_path('uploads'), $imageName);
-            $imageName = public_path('uploads/'.$imageName);
+            $image->move(public_path('uploads/topic_pictures/'), $imageName);
+            $imageName = public_path('uploads/topic_pictures/'.$imageName);
 
-            $uploadFolder = 'uploads/';
+            $uploadFolder = 'uploads/topic_pictures/';
             $imageName = baseName($imageName);
             $imageName = $uploadFolder.$imageName;
         }

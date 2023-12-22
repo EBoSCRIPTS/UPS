@@ -39,7 +39,10 @@
             <tr>
                 <th scope="col">Date</th>
                 <th scope="col">User</th>
-                <th scope="col">Hours</th>
+                <th scope="col">Start Time</th>
+                <th scope="col">End Time</th>
+                <th scope="col">Night Hours</th>
+                <th scope="col">Total Hours</th>
             </tr>
             </thead>
             <tbody>
@@ -47,6 +50,9 @@
             <tr>
                     <td>{{$loggedHour->date}}</td>
                     <td>{{$loggedHour->user->first_name}} {{$loggedHour->user->last_name}}</td>
+                    <td>{{$loggedHour->start_time}}</td>
+                    <td>{{$loggedHour->end_time}}</td>
+                    <td>{{$loggedHour->night_hours}}</td>
                     <td>{{$loggedHour->total_hours}}</td>
             </tr>
         @endforeach
