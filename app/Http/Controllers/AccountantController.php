@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\LoggedHoursSubmittedModel;
 use App\Models\LogHoursModel;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use App\Models\DepartamentsModel;
 use App\Http\Controllers\DepartmentsController;
@@ -12,17 +13,19 @@ use App\Models\AccountantDepartmentSettingsModel;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use App\Models\AccountantFulfilledPayslipsModel;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\View\View;
 
 
 class AccountantController extends Controller
 {
-    public function showAll()
+    public function showAll(): View
     {
         return view('accountant.accountant_view', ['departments' => DepartamentsModel::all()]);
     }
 
     //returns information to accountant department view
-    public function showDept(Request $request)
+    public function showDept(Request $request): View
     {
         $showDept = DepartamentsModel::query()->find($request->id);
         $showEmployees = EmployeeInformationModel::query()->where('department_id', $request->id)->get();
@@ -50,7 +53,7 @@ class AccountantController extends Controller
                 'realPay' => $realSalary]);
     }
 
-    public function loadEmployeeInformation(Request $request)
+    public function loadEmployeeInformation(Request $request): View
     {
         $employee = EmployeeInformationModel::query()->where('user_id', $request->employee)->first();
         $showEmployees = EmployeeInformationModel::query()->where('department_id', $request->id)->get();
@@ -63,7 +66,7 @@ class AccountantController extends Controller
     }
 
     //handles currently logged hours for current month(not associated with submitted hours)
-    private function getEmployeeWorkedHoursThisMonth($userId)
+    private function getEmployeeWorkedHoursThisMonth($userId): int
     {
         $logHours = LogHoursModel::query()
             ->where('user_id', $userId)
@@ -85,14 +88,14 @@ class AccountantController extends Controller
         return $totalHours;
     }
 
-    public function getDepartmentSettings(Request $request)
+    public function getDepartmentSettings(Request $request): View
     {
         $settings = AccountantDepartmentSettingsModel::query()->where('department_id', $request->department_id)->get();
 
         return view('accountant.accountant_department_settings', ['settings' => $settings, 'department' => $request->department_id] );
     }
 
-    public function addTax(Request $request)
+    public function addTax(Request $request): RedirectResponse
     {
         $newTax = new AccountantDepartmentSettingsModel([
             'department_id' => $request->department_id,
@@ -106,7 +109,7 @@ class AccountantController extends Controller
         return back()->with('success', 'Tax added!');
     }
 
-    public function deleteTax(Request $request)
+    public function deleteTax(Request $request): RedirectResponse
     {
         $tax = AccountantDepartmentSettingsModel::query()->find($request->tax_id);
         $tax->delete();
@@ -116,7 +119,7 @@ class AccountantController extends Controller
 
 
     //calculations for payslips, we also handle taxes here, could try to combine 2 ifs
-    public function getEmployeePayslipDetails(Request $request)
+    public function getEmployeePayslipDetails(Request $request): View
     {
         $employee = EmployeeInformationModel::query()->where('user_id', $request->user_id)->first();
         $getHours = LoggedHoursSubmittedModel::query()
@@ -215,7 +218,7 @@ class AccountantController extends Controller
     }
 
     //function that checks if accountant has already fulfilled specific payslip
-    public function employeePayslipFulfill(Request $request)
+    public function employeePayslipFulfill(Request $request): RedirectResponse
     {
         if (AccountantFulfilledPayslipsModel::query()->where('loghours_submitted_id', $request->hours_id)->first()) {
             return back()->with('error', 'Already fulfilled');

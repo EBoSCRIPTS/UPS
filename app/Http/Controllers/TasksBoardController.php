@@ -9,15 +9,17 @@ use App\Models\Tasks\TasksProjectModel;
 use App\Models\Tasks\TasksStatusModel;
 use App\Models\Tasks\TasksTaskModel;
 use App\Models\UserModel;
+use Illuminate\Http\RedirectResponse;
 Use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Excel;
 use Maatwebsite\Excel\Facades\Excel as MaatwebsiteExcel;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class TasksBoardController extends Controller
 {
-    public function editProject(Request $request)
+    public function editProject(Request $request): RedirectResponse
     {
         $project = TasksProjectModel::query()->where('id', $request->project_id)->first();
         $project->update([
@@ -49,7 +51,7 @@ class TasksBoardController extends Controller
         return back()->with('success', 'Project updated!');
     }
 
-    public function getProjectStatistics(Request $request)
+    public function getProjectStatistics(Request $request): \Illuminate\View\View
     {
         $currentMonth = Carbon::now()->monthName;
 
@@ -80,7 +82,7 @@ class TasksBoardController extends Controller
                 'project_id' => $request->project_id]);
     }
 
-    public function addUserToProject(Request $request)
+    public function addUserToProject(Request $request): RedirectResponse
     {
         for ($i = 0; $i < sizeof($request->input('participants')); $i++) {
             $newUser = new TasksParticipantsModel([
@@ -92,14 +94,14 @@ class TasksBoardController extends Controller
         return redirect('/tasks/project_settings/' . $request->input('project_id'));
     }
 
-    public function removeUserFromProject(Request $request)
+    public function removeUserFromProject(Request $request): RedirectResponse
     {
         TasksParticipantsModel::query()->where('project_id', $request->project_id)->where('employee_id', $request->input('user_id'))->delete();
 
         return redirect('/tasks/project_settings/' . $request->input('project_id'));
     }
 
-    public function getStatisticsForPeriod(Request $request) //if we want to load in a specific period
+    public function getStatisticsForPeriod(Request $request): \Illuminate\View\View//if we want to load in a specific period
     {
         $currentMonth = Carbon::now()->monthName;
 
@@ -131,7 +133,7 @@ class TasksBoardController extends Controller
                 'project_id' => $request->project_id]);
     }
 
-    public function getProjectSettings(Request $request)
+    public function getProjectSettings(Request $request): \Illuminate\View\View|RedirectResponse
     {
         if ($this->checkIfHasPerms($request->project_id) == false) { //check if user is either manager/admin project leader
             return redirect('/');
@@ -151,7 +153,7 @@ class TasksBoardController extends Controller
                 'employees' => $allUsers]);
     }
 
-    public function loadAllProjectTasks(Request $request)
+    public function loadAllProjectTasks(Request $request): \Illuminate\View\View
     {
         $allTasks = TasksTaskModel::query()
             ->join('tasks_status', 'tasks_task.project_id', '=', 'tasks_status.project_id')
@@ -188,7 +190,7 @@ class TasksBoardController extends Controller
             ]);
     }
 
-    public function updateProjectLeader(Request $request)
+    public function updateProjectLeader(Request $request): RedirectResponse
     {
         $project = TasksProjectModel::query()->where('id', $request->project_id)->first();
         $project->update([
@@ -199,7 +201,7 @@ class TasksBoardController extends Controller
     }
 
 
-    public function generateExcelForProjectStatistics(Request $request)
+    public function generateExcelForProjectStatistics(Request $request): BinaryFileResponse
     {
         return MaatwebsiteExcel::download(new TaskExport($request->input('startDate'), $request->input('endDate'), $request->input('project_id')), 'project_statistics.xlsx',\Maatwebsite\Excel\Excel::XLSX);
     }

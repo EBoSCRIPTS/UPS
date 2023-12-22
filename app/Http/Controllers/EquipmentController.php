@@ -7,11 +7,12 @@ use App\Models\Equipment\EquipmentAssignmentModel;
 use App\Models\Equipment\EquipmentTypeModel;
 use App\Models\Equipment\EquipmentItemsModel;
 use Carbon\Carbon;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
 class EquipmentController extends Controller
 {
-    public function showRegistered()
+    public function showRegistered(): \Illuminate\View\View
     {
         $equipment = EquipmentItemsModel::query()->where('is_assigned', 1)->get();
 
@@ -42,7 +43,7 @@ class EquipmentController extends Controller
             'assignedEquipment' => $nameArray]);
     }
 
-    public function addEquipmentType(Request $request)
+    public function addEquipmentType(Request $request): RedirectResponse
     {
         $add = new EquipmentTypeModel([
             'name' => $request->input('type'),
@@ -52,7 +53,7 @@ class EquipmentController extends Controller
         return back()->with('success', 'Type of equipment added successfully');
     }
 
-    public function addEquipment(Request $request)
+    public function addEquipment(Request $request): RedirectResponse
     {
         $newEquipment = new EquipmentItemsModel([
             'type_id' => $request->input('type'),
@@ -66,7 +67,7 @@ class EquipmentController extends Controller
         return back()->with('success', 'Equipment added successfully');
     }
 
-    public function assignEquipment(Request $request)
+    public function assignEquipment(Request $request): RedirectResponse
     {
         $employee = EquipmentAssignmentModel::query()->where('employee_id', $request->input('employee_id'))->first();
 
@@ -87,7 +88,7 @@ class EquipmentController extends Controller
     }
 
     //method used in equipment_assignment page
-    public function loadAssignables(Request $request)
+    public function loadAssignables(Request $request): \Illuminate\View\View
     {
         $employee = new EmployeeInformationController();
         $employee = $employee->getAllEmployees();
@@ -103,7 +104,7 @@ class EquipmentController extends Controller
         return view('equipment_assignment', ['employees' => $employee, 'equipments' => $equipment]);
     }
 
-    public function deleteEquipment(Request $request)
+    public function deleteEquipment(Request $request): RedirectResponse
     {
         $equipment = EquipmentItemsModel::query()->where('id', $request->input('id'))->first();
         $equipment->delete();
@@ -111,7 +112,7 @@ class EquipmentController extends Controller
         return back()->with('success', 'Item deleted!');
     }
 
-    public function returnEquipment(Request $request)
+    public function returnEquipment(Request $request): RedirectResponse
     {
         $equipment = EquipmentItemsModel::query()->where('id', $request->input('id'))->first();
         $userAssignment = EquipmentAssignmentModel::query()->where('id', $request->input('assignment_id'))->first();

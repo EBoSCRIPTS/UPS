@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\EmployeeInformationModel;
 use App\Models\VacationPointsModel;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use App\Models\LogHoursModel;
 use App\Models\LoggedHoursSubmittedModel;
@@ -13,7 +15,7 @@ use Carbon\Carbon;
 
 class LogHoursController extends Controller
 {
-    public function getCurrentMonth()
+    public function getCurrentMonth(): \Illuminate\View\View
     {
         $month = Carbon::now()->monthName;
         $day = Carbon::now()->day;
@@ -44,7 +46,7 @@ class LogHoursController extends Controller
         return view('log_worked_hours', ['dates' => $datesToFill, 'month' => $month, 'userLogs' => $userLogs]);
     }
 
-    public function insertLoggedHours(Request $request)
+    public function insertLoggedHours(Request $request): RedirectResponse
     {
         if ($this->checkIfClosedMonth(Auth::user()->id, $request->input('month'))) {
             return redirect('/');
@@ -131,7 +133,7 @@ class LogHoursController extends Controller
         return redirect('/loghours')->with('success', 'Hours inserted!');
     }
 
-    public function deleteLoggedHours(Request $request)
+    public function deleteLoggedHours(Request $request): RedirectResponse
     {
         $loggedHours = LogHoursModel::query()
             ->where('id', $request->input('id'))
@@ -142,12 +144,12 @@ class LogHoursController extends Controller
         return redirect('/loghours')->with('success', 'Hours deleted!');
     }
 
-    private function getUserAlreadyLoggedHours()
+    private function getUserAlreadyLoggedHours(): array
     {
         return LogHoursModel::query()->where('user_id', Auth::user()->id)->pluck('date')->toArray();
     }
 
-    public function getPreviousMonth()
+    public function getPreviousMonth(): \Illuminate\View\View
     {
         if ($this->checkIfClosedMonth(Auth::user()->id, Carbon::now()->subMonth()->monthName)) {
             return redirect('/');
@@ -174,7 +176,7 @@ class LogHoursController extends Controller
         return view('log_worked_hours', ['dates' => $datesToFill, 'month' => $month, 'userLogs' => $userLogs, 'hide' => $hide]);
     }
 
-    public function closeMonthlyReport(Request $request)
+    public function closeMonthlyReport(Request $request): RedirectResponse
     {
         if ($request->input('month') == Carbon::now()->monthName) { //check for which month we close the report for
             $logHours = LogHoursModel::query()
@@ -237,7 +239,7 @@ class LogHoursController extends Controller
         return true;
     }
 
-    public function getSubmittedHours(Request $request) //if user has closed their hours report we call this method
+    public function getSubmittedHours(Request $request): \Illuminate\View\View //if user has closed their hours report we call this method
     {
         $submittedHours = LoggedHoursSubmittedModel::query()
             ->where('is_confirmed', 1)
@@ -253,7 +255,7 @@ class LogHoursController extends Controller
         return view('loghours_submit_review', ['submits' => $submittedHours, 'monthlyHours' => $monthlyHours]);
     }
 
-    public function submitHoursReview(Request $request)
+    public function submitHoursReview(Request $request): RedirectResponse
     {
         $submittedHours = LoggedHoursSubmittedModel::query()
             ->where('id', $request->input('id'))
@@ -283,7 +285,7 @@ class LogHoursController extends Controller
         return back();
     }
 
-    public function getSubmitedAndConfirmed($user_id, $month) //for accountant view
+    public function getSubmitedAndConfirmed($user_id, $month): object //for accountant view
     {
         $submittedHours = LoggedHoursSubmittedModel::query()
             ->where('is_confirmed', 2)

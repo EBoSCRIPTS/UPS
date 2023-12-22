@@ -9,19 +9,21 @@ use App\Models\Tasks\TasksParticipantsModel;
 use App\Models\PerformanceReportsModel;
 use App\Models\UserModel;
 use Carbon\Carbon;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel as MaatwebsiteExcel;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class ProjectPerformanceController extends Controller
 {
-    public function loadProjectPerformance(Request $request) //loads page for project performance(specific project)
+    public function loadProjectPerformance(Request $request): \Illuminate\View\View //loads page for project performance(specific project)
     {
         $projectMembers = TasksParticipantsModel::query()->where('project_id', $request->project_id)->get();
 
         return view('tasks.tasks_employee_performance', ['projectId' => $request->project_id, 'projectMembers' => $projectMembers]);
     }
 
-    public function makeReport(Request $request)
+    public function makeReport(Request $request): RedirectResponse
     {
         $getName = UserModel::query()->where('id', $request->input('employee_id'))->select('first_name', 'last_name')->first();
         $report = new PerformanceReportsModel([
@@ -39,7 +41,7 @@ class ProjectPerformanceController extends Controller
         return back()->with('success', 'Performance report created successfully!');
     }
 
-    public function generatePerformanceReportXlsx(Request $request)
+    public function generatePerformanceReportXlsx(Request $request): BinaryFileResponse
     {
         return MaatwebsiteExcel::download(new PerformanceExport($request->project_id), 'performance_report.xlsx',\Maatwebsite\Excel\Excel::XLSX);
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Mail\SendToAll;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Support\Facades\Mail;
@@ -10,7 +11,7 @@ use App\Models\UserModel;
 
 class MailController extends Controller
 {
-    public function sendMailToAll(Request $request)
+    public function sendMailToAll(Request $request): RedirectResponse
     {
         $getAllEmails = UserModel::query()->select('email')->get()->toArray();
 

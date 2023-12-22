@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\VacationPointsModel;
+use FontLib\TrueType\Collection;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use App\Models\DepartamentsModel;
 use App\Models\EmployeeInformationModel;
@@ -11,7 +13,7 @@ use App\Models\UserModel;
 
 class EmployeeInformationController extends Controller
 {
-    public function getEmployeeInformationData()
+    public function getEmployeeInformationData(): \Illuminate\View\View
     {
         $users = UserModel::all();
         $departments = DepartamentsModel::all();
@@ -29,7 +31,7 @@ class EmployeeInformationController extends Controller
         return view('employee_information', ['users' => $getNotSigned, 'departments' => $departments, 'employees' => $employees]);
     }
 
-    public function insertEmployeeInformation(Request $request)
+    public function insertEmployeeInformation(Request $request): RedirectResponse
     {
         $information = new EmployeeInformationModel([
             'user_id' => $request->input('employee_id'),
@@ -51,7 +53,7 @@ class EmployeeInformationController extends Controller
         return redirect('/employee_information');
     }
 
-    public function deleteEmployee(Request $request)
+    public function deleteEmployee(Request $request): RedirectResponse
     {
         $employee = EmployeeInformationModel::query()->find($request->input('employee_id'));
         $employee->delete();
@@ -59,7 +61,7 @@ class EmployeeInformationController extends Controller
         return redirect('/employee_information');
     }
 
-    public function getAllEmployees()
+    public function getAllEmployees(): \Illuminate\Database\Eloquent\Collection
     {
         return EmployeeInformationModel::query()->select('id', 'user_id')->get();
     }

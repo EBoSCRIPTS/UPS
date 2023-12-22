@@ -9,22 +9,24 @@ use App\Models\Tasks\TasksStatusModel;
 use App\Models\Tasks\TasksTaskCommentsModel;
 use App\Models\Tasks\TasksTaskModel;
 use App\Models\UserModel;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 
 class TasksController extends Controller
 {
-    //gotta change name to load project page
-
-    public function loadNewProjectsPage() {
+    public function loadNewProjectsPage() : \Illuminate\View\View
+    {
         $users = UserModel::query()->select('id', 'first_name', 'last_name')->get();
         $employees = EmployeeInformationModel::query()->select('id', 'user_id')->get();
 
         return view('tasks.tasks_create_project', ['users' => $users, 'employees' => $employees]);
     }
 
-    public function createNewProject(Request $request)
+    public function createNewProject(Request $request): RedirectResponse
     {
         $newProject = new TasksProjectModel([
             'name' => $request->input('project_name'),
@@ -61,14 +63,14 @@ class TasksController extends Controller
 
     //this method loads in all projects in project_settings view (only called for higher roles)
 
-    public function loadAvailableProjects()
+    public function loadAvailableProjects(): \Illuminate\View\View
     {
         $projects = TasksProjectModel::all();
         return view('tasks.tasks_projects_settings', ['projects' => $projects]);
     }
 
 
-    public function projectsApi() //important to keep this, helps reduce amount of code needed for loading data for each page that requires if user is assigned information
+    public function projectsApi(): JsonResponse  //important to keep this, helps reduce amount of code needed for loading data for each page that requires if user is assigned information
     {
         $getEmployeeId = EmployeeInformationModel::query()->where('user_id', Auth::user()->id)->pluck('id')->first();
         $projects = TasksParticipantsModel::query()
@@ -79,7 +81,7 @@ class TasksController extends Controller
         return response()->json($projects);
     }
 
-    public function newTask(Request $request)
+    public function newTask(Request $request): RedirectResponse
     {
         $getTaskStatusesForProject = TasksStatusModel::query()->where('project_id', $request->input('project'))->select('id')->get()->toArray();
 
@@ -117,7 +119,7 @@ class TasksController extends Controller
 
 
     //loads in user projects
-    public function loadMyTasks(Request $request)
+    public function loadMyTasks(Request $request): \Illuminate\View\View
     {
         $getEmployeeId = EmployeeInformationModel::query()->where('user_id', $request->user()->id)->pluck('id')->first();
         $myTasks = TasksTaskModel::query()->where('assigned_to', $request->user()->id)->get();
@@ -126,7 +128,7 @@ class TasksController extends Controller
         return view('tasks.tasks_landing', ['tasks' => $myTasks, 'myProjects' => $myProjects]);
     }
 
-    public function loadTicket(Request $request)
+    public function loadTicket(Request $request): \Illuminate\View\View
     {
         $ticket = TasksTaskModel::query()->where('id', $request->ticket_id)->first();
         $statuses = TasksStatusModel::query()->where('project_id', $ticket->project_id)->select('statuses')->get()->toArray();
@@ -146,7 +148,7 @@ class TasksController extends Controller
                 'users' => $users]);
     }
 
-    public function updateTaskDescription (Request $request)
+    public function updateTaskDescription (Request $request): RedirectResponse
     {
         $ticket = TasksTaskModel::query()->where('id', $request->input('ticket_id'))->first();
 
@@ -158,7 +160,7 @@ class TasksController extends Controller
     }
 
 
-    public function loadProjectTasks(Request $request) //used in project board page
+    public function loadProjectTasks(Request $request): \Illuminate\View\View //used in project board page
     {
         $projectTasks = TasksTaskModel::query()->where('project_id', $request->project_id)->where('is_completed', 0)->where('is_draft', 0)->get();
         $myTasks = TasksTaskModel::query()->where('assigned_to', $request->user()->id)->get();
@@ -181,7 +183,7 @@ class TasksController extends Controller
             'currentStatus' => $currentStatus]);
     }
 
-    public function updateStatus(Request $request)
+    public function updateStatus(Request $request): RedirectResponse
     {
         $ticket = TasksTaskModel::query()->where('id', $request->ticket_id)->first();
         $ticketAllStatuses = TasksStatusModel::query()->where('project_id', $ticket['project_id'])->select('statuses')->get()->toArray();
@@ -212,12 +214,13 @@ class TasksController extends Controller
         return redirect('/tasks/ticket/' . $request->ticket_id);
     }
 
-    public function loadCommentsForTicket($ticket_id)
+    public function loadCommentsForTicket($ticket_id): Collection
     {
         return TasksTaskCommentsModel::query()->where('task_id', $ticket_id)->get();
     }
 
-    public function addComment(Request $request){
+    public function addComment(Request $request): RedirectResponse
+    {
         $newComment = new TasksTaskCommentsModel([
             'task_id' => $request->input('task_id'),
             'comment_author_id' => $request->input('comment_author'),
@@ -229,7 +232,7 @@ class TasksController extends Controller
         return redirect('/tasks/ticket/' . $request->input('task_id'));
     }
 
-    public function updateAssignee(Request $request)
+    public function updateAssignee(Request $request): RedirectResponse
     {
         $ticket = TasksTaskModel::query()->where('id', $request->ticket_id)->first();
         $ticket->update([
@@ -239,7 +242,7 @@ class TasksController extends Controller
         return redirect('/tasks/ticket/' . $request->ticket_id);
     }
 
-    public function deleteTicket(Request $request)
+    public function deleteTicket(Request $request): RedirectResponse
     {
         $ticket = TasksTaskModel::query()->where('id', $request->ticket_id)->first();
         $ticket->delete();
@@ -247,7 +250,7 @@ class TasksController extends Controller
         return redirect('/tasks');
     }
 
-    public function completeTicket(Request $request)
+    public function completeTicket(Request $request): RedirectResponse
     {
         $ticket = TasksTaskModel::query()->where('id', $request->ticket_id)->first();
 
@@ -269,7 +272,7 @@ class TasksController extends Controller
     }
 
 
-    public function updateTaskDraftStatus(Request $request)
+    public function updateTaskDraftStatus(Request $request): RedirectResponse
     {
         $task = TasksTaskModel::query()->where('id', $request->input('ticket_id'))->first();
         if($task->is_draft == 1){
@@ -288,7 +291,7 @@ class TasksController extends Controller
         return back()->with('success', 'Draft status updated!');
     }
 
-    public function updatePriority(Request $request)
+    public function updatePriority(Request $request): RedirectResponse
     {
         $task = TasksTaskModel::query()->where('id', $request->input('ticket_id'))->first();
         $priorities = ['low', 'medium', 'high', 'critical'];
@@ -330,7 +333,7 @@ class TasksController extends Controller
         return back()->with('success', 'Priority updated!');
     }
 
-    public function updateTitle(Request $request)
+    public function updateTitle(Request $request): RedirectResponse
     {
         $task = TasksTaskModel::query()->where('id', $request->ticket_id)->first();
 

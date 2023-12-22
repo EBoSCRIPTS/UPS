@@ -3,10 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\EmployeeVacationsModel;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use App\Models\AbsenceModel;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\View;
 
 class AbsenceController extends Controller
 {
@@ -16,7 +20,7 @@ class AbsenceController extends Controller
     }
 
     //loads in the absence review page
-    public function showAbsenceReview(Request $request)
+    public function showAbsenceReview(Request $request): \Illuminate\View\View
     {
         $absences = $this->reviewAbsence($request);
         $reviewedAbsences = $this->getReviewedAbsence($request);
@@ -25,7 +29,7 @@ class AbsenceController extends Controller
     }
 
     //for user himself
-    public function userAbsences()
+    public function userAbsences(): \Illuminate\View\View
     {
         $showSent = $this->getUserAbsence();
         $showReviewed = $this->getUserAbsenceReviewed();
@@ -33,7 +37,7 @@ class AbsenceController extends Controller
         return view('absence.absence', ['showSent' => $showSent, 'showReviewed' => $showReviewed]);
     }
 
-    public function addAbsence(Request $request)
+    public function addAbsence(Request $request): RedirectResponse
     {
         if($request->input('status') == null) {
             $request->merge(['status' => 'Sent']);
@@ -64,28 +68,28 @@ class AbsenceController extends Controller
     }
 
     /* users own requests */
-    public function getUserAbsence()
+    public function getUserAbsence(): Collection
     {
         return AbsenceModel::query()->where('user_id', Auth::id())->where('status', 'Sent')->orderBy('created_at', 'desc')->get();
     }
 
-    public function getUserAbsenceReviewed()
+    public function getUserAbsenceReviewed(): Collection
     {
         return AbsenceModel::query()->where('user_id', Auth::id())->where('status', 'Approve')->orWhere('status', 'Deny')->orderBy('created_at', 'desc')->get();
     }
 
     /* absence review page(for all) */
-    public function reviewAbsence()
+    public function reviewAbsence(): Collection
     {
         return AbsenceModel::query()->where('status', 'Sent')->orderBy('created_at', 'desc')->get();
     }
 
-    public function getReviewedAbsence()
+    public function getReviewedAbsence(): Collection
     {
         return AbsenceModel::query()->where('status', 'Approve')->orWhere('status', 'Deny')->orderBy('created_at', 'desc')->get();
     }
 
-    public function updateAbsence(Request $request)
+    public function updateAbsence(Request $request): RedirectResponse
     {
         $absence = AbsenceModel::query()->where('id', $request->input('id'))->first();
 
@@ -110,7 +114,7 @@ class AbsenceController extends Controller
         return redirect('/absence/review')->with('success', 'Absence updated!');
     }
 
-    public function deleteAbsence(Request $request)
+    public function deleteAbsence(Request $request): RedirectResponse
     {
         $absence = AbsenceModel::query()->find($request->id);
         $absence->delete();

@@ -5,17 +5,18 @@ namespace App\Http\Controllers;
 use App\Models\News\NewsCommentsModel;
 use App\Models\News\NewsCommentsRatingModel;
 use App\Models\News\NewsTopicModel;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
 class NewsController extends Controller
 {
-    public function createTopic() //for creating new topics and editing old ones
+    public function createTopic(): \Illuminate\View\View //for creating new topics and editing old ones
     {
         $topics = NewsTopicModel::all();
         return view('news_creation', ['topics' => $topics]);
     }
 
-    public function insertNewTopic(Request $request)
+    public function insertNewTopic(Request $request): RedirectResponse
     {
         if ($request->hasFile('coverPhoto')) {
             $image = $request->file('coverPhoto');
@@ -41,7 +42,7 @@ class NewsController extends Controller
     }
 
     //used for loading in specific topic
-    public function loadNewsTopic(Request $request)
+    public function loadNewsTopic(Request $request): \Illuminate\View\View
     {
         $topic = NewsTopicModel::query()->where('id', $request->topic_id)->get()->toArray();
         $comments = NewsCommentsModel::query()->where('topic_id', $request->topic_id)->get();
@@ -55,23 +56,23 @@ class NewsController extends Controller
     }
 
     //this is only used for landing page(home page)
-    public function loadAllTopics()
+    public function loadAllTopics(): \Illuminate\View\View
     {
         return view('home', ['topics' => NewsTopicModel::query()->orderBy('id', 'desc')->limit(6)->get()->toArray()]);
     }
 
-    public function loadNewsPageTopics()
+    public function loadNewsPageTopics(): \Illuminate\View\View
     {
         return view('news_all_news', ['topics' => NewsTopicModel::query()->orderBy('id', 'desc')->get()]);
     }
 
-    public function loadEditNewsTopic(Request $request) //get all the data about specific topic
+    public function loadEditNewsTopic(Request $request): \Illuminate\View\View //get all the data about specific topic
     {
         $topic = NewsTopicModel::query()->where('id', $request->topic_id)->first();
         return view('news_edit', ['topic' => $topic]);
     }
 
-    public function postTopicComment(Request $request)
+    public function postTopicComment(Request $request): RedirectResponse
     {
         $comments = new NewsCommentsModel([
             'topic_id' => $request->input('topic_id'),
@@ -84,7 +85,7 @@ class NewsController extends Controller
         return back()->with('success', 'Comment created successfully!');
     }
 
-    public function updateTopic(Request $request)
+    public function updateTopic(Request $request): RedirectResponse
     {
         $topic = NewsTopicModel::query()->where('id', $request->input('topic_id'))->first();
 
@@ -109,7 +110,7 @@ class NewsController extends Controller
         return back()->with('success', 'News topic updated successfully!');
     }
 
-    public function deleteNewsTopic(Request $request)
+    public function deleteNewsTopic(Request $request): RedirectResponse
     {
         $topic = NewsTopicModel::query()->where('id', $request->topic_id)->first();
 
@@ -124,7 +125,7 @@ class NewsController extends Controller
         return back()->with('success', 'News topic deleted successfully!');
     }
 
-    public function rateTopicComment(Request $request)
+    public function rateTopicComment(Request $request): RedirectResponse
     {
         if (NewsCommentsRatingModel::query()->where('news_topic_id', $request->topic_id) //check if user hasn't already rated this comment before
             ->where('comment_id', $request->comment_id)
