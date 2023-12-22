@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use App\Models\DepartamentsModel;
 use App\Models\EmployeeInformationModel;
 use App\Models\EmployeeVacationsModel;
+use App\Models\Tasks\TasksParticipantsModel;
 use App\Models\UserModel;
 
 class EmployeeInformationController extends Controller
@@ -56,15 +57,16 @@ class EmployeeInformationController extends Controller
 
     public function deleteEmployee(Request $request): RedirectResponse
     {
-        $employee = EmployeeInformationModel::query()->find($request->input('employee_id'));
-
         if  (EquipmentAssignmentModel::query()->where('employee_id', $request->input('employee_id'))->get() != null)
         {
             return back()->withInput()->withErrors([
                 'equipment' => 'This employee has equipment assigned. Please remove it before deleting.'
             ]);
         }
+        $participantDelete = TasksParticipantsModel::query()->where('employee_id', $request->input('employee_id'))->get();
+        $participantDelete->delete();
 
+        $employee = EmployeeInformationModel::query()->find($request->input('employee_id'));
         $employee->delete();
 
         return redirect('/employee_information');

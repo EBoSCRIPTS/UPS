@@ -285,7 +285,7 @@ class LogHoursController extends Controller
         return back();
     }
 
-    public function getSubmitedAndConfirmed($user_id, $month): object //for accountant view
+    public function getSubmitedAndConfirmed($user_id, $month): object|null //for accountant view
     {
         $submittedHours = LoggedHoursSubmittedModel::query()
             ->where('is_confirmed', 2)

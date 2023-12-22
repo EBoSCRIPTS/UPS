@@ -18,6 +18,15 @@ class UserController extends Controller
 {
     public function register(Request $request): RedirectResponse
     {
+        $validated = $request->validate([
+            'first_name' => 'string|required|max:50',
+            'last_name' => 'string|required|max:50',
+            'email' => 'string|required|email|unique:users,email|max:255',
+            'password' => 'required|min:8',
+            'phone_number' => 'required|unique:users,phone_number|max:15',
+            'role_id' => 'required',
+        ]);
+
         if ($request->hasFile('profile_picture')) { //store image in server storage
             $image = $request->file('profile_picture');
             $imageName = time().'.'.$image->getClientOriginalExtension();
@@ -61,11 +70,17 @@ class UserController extends Controller
     {
         $user = UserModel::query()->find($request->input('id'));
         $user->delete();
+
         return redirect('/mng/edit')->with('success', 'User deleted!');
     }
 
     public function editUser(Request $request): RedirectResponse
     {
+        $validated = $request->validate([
+            'email' => 'string|unique:users,email|max:255',
+            'phone_number' => 'string|unique:users,phone_number|max:255',
+        ]);
+
         $user = UserModel::query()->find($request->input('id'));
 
         if($request->hasFile('profile_picture'))
@@ -125,6 +140,12 @@ class UserController extends Controller
 
     public function changePassword(Request $request): RedirectResponse
     {
+        $validated = $request->validate([
+            'old_password' => 'required',
+            'new_password' => 'required|min:8',
+            'confirm_password' => 'required|same:new_password',
+        ]);
+
         $user = UserModel::query()->where('id', $request->id)->select('id', 'password')->first();
 
         if (!Hash::check($request->input('old_password'), $user->password)) { //if passwords don't match force user back
@@ -140,6 +161,11 @@ class UserController extends Controller
 
     public function updateBanking(Request $request): RedirectResponse
     {
+        $validated = $request->validate([
+            'bank_name' => 'required',
+            'account_name' => 'required|unique:employee_information,bank_account_name',
+            'account_number' => 'required|unique:employee_information,bank_account',
+        ]);
 
         $employee = EmployeeInformationModel::query()->where('user_id', Auth::user()->id)->first();
 
