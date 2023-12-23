@@ -287,7 +287,7 @@ class TasksController extends Controller
     public function completeTicket(Request $request): RedirectResponse
     {
         $validated = $request->validate([
-            'user_id' => 'required|integer|exists:users,id',
+            'user_id' => 'sometimes|integer|exists:users,id',
             'ticket_id' => 'required|integer|exists:tasks_task,id',
         ]);
 

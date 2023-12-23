@@ -91,9 +91,9 @@ class UserController extends Controller
     public function editUser(Request $request): RedirectResponse
     {
         $validated = $request->validate([
-            'email' => 'string|unique:users,email|max:255',
-            'phone_number' => 'string|unique:users,phone_number|max:255',
-            'profile_picture' => 'image|mimes:jpeg,png,jpg,gif,svg',
+            'email' => 'sometimes|nullable|email|string|unique:users,email|max:255',
+            'phone_number' => 'sometimes|nullable|numeric|unique:users,phone_number|max:15',
+            'profile_picture' => 'sometimes|nullable|image|mimes:jpeg,png,jpg,gif,svg',
         ]);
 
         $user = UserModel::query()->find($request->input('id'));
