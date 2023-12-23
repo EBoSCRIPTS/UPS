@@ -38,10 +38,10 @@ class EmployeeInformationController extends Controller
         $validated = $request->validate([
             'employee_id' => 'required|unique:employee_information,user_id',
             'department_id' => 'required',
-            'hour_pay' => 'numeric',
-            'salary' => 'numeric',
-            'position' => 'required',
-            'hours' => 'numeric',
+            'hour_pay' => 'sometimes|nullable|decimal:2',
+            'salary' => 'sometimes|nullable|decimal:2',
+            'position' => 'required|string',
+            'hours' => 'numeric|required',
         ]);
 
         $information = new EmployeeInformationModel([
@@ -86,8 +86,8 @@ class EmployeeInformationController extends Controller
     {
         $validated = $request->validate([
             'employee_id' => 'required|exists:employee_information,id',
-            'hour_pay' => 'sometimes|nullable|numeric',
-            'salary' => 'sometimes|nullable|numeric',
+            'hour_pay' => 'sometimes|nullable|decimal:2',
+            'salary' => 'sometimes|nullable|decimal:2',
             'monthly_hours' => 'sometimes|nullable|numeric',
         ]);
 

@@ -44,9 +44,9 @@
                 <option value="fixed">Set salary</option>
             </select>
 
-            <input type="number" class="form-control" id="hour_pay" name="hour_pay" placeholder="Hourly" min="0"/>
+            <input type="text" class="form-control" id="hour_pay" name="hour_pay" placeholder="Hourly"/>
 
-            <input type="number" class="form-control" id="salary" name="salary" placeholder="Fixed" min="0"/>
+            <input type="text" class="form-control" id="salary" name="salary" placeholder="Fixed"/>
 
 
             <label for="position" class="form-label">Position</label>
@@ -123,10 +123,10 @@
                                     <input type="hidden" name="employee_id" value="{{ $employee->id }}">
 
                                     <label for="hour_pay" class="form-label">Hour Pay</label>
-                                    <input type="number" class="form-control" id="hour_pay" name="hour_pay" placeholder="{{$employee->hour_pay}}" min="0"/>
+                                    <input type="text" class="form-control" id="hour_pay" name="hour_pay" placeholder="{{$employee->hour_pay}}"/>
 
                                     <label for="salary" class="form-label">Salary</label>
-                                    <input type="number" class="form-control" id="salary" name="salary" placeholder="{{$employee->salary}}" min="0"/>
+                                    <input type="text" class="form-control" id="salary" name="salary" placeholder="{{$employee->salary}}"/>
 
                                     <label for="position" class="form-label">Position</label>
                                     <input type="text" class="form-control" id="position" name="position" placeholder="{{$employee->position}}"/>

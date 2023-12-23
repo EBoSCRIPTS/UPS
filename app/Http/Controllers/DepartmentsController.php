@@ -53,7 +53,7 @@ class DepartmentsController extends Controller
     public function loadUserDepartment(Request $request): \Illuminate\View\View
     {
         $employeeDept = EmployeeInformationModel::query()->where('user_id', $request->user()->id)->pluck('department_id')->first();
-        $department = DepartamentsModel::query()->find($employeeDept)->select('id', 'name')->first();
+        $department = DepartamentsModel::query()->where('id', $employeeDept)->select('id', 'name')->first();
 
         $getAllDeptEmployees = EmployeeInformationModel::query()
             ->where('department_id', $department->id)
