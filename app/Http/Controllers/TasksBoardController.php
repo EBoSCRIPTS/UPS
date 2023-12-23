@@ -225,7 +225,7 @@ class TasksBoardController extends Controller
         }
     }
 
-    private function checkAverageRating($project_id): int
+    private function checkAverageRating($project_id): int|null
     {
         return PerformanceReportsModel::query()->where('project_id', $project_id)
             ->where('soft_deleted', 0)

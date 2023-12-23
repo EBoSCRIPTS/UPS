@@ -13,6 +13,7 @@ use App\Models\UserModel;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Carbon\Carbon;
 
 class UserController extends Controller
 {
@@ -62,14 +63,24 @@ class UserController extends Controller
 
     public function showAll(): View
     {
-        $users = UserModel::all();
+        $users = UserModel::query()->where('soft_deleted', 0)->get();
         return view('user_manage.user_edit', ['users' => $users]);
     }
 
     public function deleteUser(Request $request): RedirectResponse
     {
         $user = UserModel::query()->find($request->input('id'));
-        $user->delete();
+
+        if ($user->created_at > Carbon::now()->subMinutes(10))
+        {
+            $user->delete();
+        }
+        //if the user is not 'fresh' we assume that he has most likely made comments or posts and should not be fully wiped to avoid data conflicts
+        else {
+            $user->update([
+                'soft_deleted' => 1
+            ]);
+        }
 
         return redirect('/mng/edit')->with('success', 'User deleted!');
     }

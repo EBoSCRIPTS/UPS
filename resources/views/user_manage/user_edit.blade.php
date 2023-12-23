@@ -73,7 +73,7 @@
                                 <td>{{$user->id}}</td>
                                 <td>{{$user->first_name}} {{$user->last_name}}</td>
                                 <td>{{$user->email}}</td>
-                                <td>{{$user->role}}</td>
+                                <td>{{$user->role->name}}</td>
                                 <td>
                                     <div class="btn-group">
                                         <form action="{{ route('user.delete') }}" method="POST" style="display: inline">

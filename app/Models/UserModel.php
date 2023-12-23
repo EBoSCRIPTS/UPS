@@ -28,6 +28,7 @@ class UserModel extends Authenticatable
         'password',
         'profile_picture',
         'role_id',
+        'soft_deleted',
     ];
 
     /**
