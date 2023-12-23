@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class AccountantFulfilledPayslipsModel extends Model
 {
@@ -15,6 +16,18 @@ class AccountantFulfilledPayslipsModel extends Model
         'employee_id',
         'department_id',
         'month',
+        'year',
         'loghours_submitted_id',
+        'fulfilled_by',
     ];
+
+    public function employee(): BelongsTo
+    {
+        return $this->belongsTo(EmployeeInformationModel::class, 'employee_id', 'id');
+    }
+
+    public function fulfilledBy():  BelongsTo
+    {
+        return $this->belongsTo(UserModel::class, 'fulfilled_by', 'id');
+    }
 }

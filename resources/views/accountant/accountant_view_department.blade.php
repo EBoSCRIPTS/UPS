@@ -19,7 +19,7 @@
 <div class="row">
     @include('components.sidebar')
     <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-3">
-        <p class="h2">Department: {{$department->name}} ({{$month}}) summary || <a href="/accountant/settings/{{$department->id}}">Settings</a></p>
+        <p class="h2">Department: {{$department->name}} summary || <a href="/accountant/settings/{{$department->id}}">Settings</a></p>
         <div class="row" style="margin-top: 50px">
             <div class="col-sm-6">
                 <p class="h3 text-center">Department Employees</p>
@@ -47,6 +47,28 @@
                         @endforeach
                     </tbody>
                 </table>
+                <hr>
+                <p class="h3 text-center">Recent employee absences</p>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Employee Name</th>
+                            <th scope="col">Start date</th>
+                            <th scope="col">End date</th>
+                            <th scope="col">Type</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($allAbsences as $absences)
+                        <tr>
+                            <td>{{$absences[0]['user']->first_name}} {{$absences[0]['user']->last_name}}</td>
+                            <td>{{$absences[0]['start_date']}}</td>
+                            <td>{{$absences[0]['end_date']}}</td>
+                            <td>{{$absences[0]['type']}}</td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
             </div>
 
             <div class="col-sm-6">
@@ -64,14 +86,38 @@
                                 <tr>
                                     <td>{{$employee->user->first_name}} {{$employee->user->last_name}}</td>
                                     <td>
-                                        <a href="/accountant/payslip/{{$department->id}}/{{$employee->user_id}}/{{$month}}" class="btn btn-primary btn-sm">Generate</a>
+                                        <a href="/accountant/payslip/{{$department->id}}/{{$employee->user_id}}/{{\Carbon\Carbon::now()->year}}/{{$month}}" class="btn btn-primary btn-sm">Generate</a>
                                     </td>
                                 </tr>
                             @endif
                         @endforeach
                     </tbody>
                 </table>
+                <hr>
+                <p class="h3 text-center">Fulfilled payouts</p>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th scope="col">Fulfilled by</th>
+                                <th scope="col">Employee Name</th>
+                                <th scope="col">For period</th>
+                                <th scope="col">Fulfilled on</th>
+                                <th scope="col">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($allFulfilled as $fulfilled)
+                                    <tr>
+                                        <td>{{$fulfilled->fulfilledBy->first_name}} {{$fulfilled->fulfilledBy->last_name}}</td>
+                                        <td>{{$fulfilled->employee->user->first_name}} {{$fulfilled->employee->user->last_name}}</td>
+                                        <td>{{$fulfilled->year}}-{{$fulfilled->month}}</td>
+                                        <td>{{$fulfilled->created_at}}</td>
+                                        <td><a href="/accountant/payslip/{{$department->id}}/{{$fulfilled->employee->user_id}}/{{$fulfilled->year}}/{{$fulfilled->month}}">Go to</a></td>
+                                    </tr>
+                            @endforeach
+                        </tbody>
             </div>
+
 
         </div>
 

@@ -95,7 +95,7 @@
                             <br>
                             <button type="button" class="btn btn-success btn-sm" id="printButton" onclick="printPayslip()">Print</button>
                             @if($isFullfilled == false)
-                            <a href="/accountant/payslip/{{$employee->department->id}}/{{$employee->id}}/{{$month}}/{{$hours->id}}/fulfill" class="btn btn-primary btn-sm">Fulfill</a>
+                            <a href="/accountant/payslip/{{$employee->department->id}}/{{$employee->id}}/{{\Carbon\Carbon::now()->year}}/{{$month}}/{{$hours->id}}/fulfill" class="btn btn-primary btn-sm">Fulfill</a>
                             @endif
                         </div>
                     </div>

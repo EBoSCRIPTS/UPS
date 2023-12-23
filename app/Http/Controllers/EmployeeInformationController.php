@@ -17,7 +17,7 @@ class EmployeeInformationController extends Controller
 {
     public function getEmployeeInformationData(): \Illuminate\View\View
     {
-        $users = UserModel::query()->where('soft_delete', 0)->get();
+        $users = UserModel::query()->where('soft_deleted', 0)->get();
         $departments = DepartamentsModel::all();
         $employees = EmployeeInformationModel::all();
 

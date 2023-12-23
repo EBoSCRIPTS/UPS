@@ -11,8 +11,13 @@ use Illuminate\Support\Facades\View;
 
 class DepartmentsController extends Controller
 {
-    public function addDepartment(Request $request): \Illuminate\View\View
+    public function addDepartment(Request $request): RedirectResponse
     {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255|unique:departments,name',
+            'description' => 'required|string',
+        ]);
+
         $departament = new DepartamentsModel([
             'name' => $request->input('departament'),
             'description' => $request->input('description'),
@@ -20,21 +25,29 @@ class DepartmentsController extends Controller
 
         $departament->save();
 
-        return view('departaments');
+        return back();
     }
 
     public function showAllDepartments(): \Illuminate\View\View
     {
         $departments = DepartamentsModel::all();
+
         return view('departaments', ['departments' => DepartamentsModel::all()]);
     }
 
-    public function deleteDepartament(Request $request): RedirectResponse
+    public function deleteDepartment(Request $request): RedirectResponse
     {
-        $departament = DepartamentsModel::query()->find($request->input('id'));
-        $departament->delete();
+        $department = DepartamentsModel::query()->find($request->input('id'));
 
-        return redirect('/departaments');
+        if (EmployeeInformationModel::query()->where('department_id', $request->input('id'))->get()->count() > 0) { //check if any employees are assigned to the department
+            return back()->withInput()->withErrors([
+                'error' => 'There are employees in this department. You can not delete it!'
+            ]);
+        }
+
+        $department->delete();
+
+        return back();
     }
 
     public function loadUserDepartment(Request $request): \Illuminate\View\View

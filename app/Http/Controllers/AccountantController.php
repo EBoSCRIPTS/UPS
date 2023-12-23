@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AbsenceModel;
 use App\Models\LoggedHoursSubmittedModel;
 use App\Models\LogHoursModel;
 use Illuminate\Http\RedirectResponse;
@@ -30,6 +31,20 @@ class AccountantController extends Controller
         $showDept = DepartamentsModel::query()->find($request->id);
         $showEmployees = EmployeeInformationModel::query()->where('department_id', $request->id)->get();
         $logHours = new LogHoursController();
+        $getFulfilled = AccountantFulfilledPayslipsModel::query()->where('department_id', $request->id)->get();
+
+
+        foreach($showEmployees as $employee){
+            $absences = AbsenceModel::query()->where('user_id', $employee->user_id)
+                    ->where('status', '=', 'APPROVE')
+                    ->where('start_date', '>=', Carbon::now()->submonths(2)->startOfMonth())
+                    ->where('end_date', '<=', Carbon::now()->endOfMonth())
+                    ->get();
+
+            if(sizeof($absences) > 0){
+                $getAbsences[$employee->id] = $absences;
+            }
+        }
 
         $employeeReports = [];
         $status = [];
@@ -45,6 +60,8 @@ class AccountantController extends Controller
 
         return view('accountant.accountant_view_department',
             ['department' => $showDept,
+                'allAbsences' => $getAbsences,
+                'allFulfilled' => $getFulfilled,
                 'employees' => $showEmployees,
                 'employeeReports' => $employeeReports,
                 'month' => Carbon::now()->monthName,
@@ -97,6 +114,12 @@ class AccountantController extends Controller
 
     public function addTax(Request $request): RedirectResponse
     {
+        $validated = $request->validate([
+            'tax_name' => 'required',
+            'tax_rate' => 'required|numeric|between:0.00,99.99',
+            'tax_salary_from' => 'required|numeric',
+        ]);
+
         $newTax = new AccountantDepartmentSettingsModel([
             'department_id' => $request->department_id,
             'tax_name' => $request->input('tax_name'),
@@ -119,7 +142,7 @@ class AccountantController extends Controller
 
 
     //calculations for payslips, we also handle taxes here, could try to combine 2 ifs
-    public function getEmployeePayslipDetails(Request $request): View
+    public function getEmployeePayslipDetails(Request $request): View|RedirectResponse
     {
         $employee = EmployeeInformationModel::query()->where('user_id', $request->user_id)->first();
         $getHours = LoggedHoursSubmittedModel::query()
@@ -127,7 +150,7 @@ class AccountantController extends Controller
             ->where('month_name', $request->month)
             ->first();
 
-        if ($employee->hour_pay != null){
+        if (isset($employee->hour_pay)){
             $overtimeHours = 0;
             if($employee->monthly_hours < $getHours->total_hours)
             {
@@ -181,12 +204,21 @@ class AccountantController extends Controller
                 'isFullfilled' => $isFullfilled]);
         }
 
-        else if ($employee->salary != null) {
+        else if (isset($employee->salary)) { //calculatiosn are a bit different if employee has a set salary
             $getTaxes = AccountantDepartmentSettingsModel::query()->where('department_id', $request->department_id)
                 ->where('tax_salary_from', '<=', $employee->salary)
                 ->orderBy('tax_salary_from', 'desc')
                 ->get()
                 ->toArray();
+
+            if (AccountantFulfilledPayslipsModel::query()->where('loghours_submitted_id', $getHours->id)->first() != null)
+            {
+                $isFullfilled = true;
+            }
+            else{
+                $isFullfilled = false;
+            }
+
 
             $uniqueTaxes = [];
 
@@ -208,6 +240,7 @@ class AccountantController extends Controller
 
             return view('accountant.accountant_payslip', ['taxes' => $employeeTaxes, 'employee' => $employee,
                 'hours' => $getHours,
+                'isFullfilled' => $isFullfilled,
                 'month' => $request->month,
                 'baseSalary' => $employee->salary,
                 'nightSalary' => 0,
@@ -215,6 +248,7 @@ class AccountantController extends Controller
                 'overtimeSalary' => 0,
                 'totalTaxPrec' => $totalTaxPrec]);
         }
+
     }
 
     //function that checks if accountant has already fulfilled specific payslip
@@ -227,8 +261,10 @@ class AccountantController extends Controller
         $fulfill = new AccountantFulfilledPayslipsModel([
             'employee_id' => $request->employee_id,
             'month' => $request->month,
+            'year' => $request->year,
             'department_id' => $request->department_id,
-            'loghours_submitted_id' => $request->hours_id
+            'loghours_submitted_id' => $request->hours_id,
+            'fulfilled_by' => Auth::user()->id
         ]);
 
         $fulfill->save();

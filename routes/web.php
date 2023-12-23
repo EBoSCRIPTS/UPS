@@ -72,7 +72,7 @@ Route::post('/loghours/review/update_balance/{user_id}', [VacationsController::c
 /* Departaments */
 Route::get('/departments', [DepartmentsController::class, 'showAllDepartments'])->name('showAllDepartments')->middleware('manager');
 Route::post('/departments/create', [DepartmentsController::class, 'addDepartment'])->name('departments.create')->middleware('manager');
-Route::post('/departments/delete', [DepartmentsController::class, 'deleteDepartament'])->name('departments.delete')->middleware('manager');
+Route::post('/departments/delete', [DepartmentsController::class, 'deleteDepartment'])->name('departments.delete')->middleware('manager');
 Route::get('/departments/my', [DepartmentsController::class, 'loadUserDepartment'])->name('my_department');
 Route::get('/departments/my/ticket_register/{ticket_id}', [SubmittedTicketsController::class, 'ticketRegistrationUpdate'])->name('register_ticket');
 
@@ -89,8 +89,8 @@ Route::get('/accountant', [AccountantController::class, 'showAll'])->name('accou
 Route::get('/accountant/{id}', [AccountantController::class, 'showDept'])->name('accountant_view_department')->middleware('accountant');
 Route::post('/accountant/user', [AccountantController::class, 'loadEmployeeInformation'])->name('accountant_view_department')->middleware('accountant');
 Route::get('/accountant/settings/{department_id}', [AccountantController::class, 'getDepartmentSettings'])->name('department_settings')->middleware('accountant');
-Route::get('/accountant/payslip/{department_id}/{user_id}/{month}', [AccountantController::class, 'getEmployeePayslipDetails'])->middleware('accountant');
-Route::get('/accountant/payslip/{department_id}/{employee_id}/{month}/{hours_id}/fulfill', [AccountantController::class, 'employeePayslipFulfill'])->middleware('accountant');
+Route::get('/accountant/payslip/{department_id}/{user_id}/{year}/{month}', [AccountantController::class, 'getEmployeePayslipDetails'])->middleware('accountant');
+Route::get('/accountant/payslip/{department_id}/{employee_id}/{year}/{month}/{hours_id}/fulfill', [AccountantController::class, 'employeePayslipFulfill'])->middleware('accountant');
 
 Route::post('/accountant/settings/{department_id}/add_tax', [AccountantController::class, 'addTax'])->name('accountant.add_tax')->middleware('accountant');
 Route::get('/accountant/settings/{department_id}/delete_tax/{tax_id}', [AccountantController::class, 'deleteTax'])->name('accountant.delete_tax')->middleware('accountant');

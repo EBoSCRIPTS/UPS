@@ -29,10 +29,10 @@
                     <input type="text" class="form-control" id="tax_name" name="tax_name">
 
                     <label for="tax_rate" class="form-label">Tax rate</label>
-                    <input type="text" class="form-control" id="tax_rate" name="tax_rate">
+                    <input type="number" class="form-control" id="tax_rate" name="tax_rate">
 
                     <label for="tax_salary_from" class="form-label">Tax from salary that starts from: </label>
-                    <input type="text" class="form-control" id="tax_salary_from" name="tax_salary_from">
+                    <input type="number" class="form-control" id="tax_salary_from" name="tax_salary_from">
 
                     <button type="submit" class="btn btn-primary mt-3 float-end">Submit</button>
                 </form>
