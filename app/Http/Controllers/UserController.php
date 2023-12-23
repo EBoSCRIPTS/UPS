@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 
 use App\Models\DepartamentsModel;
 use App\Models\EmployeeInformationModel;
+use App\Models\Equipment\EquipmentAssignmentModel;
 use App\Models\PerformanceReportsModel;
 use App\Models\Tasks\TasksParticipantsModel;
+Use App\Models\EmployeeVacationsModel;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use App\Models\UserModel;
@@ -124,6 +126,7 @@ class UserController extends Controller
         $employeeId = EmployeeInformationModel::query()->where('user_id', $request->id)->pluck('id')->first();
         $projects = TasksParticipantsModel::query()->where('employee_id', $employeeId)->get();
 
+
         if($request->id == Auth::user()->id) { //only return this sensitive info if the user profile is user himself
             $employeeInformation = EmployeeInformationModel::query()->where('user_id', Auth::user()->id)->first();
             $performanceReport = PerformanceReportsModel::query()
@@ -131,8 +134,10 @@ class UserController extends Controller
                 ->orderBy('created_at', 'desc')
                 ->first();
             $departments = DepartamentsModel::query()->select('id', 'name')->get();
+            $employeeEquipment = EquipmentAssignmentModel::query()->where('employee_id', $employeeId)->get();
         }
         else {
+            $employeeEquipment = null;
             $performanceReport = null;
             $employeeInformation = null;
             $departments = null;
@@ -145,6 +150,7 @@ class UserController extends Controller
         return view('profile', ['user' => $user,
             'projects' => $projects,
             'employeeInformation' => $employeeInformation,
+            'employeeEquipment' => $employeeEquipment,
             'performanceReport' => $performanceReport,
             'departments' => $departments]);
     }

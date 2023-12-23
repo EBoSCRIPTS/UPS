@@ -91,6 +91,7 @@
                                 <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#changePassword">Change password</button>
                                 <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#bankDetails">Bank details</button>
                                 <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#employmentInformation" onclick="return confirmAccess()">Employment information</button>
+                                <button type="button" class="btn btn-info" data-bs-toggle="modal", data-bs-target="#equipmentInformation">My equipment</button>
                                 <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#submitTicket">Submit ticket</button>
 
                                 <div class="modal fade" id="changePassword" tabindex="-1" aria-labelledby="changePassword" aria-hidden="true">
@@ -198,6 +199,21 @@
 
                                                    <button type="submit" class="btn btn-success mt-3 float-end" onclick="return confirm('Make sure all the info you input is correct!')">Submit a ticket</button>
                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="modal modal-lg fade" id="equipmentInformation" tabindex="-1" aria-labelledby="equipmentInformation" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title text-center" id="equipmentInformation">Equipment Information</h5>
+                                            </div>
+                                            <div class="modal-body">
+                                                @foreach($employeeEquipment as $equipment)
+                                                    <p><strong>*) {{$equipment->equipment->name}} | ISSUED ON: {{$equipment->date_given}}</strong></p>
+                                                @endforeach
                                             </div>
                                         </div>
                                     </div>
