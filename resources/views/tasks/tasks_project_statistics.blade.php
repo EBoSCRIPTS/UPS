@@ -142,6 +142,11 @@
             legend: {display: false},
             scales: {
                 y: { minBarLength: 0 }
+            },
+            plugins: {
+                legend: {
+                    display: false
+                }
             }
         }
     });
@@ -179,6 +184,11 @@
             x: {
                 min: 0,
                 max: 100,
+            },
+            plugins: {
+                legend: {
+                    display: false
+                }
             }
         },
     });
