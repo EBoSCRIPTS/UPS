@@ -48,6 +48,10 @@ class LogHoursController extends Controller
 
     public function insertLoggedHours(Request $request): RedirectResponse
     {
+        $validated = $request->validate([
+            'user_id' => 'required|exists:users,id',
+        ]);
+
         if ($this->checkIfClosedMonth(Auth::user()->id, $request->input('month'))) {
             return redirect('/');
         }
@@ -257,10 +261,13 @@ class LogHoursController extends Controller
 
     public function submitHoursReview(Request $request): RedirectResponse
     {
+        $validated = $request->validate([
+            'id' => 'required',
+        ]);
+
         $submittedHours = LoggedHoursSubmittedModel::query()
             ->where('id', $request->input('id'))
             ->first();
-
 
         if ($request->has('Approve')) {
             $employeeVacation = VacationPointsModel::query() //on confirm we automatically add vacation points
@@ -285,7 +292,7 @@ class LogHoursController extends Controller
         return back();
     }
 
-    public function getSubmitedAndConfirmed($user_id, $month): object|null //for accountant view
+    public function getSubmittedAndConfirmed($user_id, $month): object|null //for accountant view
     {
         $submittedHours = LoggedHoursSubmittedModel::query()
             ->where('is_confirmed', 2)

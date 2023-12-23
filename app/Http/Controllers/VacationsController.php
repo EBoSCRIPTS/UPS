@@ -25,6 +25,11 @@ class VacationsController extends Controller
 
     public function updateBalance(Request $request): RedirectResponse
     {
+        $validated = $request->validate([
+            'employee_id' => 'required|integer|exists:users,id',
+            'balance' => 'required|numeric',
+        ]);
+
         $getBalance = VacationPointsModel::query()
             ->where('user_id', $request->input('employee_id'))
             ->first();

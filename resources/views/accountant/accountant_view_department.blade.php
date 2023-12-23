@@ -19,7 +19,7 @@
 <div class="row">
     @include('components.sidebar')
     <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-3">
-        <p class="h2">Department: {{$department->name}} summary || <a href="/accountant/settings/{{$department->id}}">Settings</a></p>
+        <p class="h2">Department: {{$department->name}} summary | <a href="/accountant/settings/{{$department->id}}">Tax Settings</a></p>
         <div class="row" style="margin-top: 50px">
             <div class="col-sm-6">
                 <p class="h3 text-center">Department Employees</p>
@@ -48,8 +48,23 @@
                     </tbody>
                 </table>
                 <hr>
-                <p class="h3 text-center">Recent employee absences</p>
-                <table class="table">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <p class="h3 text-center">Recent employee absences</p>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="dropdown">
+                            <button class="btn btn-primary dropdown-toggle float-end" type="button" data-bs-toggle="dropdown">Filter by name
+                                <span class="caret"></span></button>
+                            <ul class="dropdown-menu">
+                                @foreach($employees as $employee)
+                                    <li style="margin-left: 15px"><input type="checkbox" class="type-checkbox" value="{{$employee->user->first_name}} {{$employee->user->last_name}}">{{$employee->user->first_name}} {{$employee->user->last_name}}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <table class="table" id="tableAbsences">
                     <thead>
                         <tr>
                             <th scope="col">Employee Name</th>
@@ -147,4 +162,31 @@
             }]
         }
     })
+
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const checkboxes = document.querySelectorAll('.type-checkbox');
+        const rows = document.querySelectorAll('#tableAbsences tbody tr');
+        console.log(rows);
+
+        checkboxes.forEach(function (checkbox) {
+            checkbox.addEventListener('change', function () {
+                const checkedTypes = Array.from(checkboxes)
+                    .filter(c => c.checked)
+                    .map(c => c.value);
+
+                rows.forEach(function (row) {
+                    const typeCell = row.querySelector('td:first-child');
+                    const typeId = typeCell.textContent.trim();
+
+                    if (checkedTypes.length === 0 || checkedTypes.includes(typeId)) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+            });
+        });
+    });
+
 </script>

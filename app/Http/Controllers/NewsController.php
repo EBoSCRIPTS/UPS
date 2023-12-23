@@ -12,12 +12,18 @@ class NewsController extends Controller
 {
     public function createTopic(): \Illuminate\View\View //for creating new topics and editing old ones
     {
-        $topics = NewsTopicModel::all();
-        return view('news_creation', ['topics' => $topics]);
+        return view('news_creation', ['topics' => NewsTopicModel::all()]);
     }
 
     public function insertNewTopic(Request $request): RedirectResponse
     {
+        $validated = $request->validate([
+            'topic' => 'required|string|max:100',
+            'editorContent' => 'required',
+            'about' => 'required',
+            'coverPhoto' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+
         if ($request->hasFile('coverPhoto')) {
             $image = $request->file('coverPhoto');
             $imageName = time().'.'.$image->getClientOriginalExtension();

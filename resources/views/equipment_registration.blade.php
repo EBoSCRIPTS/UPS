@@ -15,6 +15,7 @@
     @include('components.sidebar')
     <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-3">
         <div class="container" style="width: 80%">
+            @include('components.errors')
             <div class="row">
             <div class="col-md-6">
         <p class="h4">Add equipment type</p>

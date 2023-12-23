@@ -12,6 +12,12 @@ class SubmittedTicketsController extends Controller
 
     public function submitTicket(Request $request): RedirectResponse
     {
+        $validated = $request->validate([
+            'title' => 'required|string|max:100',
+            'description' => 'required|string',
+            'department_id' => 'required|integer|exists:departaments,id',
+        ]);
+
         $ticket = new SubmittedTicketsModel([
             'user_id' => Auth::user()->id,
             'ticket_title' => $request->input('title'),

@@ -14,7 +14,7 @@ function enableDisabledInputs() {
         saveButton.className = 'btn btn-success btn-sm mb-2';
         saveButton.type = 'submit';
         saveButton.onclick = function () {
-            removeButtons();
+            this.form.submit();
         };
 
 

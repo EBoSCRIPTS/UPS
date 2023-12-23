@@ -15,6 +15,7 @@
     @include('components.sidebar')
     <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
         <div class="container" style="width: 75%; margin-top: 20px">
+            @include('components.errors')
         <p class="h2 text-center">Absence Requests</p>
             <hr class="hr"/>
             <form action="{{ route('absence.create') }}" method="POST">
@@ -53,7 +54,7 @@
         @foreach($showSent as $absence)
             <div class="card mt-3">
                 <div class="card-box">
-                    <h5 class="card-header">Created at: {{ $absence->created_at }} | Status: {{ $absence->status }} </h5>
+                    <h5 class="card-header">Created at: {{ $absence->created_at }} | Status: {{ $absence->status }} | Dates: {{$absence->start_date}} -> {{$absence->end_date}}</h5>
                     <p>Type: {{$absence->type}}</p>
                     <p>Comment: {{ $absence->reason }}</p>
                     <p>Duration: {{ $absence->duration }} days </p>

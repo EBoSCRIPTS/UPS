@@ -35,6 +35,15 @@ class EmployeeInformationController extends Controller
 
     public function insertEmployeeInformation(Request $request): RedirectResponse
     {
+        $validated = $request->validate([
+            'employee_id' => 'required|unique:employee_information,user_id',
+            'department_id' => 'required',
+            'hour_pay' => 'numeric',
+            'salary' => 'numeric',
+            'position' => 'required',
+            'hours' => 'numeric',
+        ]);
+
         $information = new EmployeeInformationModel([
             'user_id' => $request->input('employee_id'),
             'department_id' => $request->input('department_id'),
@@ -43,6 +52,7 @@ class EmployeeInformationController extends Controller
             'position' => $request->input('position'),
             'monthly_hours' => $request->input('hours'),
         ]);
+
         $information->save();
 
         $vacation = new VacationPointsModel([
@@ -74,6 +84,13 @@ class EmployeeInformationController extends Controller
 
     public function editEmployee(Request $request): RedirectResponse
     {
+        $validated = $request->validate([
+            'employee_id' => 'required|exists:employee_information,id',
+            'hour_pay' => 'sometimes|nullable|numeric',
+            'salary' => 'sometimes|nullable|numeric',
+            'monthly_hours' => 'sometimes|nullable|numeric',
+        ]);
+
         $employee = EmployeeInformationModel::query()->where('id', $request->input('employee_id'))->first();
 
         $employee->update([

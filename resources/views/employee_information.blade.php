@@ -20,11 +20,7 @@
     @include('components.sidebar')
     <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-3">
         <div class="container" style="width: 80%">
-            @if($errors->has('equipment'))
-            <div class="alert alert-danger">
-                <strong>{{ $errors->first('equipment')}}</strong>
-            </div>
-            @endif
+            @include('components.errors')
         <form action="{{route('employee_information.create')}}" method="POST">
             @csrf
             <label for="employee_name" class="form-label">Unassigned Employee Name</label>
@@ -48,9 +44,9 @@
                 <option value="fixed">Set salary</option>
             </select>
 
-            <input type="text" class="form-control" id="hour_pay" name="hour_pay" placeholder="Hourly"/>
+            <input type="number" class="form-control" id="hour_pay" name="hour_pay" placeholder="Hourly" min="0"/>
 
-            <input type="text" class="form-control" id="salary" name="salary" placeholder="Fixed"/>
+            <input type="number" class="form-control" id="salary" name="salary" placeholder="Fixed" min="0"/>
 
 
             <label for="position" class="form-label">Position</label>
@@ -127,23 +123,20 @@
                                     <input type="hidden" name="employee_id" value="{{ $employee->id }}">
 
                                     <label for="hour_pay" class="form-label">Hour Pay</label>
-                                    <input type="text" class="form-control" id="hour_pay" name="hour_pay" placeholder="{{$employee->hour_pay}}"/>
+                                    <input type="number" class="form-control" id="hour_pay" name="hour_pay" placeholder="{{$employee->hour_pay}}" min="0"/>
 
                                     <label for="salary" class="form-label">Salary</label>
-                                    <input type="text" class="form-control" id="salary" name="salary" placeholder="{{$employee->salary}}"/>
+                                    <input type="number" class="form-control" id="salary" name="salary" placeholder="{{$employee->salary}}" min="0"/>
 
                                     <label for="position" class="form-label">Position</label>
                                     <input type="text" class="form-control" id="position" name="position" placeholder="{{$employee->position}}"/>
 
                                     <label for="hours" class="form-label">Monthly Hours</label>
-                                    <input type="text" class="form-control" id="hours" name="hours" placeholder="{{$employee->monthly_hours}}"/>
+                                    <input type="number" class="form-control" id="hours" name="hours" placeholder="{{$employee->monthly_hours}}"/>
 
                                     <button type="submit" class="btn btn-primary mt-3">Save</button>
                                 </form>
 
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-primary">Save changes</button>
                             </div>
                         </div>
                         </div>

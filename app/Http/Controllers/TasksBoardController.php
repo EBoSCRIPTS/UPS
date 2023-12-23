@@ -22,6 +22,11 @@ class TasksBoardController extends Controller
 {
     public function editProject(Request $request): RedirectResponse
     {
+        $validated = $request->validate([
+            'name' => 'sometimes|string|max:100',
+            'status' => 'sometimes|array',
+        ]);
+
         $project = TasksProjectModel::query()->where('id', $request->project_id)->first();
         $project->update([
             'name' => $request->input('name'),
@@ -88,6 +93,12 @@ class TasksBoardController extends Controller
 
     public function addUserToProject(Request $request): RedirectResponse
     {
+        $validated = $request->validate([
+            'project_id' => 'required|integer|exists:tasks_project,id',
+            'participants' => 'required|array',
+            'participants.*' => 'required|integer|exists:employee_information,id',
+        ]);
+
         for ($i = 0; $i < sizeof($request->input('participants')); $i++) {
             $newUser = new TasksParticipantsModel([
                 'project_id' => $request->input('project_id'),
@@ -95,11 +106,17 @@ class TasksBoardController extends Controller
             ]);
             $newUser->save();
         }
+
         return redirect('/tasks/project_settings/' . $request->input('project_id'));
     }
 
     public function removeUserFromProject(Request $request): RedirectResponse
     {
+        $validated = $request->validate([
+            'user_id' => 'required|integer|exists:tasks_participants,employee_id',
+            'project_id' => 'required|integer|exists:tasks_project,id',
+        ]);
+
         TasksParticipantsModel::query()->where('project_id', $request->project_id)->where('employee_id', $request->input('user_id'))->delete();
 
         return redirect('/tasks/project_settings/' . $request->input('project_id'));
@@ -196,6 +213,10 @@ class TasksBoardController extends Controller
 
     public function updateProjectLeader(Request $request): RedirectResponse
     {
+        $validated = $request->validate([
+            'project_leader' => 'required|integer|exists:employee_information,user_id',
+        ]);
+
         $project = TasksProjectModel::query()->where('id', $request->project_id)->first();
         $project->update([
             'leader_employee_id' => $request->input('project_leader')

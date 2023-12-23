@@ -45,6 +45,10 @@ class EquipmentController extends Controller
 
     public function addEquipmentType(Request $request): RedirectResponse
     {
+        $validated = $request->validate([
+            'type' => 'required|string|unique:equipment_type,name|max:100',
+        ]);
+
         $add = new EquipmentTypeModel([
             'name' => $request->input('type'),
         ]);
@@ -55,6 +59,12 @@ class EquipmentController extends Controller
 
     public function addEquipment(Request $request): RedirectResponse
     {
+        $validated = $request->validate([
+            'type' => 'required|exists:equipment_type,id',
+            'name' => 'string|required|max:100',
+            'serial_number' => 'string|required|max:50|unique:equipment_items,serial_number',
+        ]);
+
         $newEquipment = new EquipmentItemsModel([
             'type_id' => $request->input('type'),
             'name' => $request->input('name'),

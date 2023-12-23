@@ -13,6 +13,10 @@ class PDFController extends Controller
 {
     public function generateEquipmentAgreement(Request $request)
     {
+        $validated = $request->validate([
+            'employee' => 'required|exists:employee_information,id',
+        ]);
+
         $employee = $request->input('employee');
 
         $getUserEquipment = EquipmentAssignmentModel::query()->where('employee_id', $employee)->get()->toArray();

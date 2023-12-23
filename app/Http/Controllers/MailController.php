@@ -13,6 +13,12 @@ class MailController extends Controller
 {
     public function sendMailToAll(Request $request): RedirectResponse
     {
+        $validated = $request->validate([
+            'subject' => 'required|string',
+            'message' => 'required|string',
+            'attachments' => 'file',
+        ]);
+
         $getAllEmails = UserModel::query()->select('email')->get()->toArray();
 
         $file = $request->file('attachments');

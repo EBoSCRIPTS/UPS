@@ -20,6 +20,7 @@
     @include('components.sidebar')
     <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-3">
         <div class="container" style="width: 80%">
+            @include('components.errors')
             <p class="h2">Create new topic</p>
             <form action="{{route('news.create_new_topic')}}" method="POST" id="contentForm" enctype="multipart/form-data">
                 @csrf

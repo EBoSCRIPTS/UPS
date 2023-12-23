@@ -14,7 +14,9 @@
 <div class="row">
     @include('components.sidebar')
     <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-3">
+        @include('components.tasks_navbar')
         <div class="container" style="width: 80%">
+            @include('components.errors')
             <p class="h3">Create performance report</p>
             <p class="h5">In the month {{Carbon\Carbon::now()->monthName}}</p>
 

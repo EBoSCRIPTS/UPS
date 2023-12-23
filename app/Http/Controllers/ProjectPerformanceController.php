@@ -51,6 +51,13 @@ class ProjectPerformanceController extends Controller
 
     public function makeReport(Request $request): RedirectResponse
     {
+        $validated = $request->validate([
+            'project_id' => 'sometimes|exists:tasks_project,id|integer',
+            'employee_id' => 'required|exists:employee_information,id|integer',
+            'performance_report' => 'required',
+            'performance_rating' => 'required|integer|between:0,100',
+        ]);
+
         $getEmployeeId = EmployeeInformationModel::query()->where('id', $request->input('employee_id'))->pluck('user_id')->first();
         $getName = UserModel::query()->where('id', $getEmployeeId)->select('id', 'first_name', 'last_name')->first();
 

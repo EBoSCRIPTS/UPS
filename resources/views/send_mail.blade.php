@@ -14,6 +14,7 @@
 <div class="row">
     @include('components.sidebar')
     <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-3">
+        @include('components.errors')
        <p class="h2">Send email to all users</p>
         <form action="{{route('send_mail')}}" method="POST" enctype="multipart/form-data">
            @csrf

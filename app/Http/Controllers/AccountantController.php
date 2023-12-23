@@ -54,13 +54,13 @@ class AccountantController extends Controller
         foreach ($showEmployees as $employee) {
             $expectedSalary += $employee->hour_pay * $employee->monthly_hours;
             $realSalary += $employee->hour_pay * $this->getEmployeeWorkedHoursThisMonth($employee->user_id);
-            $status[$employee->user_id] = $logHours->getSubmitedAndConfirmed($employee->user_id, Carbon::now()->monthName);
+            $status[$employee->user_id] = $logHours->getSubmittedAndConfirmed($employee->user_id, Carbon::now()->monthName);
             $employeeReports[$employee->user_id] = $this->getEmployeeWorkedHoursThisMonth($employee->user_id);
         }
 
         return view('accountant.accountant_view_department',
             ['department' => $showDept,
-                'allAbsences' => $getAbsences,
+                'allAbsences' => $getAbsences ?? [],
                 'allFulfilled' => $getFulfilled,
                 'employees' => $showEmployees,
                 'employeeReports' => $employeeReports,

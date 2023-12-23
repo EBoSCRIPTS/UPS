@@ -39,6 +39,13 @@ class AbsenceController extends Controller
 
     public function addAbsence(Request $request): RedirectResponse
     {
+        $validated = $request->validate([
+            'user_id' => 'required|integer',
+            'start_date' => 'required|date|before:end_date',
+            'end_date' => 'required|date|after_or_equal:start_date',
+            'reason' => 'required|string',
+        ]);
+
         if($request->input('status') == null) {
             $request->merge(['status' => 'Sent']);
         }

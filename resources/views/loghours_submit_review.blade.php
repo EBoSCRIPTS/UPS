@@ -20,6 +20,7 @@
     @include('components.sidebar')
     <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-3">
         <div class="container" style="width: 80%">
+            @include('components.errors')
             <p class="h3">Review Hours</p>
 
             @if(count($submits) > 0)

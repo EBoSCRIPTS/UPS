@@ -14,7 +14,7 @@
 <div class="row">
     @include('components.sidebar')
     <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-3">
-
+    @include('components.errors')
     <div class="row" style="margin: 50px;">
         <div class="col-lg-6">
             <div class="row">
@@ -34,7 +34,7 @@
             @csrf
             <p class="h5">Task description</p>
             <input type="hidden" name="ticket_id" value="{{$ticket->id}}">
-            <textarea class="bg-light" id="ticket_description" name="ticket_description" style="width: 24rem; height: 10rem"></textarea>
+            <textarea class="form-control bg-light" id="ticket_description" name="ticket_description" style="height: 14rem"></textarea>
             <br>
             <button type="submit" class="btn btn-sm btn-primary">Update</button>
         </form>
@@ -58,7 +58,7 @@
             <input type="hidden" name="comment_author" value="{{Auth::user()->id}}">
             <div class="form-group">
                 <label for="comment">Comment</label>
-                <textarea class="form-control" id="comment" name="comment" rows="3"></textarea>
+                <textarea class="form-control" id="comment" name="comment" rows="3" required></textarea>
                 <button type="submit" class="btn btn-primary btn-sm mt-2">Submit</button>
             </div>
 

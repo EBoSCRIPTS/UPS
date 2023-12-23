@@ -28,6 +28,7 @@ class UserController extends Controller
             'password' => 'required|min:8',
             'phone_number' => 'required|unique:users,phone_number|max:15',
             'role_id' => 'required',
+            'profile_picture' => 'image|mimes:jpeg,png,jpg,gif,svg',
         ]);
 
         if ($request->hasFile('profile_picture')) { //store image in server storage
@@ -92,6 +93,7 @@ class UserController extends Controller
         $validated = $request->validate([
             'email' => 'string|unique:users,email|max:255',
             'phone_number' => 'string|unique:users,phone_number|max:255',
+            'profile_picture' => 'image|mimes:jpeg,png,jpg,gif,svg',
         ]);
 
         $user = UserModel::query()->find($request->input('id'));
@@ -136,12 +138,6 @@ class UserController extends Controller
             $departments = DepartamentsModel::query()->select('id', 'name')->get();
             $employeeEquipment = EquipmentAssignmentModel::query()->where('employee_id', $employeeId)->get();
         }
-        else {
-            $employeeEquipment = null;
-            $performanceReport = null;
-            $employeeInformation = null;
-            $departments = null;
-        }
 
         if($user == null) {
             abort(404);
@@ -149,10 +145,10 @@ class UserController extends Controller
 
         return view('profile', ['user' => $user,
             'projects' => $projects,
-            'employeeInformation' => $employeeInformation,
-            'employeeEquipment' => $employeeEquipment,
-            'performanceReport' => $performanceReport,
-            'departments' => $departments]);
+            'employeeInformation' => $employeeInformation ?? null,
+            'employeeEquipment' => $employeeEquipment ?? null,
+            'performanceReport' => $performanceReport ?? null,
+            'departments' => $departments ?? null]);
     }
 
     public function changePassword(Request $request): RedirectResponse

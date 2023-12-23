@@ -28,6 +28,12 @@ class TasksController extends Controller
 
     public function createNewProject(Request $request): RedirectResponse
     {
+        $validated = $request->validate([
+            'project_name' => 'required|string|max:100',
+            'department_id' => 'required|integer|exists:departaments,id',
+            'project_manager_id' => 'required|integer|exists:users,id',
+        ]);
+
         $newProject = new TasksProjectModel([
             'name' => $request->input('project_name'),
             'department_id' => $request->input('department_id'),
@@ -65,8 +71,7 @@ class TasksController extends Controller
 
     public function loadAvailableProjects(): \Illuminate\View\View
     {
-        $projects = TasksProjectModel::all();
-        return view('tasks.tasks_projects_settings', ['projects' => $projects]);
+        return view('tasks.tasks_projects_settings', ['projects' => TasksProjectModel::all()]);
     }
 
 
@@ -83,6 +88,15 @@ class TasksController extends Controller
 
     public function newTask(Request $request): RedirectResponse
     {
+        $validated = $request->validate([
+            'task_name' => 'required|string|max:255',
+            'description' => 'required|string',
+            'project' => 'required|integer|exists:tasks_project,id',
+            'priority' => 'required|string|in:low,medium,high,critical',
+            'task_points' => 'required|numeric|min:0|max:100',
+            'task_label' => 'required|string|in:feature,bug,ticket'
+        ]);
+
         $getTaskStatusesForProject = TasksStatusModel::query()->where('project_id', $request->input('project'))->select('id')->get()->toArray();
 
         if ($request->input('task_label') == 'feature') //store html values to reduce cluster in blade
@@ -103,7 +117,7 @@ class TasksController extends Controller
             'description' => $request->input('description'),
             'project_id' => $request->input('project'),
             'made_by' => Auth::user()->id,
-            'assigned_to' => substr($request->input('assign_to'), 0,1), //get the ID value from input field
+            'assigned_to' => substr($request->input('assign_to'), 0,1) ?? null, //get the ID value from input field
             'status_id' => $getTaskStatusesForProject[0]['id'],
             'status_key' => 0,
             'priority' => $request->input('priority'),
@@ -150,6 +164,10 @@ class TasksController extends Controller
 
     public function updateTaskDescription (Request $request): RedirectResponse
     {
+        $validated = $request->validate([
+            'ticket_description' => 'required|string',
+        ]);
+
         $ticket = TasksTaskModel::query()->where('id', $request->input('ticket_id'))->first();
 
         $ticket->update([
@@ -227,6 +245,12 @@ class TasksController extends Controller
 
     public function addComment(Request $request): RedirectResponse
     {
+        $validated = $request->validate([
+            'task_id' => 'required|integer|exists:tasks_task,id',
+            'comment' => 'required|string',
+            'comment_author' => 'required|integer|exists:users,id',
+        ]);
+
         $newComment = new TasksTaskCommentsModel([
             'task_id' => $request->input('task_id'),
             'comment_author_id' => $request->input('comment_author'),
@@ -240,6 +264,10 @@ class TasksController extends Controller
 
     public function updateAssignee(Request $request): RedirectResponse
     {
+        $validated = $request->validate([
+            'assignee_select' => 'required|integer|exists:users,id',
+        ]);
+
         $ticket = TasksTaskModel::query()->where('id', $request->ticket_id)->first();
         $ticket->update([
             'assigned_to' => $request->input('assignee_select'),
@@ -258,6 +286,11 @@ class TasksController extends Controller
 
     public function completeTicket(Request $request): RedirectResponse
     {
+        $validated = $request->validate([
+            'user_id' => 'required|integer|exists:users,id',
+            'ticket_id' => 'required|integer|exists:tasks_task,id',
+        ]);
+
         $ticket = TasksTaskModel::query()->where('id', $request->ticket_id)->first();
 
         if ($ticket->is_completed == 1) {
@@ -280,6 +313,10 @@ class TasksController extends Controller
 
     public function updateTaskDraftStatus(Request $request): RedirectResponse
     {
+        $validated = $request->validate([
+            'ticket_id' => 'required|integer|exists:tasks_task,id',
+        ]);
+
         $task = TasksTaskModel::query()->where('id', $request->input('ticket_id'))->first();
         if($task->is_draft == 1){
             $task->update([
@@ -299,6 +336,11 @@ class TasksController extends Controller
 
     public function updatePriority(Request $request): RedirectResponse
     {
+        $validated = $request->validate([
+            'ticket_id' => 'required|integer|exists:tasks_task,id',
+            'priority' => 'sometimes|string|in:low,medium,high,critical',
+        ]);
+
         $task = TasksTaskModel::query()->where('id', $request->input('ticket_id'))->first();
         $priorities = ['low', 'medium', 'high', 'critical'];
 
@@ -341,6 +383,11 @@ class TasksController extends Controller
 
     public function updateTitle(Request $request): RedirectResponse
     {
+        $validated = $request->validate([
+            'ticket_id' => 'sometimes|integer|exists:tasks_task,id',
+            'title' => 'required|string|max:255',
+        ]);
+
         $task = TasksTaskModel::query()->where('id', $request->ticket_id)->first();
 
         $task->update([

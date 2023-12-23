@@ -14,7 +14,7 @@ class DepartmentsController extends Controller
     public function addDepartment(Request $request): RedirectResponse
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:255|unique:departments,name',
+            'departament' => 'required|string|max:255|unique:departaments,name',
             'description' => 'required|string',
         ]);
 
