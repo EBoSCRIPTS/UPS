@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 21, 2023 at 09:44 PM
+-- Generation Time: Dec 23, 2023 at 10:08 AM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -235,13 +235,14 @@ CREATE TABLE `news_topic` (
 
 CREATE TABLE `performance_reports` (
   `id` int(11) NOT NULL,
-  `employee_Id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
   `employee_name` varchar(100) NOT NULL,
   `project_id` int(11) NOT NULL,
   `rating_text` text NOT NULL,
   `rating` tinyint(4) NOT NULL,
   `year` int(11) NOT NULL,
   `month` varchar(100) NOT NULL,
+  `soft_deleted` tinyint(1) NOT NULL DEFAULT 0,
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
   `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -278,6 +279,24 @@ CREATE TABLE `req_absence` (
 CREATE TABLE `roles` (
   `id` int(10) UNSIGNED NOT NULL,
   `name` varchar(255) NOT NULL COMMENT 'name of the role'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `submitted_tickets`
+--
+
+CREATE TABLE `submitted_tickets` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `ticket_title` varchar(100) NOT NULL,
+  `ticket_text` text NOT NULL,
+  `department_id` int(11) NOT NULL,
+  `is_registered` tinyint(1) NOT NULL DEFAULT 0,
+  `registered_by_user_id` int(11) DEFAULT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -372,6 +391,7 @@ CREATE TABLE `users` (
   `updated_at` date NOT NULL DEFAULT current_timestamp(),
   `role_id` int(10) UNSIGNED NOT NULL,
   `is_writer` enum('0','1','','') NOT NULL DEFAULT '0',
+  `soft_deleted` int(11) DEFAULT 0,
   `profile_picture` text NOT NULL DEFAULT 'uploads/default_pfp.png'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -489,6 +509,12 @@ ALTER TABLE `req_absence`
 -- Indexes for table `roles`
 --
 ALTER TABLE `roles`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `submitted_tickets`
+--
+ALTER TABLE `submitted_tickets`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -634,6 +660,12 @@ ALTER TABLE `req_absence`
 --
 ALTER TABLE `roles`
   MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `submitted_tickets`
+--
+ALTER TABLE `submitted_tickets`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `tasks_participants`
