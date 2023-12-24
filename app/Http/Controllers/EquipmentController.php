@@ -79,6 +79,11 @@ class EquipmentController extends Controller
 
     public function assignEquipment(Request $request): RedirectResponse
     {
+        $validated = $request->validate([
+            'employee' => 'required|exists:employee_information,id',
+            'equipment' => 'required|exists:equipment_items,id',
+        ]);
+
         $employee = EquipmentAssignmentModel::query()->where('employee_id', $request->input('employee_id'))->first();
 
         $give = new EquipmentAssignmentModel([
