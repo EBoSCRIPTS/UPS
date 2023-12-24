@@ -13,6 +13,7 @@
 </head>
 
 <body>
+<div class="row">
     @if(!isset(Auth::user()->email))
         <script>window.location="/login"</script>
         @endif

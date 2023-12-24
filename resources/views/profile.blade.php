@@ -129,13 +129,13 @@
                                                 <form action="{{route('user.update_banking', Auth::user()->id)}}" method="POST" id="bankDetailsForm">
                                                     @csrf
                                                     <label for="bank_name" class="form-label">Bank Name</label>
-                                                    <input type="text" id="bank_name" name="bank_name" class="form-control" required placeholder="{{$employeeInformation->bank_name}}">
+                                                    <input type="text" id="bank_name" name="bank_name" class="form-control" required placeholder="{{$employeeInformation->bank_name ?? 'No bank details'}}">
 
                                                     <label for="account_name" class="form-label">Account Name</label>
-                                                    <input type="text" id="account_name" name="account_name" class="form-control" required placeholder="{{$employeeInformation->bank_account_name}}">
+                                                    <input type="text" id="account_name" name="account_name" class="form-control" required placeholder="{{$employeeInformation->bank_account_name ?? 'No bank details'}}">
 
                                                     <label for="account_number" class="form-label">Account Number</label>
-                                                    <input type="text" id="account_number" name="account_number" class="form-control" required placeholder="{{$employeeInformation->bank_account}}">
+                                                    <input type="text" id="account_number" name="account_number" class="form-control" required placeholder="{{$employeeInformation->bank_account ?? 'No bank details'}}">
 
                                                     <button type="submit" class="btn btn-success mt-3 float-end">Save changes</button>
                                                 </form>
@@ -152,22 +152,22 @@
                                                 <h5 class="modal-title text-center" id="employmentInformation">Employment information</h5>
                                             </div>
                                             <div class="modal-body">
-                                                <p class="h5">Department: {{$employeeInformation->department->name}}</p>
+                                                <p class="h5">Department: {{$employeeInformation->department->name ?? 'Not registered yet'}}</p>
                                                 <hr>
-                                                <p class="h5">Job title: {{$employeeInformation->position}}</p>
+                                                <p class="h5">Job title: {{$employeeInformation->position ?? 'Not registered yet'}}</p>
                                                 <hr>
-                                                <p class="h5">Monthly hours: {{$employeeInformation->monthly_hours}}</p>
+                                                <p class="h5">Monthly hours: {{$employeeInformation->monthly_hours ?? 'Not registered yet'}}}</p>
                                                 <hr>
-                                                @if($employeeInformation->hour_pay != null)
-                                                    <p class="h5">Hourly rate: ${{$employeeInformation->hour_pay}}</p>
+                                                @if(isset($employeeInformation->hour_pay) && $employeeInformation->hour_pay != null)
+                                                    <p class="h5">Hourly rate: ${{$employeeInformation->hour_pay ?? 'Not registered yet'}}</p>
                                                 @else
-                                                    <p class="h5">Salary: {{$employeeInformation->salary}}</p>
+                                                    <p class="h5">Salary: {{$employeeInformation->salary ?? 'Not registered yet'}}</p>
                                                 @endif
                                                 <hr>
                                                 @if($performanceReport != null)
                                                     <p class="h5 text-center">Performance report</p>
-                                                    <p><strong>Current rating score: {{$performanceReport->rating}}%</strong></p>
-                                                    <p><strong>Rating description: {{$performanceReport->rating_text}}</strong></p>
+                                                    <p><strong>Current rating score: {{$performanceReport->rating ?? 'No performance ratings yet'}}%</strong></p>
+                                                    <p><strong>Rating description: {{$performanceReport->rating_text ?? 'No performance ratings yet'}}</strong></p>
                                                 @endif
                                             </div>
                                         </div>

@@ -12,7 +12,8 @@
 
 </head>
 
-<body class="row" style="height: 100%">
+<body>
+<div class="row">
 @include('components.sidebar')
     <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
         <div class="container" style="width: 80%">
@@ -56,5 +57,5 @@
 
 
 
-
+</div>
 </body>

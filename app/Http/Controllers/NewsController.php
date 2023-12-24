@@ -80,6 +80,12 @@ class NewsController extends Controller
 
     public function postTopicComment(Request $request): RedirectResponse
     {
+        $validated = $request->validate([
+            'topic_id' => 'required',
+            'text' => 'required|string',
+            'name' => 'required|string|max:100',
+        ]);
+
         $comments = new NewsCommentsModel([
             'topic_id' => $request->input('topic_id'),
             'comment' => $request->input('text'),

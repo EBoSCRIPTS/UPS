@@ -62,7 +62,7 @@
                 <form action="{{ route('absence.delete', $absence->id) }}" method="POST">
                     @csrf
                     <input type="hidden" name="id" id="id" value="{{ $absence->id }}">
-                <input type="submit" class="btn btn-danger" value="DELETE">
+                    <button type="submit" class="btn btn-danger w-100 mb-3 justify-content-center"  value="DELETE">Delete</button>
                 </form>
             </div>
         @endforeach

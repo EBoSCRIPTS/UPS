@@ -17,21 +17,10 @@
     {{ redirect('/home') }}
 @else
     <div class="container d-flex align-items-center justify-content-center" style="height: 100vh;">
-        @if ($errors->has('email') || $errors->has('password'))
-            <div class="alert alert-danger">
-                @if ($errors->has('email'))
-                    <strong>| {{ $errors->first('email')}} |</strong>
-                @endif
-
-                @if ($errors->has('password'))
-                    <strong>{{ $errors->first('password')}} |</strong>
-                @endif
-            </div>
-        @endif
-
         <form action="{{ route('logging_in') }}" method="POST" class="col-12 col-md-6">
             @csrf
             <div class="form-group mb-3 text-center">
+                @include('components.errors')
                 <h1>UPS</h1>
                 <label for="email">EMAIL</label>
                 <input type="email" name="email" id="email" class="form-control" required>

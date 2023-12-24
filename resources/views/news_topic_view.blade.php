@@ -18,11 +18,12 @@
 <div class="row">
 @include('components.sidebar')
     <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-3">
-       <div class="container" style="width: 60%">
+       <div class="container" id="container" style="width: 80%">
+           @include('components.errors')
         <div class="topic">
             <p class="h1 text-center">{{$topic[0]['topic']}}</p>
-           <img src="{{asset($topic[0]['news_image'])}}" class=" rounded d-block mx-auto" alt="..." width="800px" height="400px">
-               <div id="textContent" style="margin-top: 50px">
+            <img src="{{ asset($topic[0]['news_image']) }}" class="rounded d-block mx-auto img-fluid" id="coverPhoto" alt="...">
+            <div id="textContent" style="margin-top: 50px">
                 {!! $topic[0]['text'] !!}
                 </div>
        </div>
@@ -71,7 +72,7 @@
             <label for="name">Your name</label>
             <input type="text" name="name" class="form-control" placeholder="Your name..">
             <textarea type="text" name="text" class="form-control mt-3" style="min-height: 100px"> </textarea>
-            <button type="submit" class="btn btn-primary btn-sm mt-3 float-end">Add comment</button>
+            <button type="submit" class="btn btn-primary btn-sm mt-3 mb-3 float-end">Add comment</button>
         </form>
         </div>
        </div>
@@ -79,6 +80,19 @@
 </div>
 </body>
 
-<script>
+<style>
+    body{
+        overflow-x: hidden;
+    }
+    @media(min-width: 768px){
+        #coverPhoto{
+            max-width: 600px;
+        }
+    }
+    @media(max-width: 768px){
+        #container{
+            width: 100%;
+        }
+    }
+</style>
 
-</script>
