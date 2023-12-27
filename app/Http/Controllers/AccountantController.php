@@ -52,7 +52,7 @@ class AccountantController extends Controller
         $realSalary = 0;
 
         foreach ($showEmployees as $employee) {
-            $expectedSalary += $employee->hour_pay * $employee->monthly_hours;
+            $expectedSalary += $employee->hour_pay * $employee->weekly_hours;
             $realSalary += $employee->hour_pay * $this->getEmployeeWorkedHoursThisMonth($employee->user_id);
             $status[$employee->user_id] = $logHours->getSubmittedAndConfirmed($employee->user_id, Carbon::now()->monthName);
             $employeeReports[$employee->user_id] = $this->getEmployeeWorkedHoursThisMonth($employee->user_id);
@@ -152,9 +152,9 @@ class AccountantController extends Controller
 
         if (isset($employee->hour_pay)){
             $overtimeHours = 0;
-            if($employee->monthly_hours < $getHours->total_hours)
+            if($employee->weekly_hours < $getHours->total_hours)
             {
-                $overtimeHours = $getHours->total_hours - $employee->monthly_hours;
+                $overtimeHours = $getHours->total_hours - $employee->weekly_hours;
             }
 
             if (AccountantFulfilledPayslipsModel::query()->where('loghours_submitted_id', $getHours->id)->first() != null)

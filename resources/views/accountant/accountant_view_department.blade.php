@@ -28,7 +28,7 @@
                         <tr>
                             <th scope="col">Employee Name</th>
                             <th scope="col">Position</th>
-                            <th scope="col">Monthly Hours</th>
+                            <th scope="col">Weekly Hours</th>
                             <th scope="col">Pay</th>
                         </tr>
                     </thead>
@@ -37,7 +37,7 @@
                             <tr>
                                 <td>{{$employee->user_id}} {{$employee->user->first_name}} {{$employee->user->last_name}}</td>
                                 <td>{{$employee->position}}</td>
-                                <td>{{$employee->monthly_hours}}</td>
+                                <td>{{$employee->weekly_hours}}</td>
                                 @if($employee->hour_pay != null)
                                     <td>{{$employee->hour_pay}}/hr</td>
                                 @else

@@ -91,7 +91,7 @@
                             @endif
                             <small>Made by: {{Auth::user()->first_name}} {{Auth::user()->last_name}}</small>
                             <br>
-                            <small>Base monthly hours amount does not include overtime or extra nighthour pay</small>
+                            <small>Base weekly hours amount does not include overtime or extra nighthour pay</small>
                             <br>
                             <button type="button" class="btn btn-success btn-sm" id="printButton" onclick="printPayslip()">Print</button>
                             @if($isFullfilled == false)

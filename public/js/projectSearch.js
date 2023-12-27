@@ -2,6 +2,7 @@ async function getProjects(field_id) {
     const response = await fetch('/api/get_all_projects');
     let selectField = document.getElementById(field_id);
     let data = await response.json();
+    console.log(data);
 
     for (let i = 0; i < data.length; i++) {
         let projectOption = document.createElement('option');

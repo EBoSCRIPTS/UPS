@@ -50,7 +50,7 @@ class EmployeeInformationController extends Controller
             'hour_pay' => $request->input('hour_pay'),
             'salary' => $request->input('salary'),
             'position' => $request->input('position'),
-            'monthly_hours' => $request->input('hours'),
+            'weekly_hours' => $request->input('hours'),
         ]);
 
         $information->save();
@@ -88,7 +88,7 @@ class EmployeeInformationController extends Controller
             'employee_id' => 'required|exists:employee_information,id',
             'hour_pay' => 'sometimes|nullable|decimal:2',
             'salary' => 'sometimes|nullable|decimal:2',
-            'monthly_hours' => 'sometimes|nullable|numeric',
+            'weekly_hours' => 'sometimes|nullable|numeric',
         ]);
 
         $employee = EmployeeInformationModel::query()->where('id', $request->input('employee_id'))->first();
@@ -97,7 +97,7 @@ class EmployeeInformationController extends Controller
             'hour_pay' => $request->input('hour_pay') ?? $employee->hour_pay,
             'salary' => $request->input('salary') ?? $employee->salary,
             'position' => $request->input('position') ?? $employee->position,
-            'monthly_hours' => $request->input('hours') ?? $employee->monthly_hours
+            'weekly_hours' => $request->input('hours') ?? $employee->weekly_hours
         ]);
 
         return back()->with('success', 'Employee updated successfully');

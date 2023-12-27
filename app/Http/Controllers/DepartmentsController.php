@@ -50,9 +50,16 @@ class DepartmentsController extends Controller
         return back();
     }
 
-    public function loadUserDepartment(Request $request): \Illuminate\View\View
+    public function loadUserDepartment(Request $request): \Illuminate\View\View|RedirectResponse
     {
         $employeeDept = EmployeeInformationModel::query()->where('user_id', $request->user()->id)->pluck('department_id')->first();
+
+        if($employeeDept == null){
+            return back()->withInput()->withErrors([
+                'error' => 'You are not assigned to any department!'
+            ]);
+        }
+
         $department = DepartamentsModel::query()->where('id', $employeeDept)->select('id', 'name')->first();
 
         $getAllDeptEmployees = EmployeeInformationModel::query()

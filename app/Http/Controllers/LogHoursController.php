@@ -252,7 +252,7 @@ class LogHoursController extends Controller
         $monthlyHours = [];
 
         foreach ($submittedHours as $submittedHour) {
-            $monthlyExpected = EmployeeInformationModel::query()->where('user_id', $submittedHour->user_id)->pluck('monthly_hours')->first();
+            $monthlyExpected = EmployeeInformationModel::query()->where('user_id', $submittedHour->user_id)->pluck('weekly_hours')->first();
             $monthlyHours[$submittedHour->user_id] = $monthlyExpected;
         };
 

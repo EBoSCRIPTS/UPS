@@ -19,7 +19,7 @@ class EmployeeInformationModel extends Model
         'hour_pay',
         'salary',
         'position',
-        'monthly_hours',
+        'weekly_hours',
         'bank_name',
         'bank_account_name',
         'bank_account'

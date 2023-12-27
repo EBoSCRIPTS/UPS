@@ -156,7 +156,7 @@
                                                 <hr>
                                                 <p class="h5">Job title: {{$employeeInformation->position ?? 'Not registered yet'}}</p>
                                                 <hr>
-                                                <p class="h5">Monthly hours: {{$employeeInformation->monthly_hours ?? 'Not registered yet'}}}</p>
+                                                <p class="h5">Weekly Hours: {{$employeeInformation->weekly_hours ?? 'Not registered yet'}}</p>
                                                 <hr>
                                                 @if(isset($employeeInformation->hour_pay) && $employeeInformation->hour_pay != null)
                                                     <p class="h5">Hourly rate: ${{$employeeInformation->hour_pay ?? 'Not registered yet'}}</p>

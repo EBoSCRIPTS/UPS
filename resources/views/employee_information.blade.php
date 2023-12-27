@@ -80,7 +80,7 @@
                         <th scope="col">Salary</th>
                         <th scope="col">Position</th>
                         <th scope="col">Bank Details</th>
-                        <th scope="col">Monthly hours</th>
+                        <th scope="col">Weekly Hours</th>
                         <th scope="col">Actions</th>
                     </tr>
                 </thead>
@@ -98,7 +98,7 @@
                                 {{$employee->bank_account_name}}
                             @endif
                         </td>
-                        <td>{{$employee->monthly_hours}}</td>
+                        <td>{{$employee->weekly_hours}}</td>
                         <td>
                             <div class="btn-group">
                             <form action="{{route('employee_information.delete')}}" method="POST">
@@ -131,8 +131,8 @@
                                     <label for="position" class="form-label">Position</label>
                                     <input type="text" class="form-control" id="position" name="position" placeholder="{{$employee->position}}"/>
 
-                                    <label for="hours" class="form-label">Monthly Hours</label>
-                                    <input type="number" class="form-control" id="hours" name="hours" placeholder="{{$employee->monthly_hours}}"/>
+                                    <label for="hours" class="form-label">Weekly Hourss</label>
+                                    <input type="number" class="form-control" id="hours" name="hours" placeholder="{{$employee->weekly_hours}}"/>
 
                                     <button type="submit" class="btn btn-primary mt-3">Save</button>
                                 </form>
