@@ -225,6 +225,26 @@ class TasksBoardController extends Controller
         return redirect('/tasks/project_settings/');
     }
 
+    public function deleteProject(Request $request): RedirectResponse
+    {
+        $project = TasksProjectModel::query()->where('id', $request->project_id)->first();
+
+        if ($project == null || $this->checkIfHasPerms($request->project_id) == false){
+            return back()->withInput()->withErrors([
+                'project' => 'Project not found or you don\'t have permissions to delete it'
+            ]);
+        }
+
+        if (TasksParticipantsModel::query()->where('project_id', $request->project_id)->first() != null){
+            return back()->withInput()->withErrors([
+                'project' => 'Project has participants. Please remove them before deleting'
+            ]);
+        }
+
+        $project->delete();
+
+        return redirect('/tasks/projects/');
+    }
 
     public function generateExcelForProjectStatistics(Request $request): BinaryFileResponse
     {

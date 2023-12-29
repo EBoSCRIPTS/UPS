@@ -7,7 +7,7 @@ use App\Models\LoggedHoursSubmittedModel;
 use App\Models\LogHoursModel;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use App\Models\DepartamentsModel;
+use App\Models\DepartmentsModel;
 use App\Http\Controllers\DepartmentsController;
 use App\Models\EmployeeInformationModel;
 use App\Models\AccountantDepartmentSettingsModel;
@@ -22,13 +22,13 @@ class AccountantController extends Controller
 {
     public function showAll(): View
     {
-        return view('accountant.accountant_view', ['departments' => DepartamentsModel::all()]);
+        return view('accountant.accountant_view', ['departments' => DepartmentsController::all()]);
     }
 
     //returns information to accountant department view
     public function showDept(Request $request): View
     {
-        $showDept = DepartamentsModel::query()->find($request->id);
+        $showDept = DepartmentsController::query()->find($request->id);
         $showEmployees = EmployeeInformationModel::query()->where('department_id', $request->id)->get();
         $logHours = new LogHoursController();
         $getFulfilled = AccountantFulfilledPayslipsModel::query()->where('department_id', $request->id)->get();

@@ -52,7 +52,7 @@
             <label for="position" class="form-label">Position</label>
             <input type="text" class="form-control" id="position" name="position"/>
 
-            <label for="hours" class="form-label">Hours per Month</label>
+            <label for="hours" class="form-label">Hours per Week</label>
             <input type="text" class="form-control" id="hours" name="hours"/>
 
             <button type="submit" class="btn btn-primary mt-3">Add</button>

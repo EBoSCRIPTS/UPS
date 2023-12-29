@@ -139,6 +139,11 @@ class NewsController extends Controller
 
     public function rateTopicComment(Request $request): RedirectResponse
     {
+        $validated = $request->validate([
+            'topic_id' => 'required, exists:news_topics,id',
+            'comment_id' => 'required, exists:news_comments,id',
+        ]);
+
         if (NewsCommentsRatingModel::query()->where('news_topic_id', $request->topic_id) //check if user hasn't already rated this comment before
             ->where('comment_id', $request->comment_id)
             ->where('user_id', auth()->user()->id)

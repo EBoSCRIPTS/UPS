@@ -82,6 +82,9 @@
                             <h4>Department: {{$employee->department->name}}</h4>
                             <h4>Position: {{$employee->position}}</h4>
                             <hr>
+                            <h5>To be paid to: {{$employee->bank_account_name}}</h5>
+                            <h5>Account number: {{$employee->bank_account}}</h5>
+                            <hr>
                             <h4 contenteditable="true">Payment for period: HERE</h4>
                             @if($employee->hour_pay != null)
                             <small>Base pay per hour: {{$employee->hour_pay}}</small>

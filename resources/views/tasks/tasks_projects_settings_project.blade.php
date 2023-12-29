@@ -17,7 +17,16 @@
             @include('components.tasks_navbar')
             <div class="container" style="width: 80%">
                 @include('components.errors')
-            <p class="h2">Projects settings</p>
+                <div class="row">
+                    <div class="col-md-6">
+                    <p class="h2">Projects settings</p>
+                    </div>
+                    <div class="col-md-6">
+                    <form action="{{route('tasks.project_delete', $project->id)}}" method="POST">
+                        @csrf
+                        <button type="submit" class="btn btn-danger btn-sm mt-2 float-end">Delete project</button>
+                    </form>
+                </div>
             <hr class="hr"/>
             <form action="{{route('tasks.project_edit', $project->id)}}" method="POST">
                 @csrf

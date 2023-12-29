@@ -15,12 +15,8 @@
     @include('components.sidebar')
         @if(isset(Auth::user()->email))
         <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-3">
-            @if($errors->has('employee_error'))
-                <div class="alert alert-danger">
-                    <p>{{$errors->first('employee_error')}}</p>
-                </div>
-            @endif
             <div class="container mt-3" style="width: 80%">
+                @include('components.errors')
                 <div class="row flex-nowrap justify-content-center">
                     <div class="col-sm-4 bg-light" style="padding-top: 50px; padding-bottom: 50px"">
                         <img src="{{ asset($user->profile_picture) }}" alt="Profile Picture" class="rounded-circle mb-3 d-block mx-auto" width="150" height="150">
@@ -163,6 +159,8 @@
                                                 @else
                                                     <p class="h5">Salary: {{$employeeInformation->salary ?? 'Not registered yet'}}</p>
                                                 @endif
+                                                <hr>
+                                                <p class="h5">VP balance (1 day = 0.2VP): {{$vp ?? 'Not registered yet'}}</p>
                                                 <hr>
                                                 @if($performanceReport != null)
                                                     <p class="h5 text-center">Performance report</p>

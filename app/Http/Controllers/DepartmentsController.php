@@ -6,7 +6,7 @@ use App\Models\EmployeeInformationModel;
 use App\Models\SubmittedTicketsModel;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use App\Models\DepartamentsModel;
+use App\Models\DepartmentsModel;
 use Illuminate\Support\Facades\View;
 
 class DepartmentsController extends Controller
@@ -18,7 +18,7 @@ class DepartmentsController extends Controller
             'description' => 'required|string',
         ]);
 
-        $departament = new DepartamentsModel([
+        $departament = new DepartmentsController([
             'name' => $request->input('departament'),
             'description' => $request->input('description'),
         ]);
@@ -30,14 +30,14 @@ class DepartmentsController extends Controller
 
     public function showAllDepartments(): \Illuminate\View\View
     {
-        $departments = DepartamentsModel::all();
+        $departments = DepartmentsController::all();
 
-        return view('departaments', ['departments' => DepartamentsModel::all()]);
+        return view('departaments', ['departments' => DepartmentsController::all()]);
     }
 
     public function deleteDepartment(Request $request): RedirectResponse
     {
-        $department = DepartamentsModel::query()->find($request->input('id'));
+        $department = DepartmentsController::query()->find($request->input('id'));
 
         if (EmployeeInformationModel::query()->where('department_id', $request->input('id'))->get()->count() > 0) { //check if any employees are assigned to the department
             return back()->withInput()->withErrors([
@@ -60,7 +60,7 @@ class DepartmentsController extends Controller
             ]);
         }
 
-        $department = DepartamentsModel::query()->where('id', $employeeDept)->select('id', 'name')->first();
+        $department = DepartmentsModel::query()->where('id', $employeeDept)->select('id', 'name')->first();
 
         $getAllDeptEmployees = EmployeeInformationModel::query()
             ->where('department_id', $department->id)

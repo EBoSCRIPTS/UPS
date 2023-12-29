@@ -24,6 +24,9 @@
 
                     <select id="department_id" name="department_id" class="form-control mt-1">
                         <option disabled selected>Select a department</option>
+                         @foreach($depts as $dept)
+                             <option value="{{$dept->id}}">{{$dept->name}}</option>
+                        @endforeach
                     </select>
 
                     <button type="button" class="btn btn-primary mt-1" data-bs-toggle="collapse" data-bs-target="#projectSettings" aria-expanded="false" aria-controls="projectSettings">Create a new project</button>

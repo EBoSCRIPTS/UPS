@@ -17,6 +17,7 @@
 @include('components.sidebar')
     <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
         <div class="container" style="width: 80%">
+            @include('components.errors')
     @if(isset(Auth::user()->email) && Auth::user()->role_id == 1)
         <h1 class="display-2 text-center">Add new user </h1>
     <form action="{{ route('user.create') }}" method="POST">

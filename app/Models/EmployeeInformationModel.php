@@ -32,6 +32,6 @@ class EmployeeInformationModel extends Model
 
     public function department(): BelongsTo
     {
-        return $this->belongsTo(DepartamentsModel::class, 'department_id', 'id');
+        return $this->belongsTo(DepartmentsModel::class, 'department_id', 'id');
     }
 }

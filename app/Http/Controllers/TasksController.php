@@ -15,6 +15,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
+use App\Models\DepartmentsModel;
 
 class TasksController extends Controller
 {
@@ -22,8 +23,9 @@ class TasksController extends Controller
     {
         $users = UserModel::query()->select('id', 'first_name', 'last_name')->get();
         $employees = EmployeeInformationModel::query()->select('id', 'user_id')->get();
+        $dept = DepartmentsModel::query()->select('id', 'name')->get();
 
-        return view('tasks.tasks_create_project', ['users' => $users, 'employees' => $employees]);
+        return view('tasks.tasks_create_project', ['users' => $users, 'employees' => $employees, 'depts' => $dept]);
     }
 
     public function createNewProject(Request $request): RedirectResponse

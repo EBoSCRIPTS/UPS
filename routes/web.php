@@ -96,7 +96,7 @@ Route::post('/accountant/settings/{department_id}/add_tax', [AccountantControlle
 Route::get('/accountant/settings/{department_id}/delete_tax/{tax_id}', [AccountantController::class, 'deleteTax'])->name('accountant.delete_tax')->middleware('accountant');
 
 /* Tasks view */
-Route::get('/tasks', [TasksController::class, 'loadMyTasks'])->name('tasks.show');
+Route::get('/tasks', [TasksController::class, 'loadMyTasks'])->name('tasks.show')->middleware('loggedIn');
 Route::get('/tasks/projects/{project_id}', [TasksController::class, 'loadProjectTasks'])->name('tasks.projects');
 Route::get('/tasks/projects/{project_id}/all_tasks', [TasksBoardController::class, 'loadAllProjectTasks'])->name('tasks.projects.all_tasks');
 Route::get('/tasks/projects/{project_id}/statistics', [TasksBoardController::class, 'getProjectStatistics'])->name('tasks.projects.statistics');
@@ -112,6 +112,7 @@ Route::post('/tasks/project_settings/add_user', [TasksBoardController::class, 'a
 Route::post('/tasks/project_settings/remove_user', [TasksBoardController::class, 'removeUserFromProject'])->name('tasks.project_remove_user');
 Route::post('/tasks/project_settings/project_edit/{project_id}', [TasksBoardController::class, 'editProject'])->name('tasks.project_edit');
 Route::post('/tasks/project_settings/update_leader/{project_id}', [TasksBoardController::class, 'updateProjectLeader'])->name('tasks.change_project_leader');
+Route::post('/tasks/project_settings/delete/{project_id}', [TasksBoardController::class, 'deleteProject'])->name('tasks.project_delete');
 
 Route::get('/tasks/projects/{project_id}/performance_report', [ProjectPerformanceController::class, 'loadProjectPerformance']);
 Route::post('/tasks/projects/{project_id}/performance_report/make', [ProjectPerformanceController::class, 'makeReport'])->name('tasks.performance_report_create');

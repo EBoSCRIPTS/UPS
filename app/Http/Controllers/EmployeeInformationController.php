@@ -7,7 +7,7 @@ use App\Models\VacationPointsModel;
 use FontLib\TrueType\Collection;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use App\Models\DepartamentsModel;
+use App\Models\DepartmentsModel;
 use App\Models\EmployeeInformationModel;
 use App\Models\EmployeeVacationsModel;
 use App\Models\Tasks\TasksParticipantsModel;
@@ -18,7 +18,7 @@ class EmployeeInformationController extends Controller
     public function getEmployeeInformationData(): \Illuminate\View\View
     {
         $users = UserModel::query()->where('soft_deleted', 0)->get();
-        $departments = DepartamentsModel::all();
+        $departments = DepartmentsModel::all();
         $employees = EmployeeInformationModel::all();
 
         $getNotSigned = []; //keep value of those users that are not registered as employees
@@ -67,14 +67,19 @@ class EmployeeInformationController extends Controller
 
     public function deleteEmployee(Request $request): RedirectResponse
     {
-        if  (EquipmentAssignmentModel::query()->where('employee_id', $request->input('employee_id'))->get() != null)
+        if  (EquipmentAssignmentModel::query()->where('employee_id', $request->input('employee_id'))->get() != null) //dont delete employee if we still have equipment assigned to him
         {
             return back()->withInput()->withErrors([
                 'equipment' => 'This employee has equipment assigned. Please remove it before deleting.'
             ]);
         }
         $participantDelete = TasksParticipantsModel::query()->where('employee_id', $request->input('employee_id'))->get();
-        $participantDelete->delete();
+
+        if($participantDelete != null) { //remove employee from every project he is assigned to
+            foreach ($participantDelete as $participant) {
+                $participant->delete();
+            }
+        }
 
         $employee = EmployeeInformationModel::query()->find($request->input('employee_id'));
         $employee->delete();

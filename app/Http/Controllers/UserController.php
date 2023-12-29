@@ -3,12 +3,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\DepartamentsModel;
+use App\Models\DepartmentsModel;
 use App\Models\EmployeeInformationModel;
 use App\Models\Equipment\EquipmentAssignmentModel;
 use App\Models\PerformanceReportsModel;
 use App\Models\Tasks\TasksParticipantsModel;
 Use App\Models\EmployeeVacationsModel;
+use App\Models\VacationPointsModel;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use App\Models\UserModel;
@@ -28,7 +29,6 @@ class UserController extends Controller
             'password' => 'required|min:8',
             'phone_number' => 'required|unique:users,phone_number|max:15',
             'role_id' => 'required',
-            'profile_picture' => 'image|mimes:jpeg,png,jpg,gif,svg',
         ]);
 
         if ($request->hasFile('profile_picture')) { //store image in server storage
@@ -74,7 +74,7 @@ class UserController extends Controller
     {
         $user = UserModel::query()->find($request->input('id'));
 
-        if ($user->created_at > Carbon::now()->subMinutes(10))
+        if ($user->created_at > Carbon::now()->subMinutes(3))
         {
             $user->delete();
         }
@@ -135,8 +135,9 @@ class UserController extends Controller
                 ->where('user_id', Auth::user()->id)
                 ->orderBy('created_at', 'desc')
                 ->first();
-            $departments = DepartamentsModel::query()->select('id', 'name')->get();
+            $departments = DepartmentsModel::query()->select('id', 'name')->get();
             $employeeEquipment = EquipmentAssignmentModel::query()->where('employee_id', $employeeId)->get();
+            $vp = VacationPointsModel::query()->where('user_id', Auth::user()->id)->pluck('vacation_points')->first();
         }
 
         if($user == null) {
@@ -148,7 +149,8 @@ class UserController extends Controller
             'employeeInformation' => $employeeInformation ?? null,
             'employeeEquipment' => $employeeEquipment ?? null,
             'performanceReport' => $performanceReport ?? null,
-            'departments' => $departments ?? null]);
+            'departments' => $departments ?? null,
+            'vp' => $vp ?? null]);
     }
 
     public function changePassword(Request $request): RedirectResponse
@@ -156,7 +158,7 @@ class UserController extends Controller
         $validated = $request->validate([
             'old_password' => 'required',
             'new_password' => 'required|min:8',
-            'confirm_password' => 'required|same:new_password',
+            'confirm_new_password' => 'required|same:new_password',
         ]);
 
         $user = UserModel::query()->where('id', $request->id)->select('id', 'password')->first();

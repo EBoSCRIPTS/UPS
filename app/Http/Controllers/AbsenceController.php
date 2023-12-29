@@ -63,7 +63,6 @@ class AbsenceController extends Controller
             'type' => $request->input('reason'),
             'reason' => $request->input('comment'),
             'status' => $request->input('status'),
-            'sent_by' => $request->input('user_id'),
             'attachment' => $request->input('attachment'),
             'approver_id' => $request->input('approver_id'),
             'date_approved' => $request->input('date_approved'),
@@ -98,6 +97,12 @@ class AbsenceController extends Controller
 
     public function updateAbsence(Request $request): RedirectResponse
     {
+        $validated = $request->validate([
+            'approver_id' => 'required|integer|exists:users,id',
+            'status' => 'required|string',
+            'is_paid' => 'sometimes|integer|in:1,2'
+        ]);
+
         $absence = AbsenceModel::query()->where('id', $request->input('id'))->first();
 
         if ($absence->type == 'Vacation'){
@@ -123,6 +128,10 @@ class AbsenceController extends Controller
 
     public function deleteAbsence(Request $request): RedirectResponse
     {
+        $validated = $request->validate([
+            'id' => 'required|integer|exists:absences,id',
+        ]);
+
         $absence = AbsenceModel::query()->find($request->id);
         $absence->delete();
         return redirect('/absence/review')->with('success', 'Absence deleted!');
