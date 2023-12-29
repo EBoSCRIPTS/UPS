@@ -192,8 +192,8 @@ class TasksController extends Controller
         $myTasks = TasksTaskModel::query()->where('assigned_to', $request->user()->id)->get();
         $projectStatus = TasksStatusModel::query()->where('project_id', $request->project_id)->select('statuses')->get()->toArray();
         $projectName = TasksProjectModel::query()->where('id', $request->project_id)->select('id','name', 'leader_employee_id')->first();
-
         $projectStatus = json_decode($projectStatus['0']['statuses']);
+        $projectParticipants = TasksParticipantsModel::query()->where('project_id', $request->project_id)->get();
 
         if($projectTasks->toArray() != null) {
             $currentStatus = $projectTasks[0]['status_key'];
@@ -206,7 +206,8 @@ class TasksController extends Controller
             'my_tasks' => $myTasks,
             'statuses' => $projectStatus,
             'project_name' => $projectName,
-            'currentStatus' => $currentStatus]);
+            'currentStatus' => $currentStatus,
+            'projParticipants' => $projectParticipants]);
     }
 
     public function updateStatus(Request $request): RedirectResponse
