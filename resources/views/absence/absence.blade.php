@@ -16,9 +16,9 @@
     <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
         <div class="container" style="width: 75%; margin-top: 20px">
             @include('components.errors')
-        <p class="h2 text-center">Absence Requests</p>
+        <p class="h2 text-center">Absence Request</p>
             <hr class="hr"/>
-            <form action="{{ route('absence.create') }}" method="POST">
+            <form action="{{ route('absence.create') }}" method="POST" enctype="multipart/form-data">
             @csrf
             <div class="form-group">
                 <input type="hidden" name="user_id" id="user_id" value="{{ Auth::user()->id }}">

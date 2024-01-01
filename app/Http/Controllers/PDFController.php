@@ -15,6 +15,7 @@ class PDFController extends Controller
     {
         $validated = $request->validate([
             'employee' => 'required|exists:employee_information,id',
+            'equipmentText' => 'required|string'
         ]);
 
         $employee = $request->input('employee');
@@ -40,6 +41,7 @@ class PDFController extends Controller
             'date' => Carbon::now(),
             'employee' => $employeeName->user->first_name . ' ' . $employeeName->user->last_name,
             'equipment' => $eqName,
+            'text' => $request->input('equipmentText')
         ];
 
         $pdf = PDF::loadView('PDF.EquipmentAgreement', $data);

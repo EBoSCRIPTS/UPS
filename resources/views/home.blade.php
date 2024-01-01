@@ -18,7 +18,7 @@
         <script>window.location="/login"</script>
         @endif
     @include('components.sidebar')
-        <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4" style="margin-top: 100px">
+        <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-3">
             <div class="container" style="width: 80%">
                 <p class="h4 text-center"> NEWS </p>
             <div class="d-flex flex-wrap justify-content-center">

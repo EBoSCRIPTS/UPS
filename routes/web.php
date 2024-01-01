@@ -49,6 +49,7 @@ Route::get('/absence/vacation/{absence_id}', [VacationsController::class, 'getUs
 Route::post('/absence/create', [AbsenceController::class, 'addAbsence'])->name('absence.create');
 Route::post('/absence/update', [AbsenceController::class, 'updateAbsence'])->name('absence.update');
 Route::post('/absence/delete', [AbsenceController::class, 'deleteAbsence'])->name('absence.delete');
+Route::get('/absence/attachment/download/{absence_id}', [AbsenceController::class, 'downloadAttachment'])->name('absence.attachment.download')->middleware('manager');
 
 /* User create views */
 Route::post('/user/create', [UserController::class, 'register'])->name('user.create')->middleware('admin');

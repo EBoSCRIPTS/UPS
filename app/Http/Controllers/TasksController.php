@@ -39,7 +39,7 @@ class TasksController extends Controller
         $newProject = new TasksProjectModel([
             'name' => $request->input('project_name'),
             'department_id' => $request->input('department_id'),
-            'leader_employee_id' => $request->input('project_manager_id'),
+            'leader_user_id' => $request->input('project_manager_id'),
         ]);
 
         $newProject->save();
@@ -191,7 +191,7 @@ class TasksController extends Controller
 
         $myTasks = TasksTaskModel::query()->where('assigned_to', $request->user()->id)->get();
         $projectStatus = TasksStatusModel::query()->where('project_id', $request->project_id)->select('statuses')->get()->toArray();
-        $projectName = TasksProjectModel::query()->where('id', $request->project_id)->select('id','name', 'leader_employee_id')->first();
+        $projectName = TasksProjectModel::query()->where('id', $request->project_id)->select('id','name', 'leader_user_id')->first();
         $projectStatus = json_decode($projectStatus['0']['statuses']);
         $projectParticipants = TasksParticipantsModel::query()->where('project_id', $request->project_id)->get();
 

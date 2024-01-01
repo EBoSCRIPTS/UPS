@@ -219,7 +219,7 @@ class TasksBoardController extends Controller
 
         $project = TasksProjectModel::query()->where('id', $request->project_id)->first();
         $project->update([
-            'leader_employee_id' => $request->input('project_leader')
+            'leader_user_id' => $request->input('project_leader')
         ]);
 
         return redirect('/tasks/project_settings/');
@@ -258,7 +258,7 @@ class TasksBoardController extends Controller
             return true;
         }
 
-        if (TasksProjectModel::query()->where('id', $project_id)->pluck('leader_employee_id')->first() == Auth::user()->id) {
+        if (TasksProjectModel::query()->where('id', $project_id)->pluck('leader_user_id')->first() == Auth::user()->id) {
             return true;
         }
         else {

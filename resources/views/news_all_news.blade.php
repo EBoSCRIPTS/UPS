@@ -17,30 +17,28 @@
         <div class="container" style="width: 80%">
             <p class="h2 text-center">All news</p>
 
-            <div class="container">
-                <div class="row">
-                    @foreach($topics as $topic)
-                        <div class="col-md-6">
-                            <a href="/news/view_topic/{{$topic->id}}" style="text-decoration: none">
-                                <div class="card mb-3 bg-light" style="max-width: 480px;">
-                                    <div class="row g-0">
-                                        <div class="col-md-4">
-                                            <img src="{{asset($topic->news_image)}}" class="img-fluid rounded-start" style="height: 200px" alt="...">
-                                        </div>
-                                        <div class="col-md-8">
-                                            <div class="card-body">
-                                                <h5 class="card-title" >{{$topic->topic}}</h5>
-                                                <p class="card-text" style="text-overflow: ellipsis"><small>{{ $topic->about }}</small></p>
-                                            </div>
-                                        </div>
+
+            @foreach($topics as $topic)
+                <a href="/news/view_topic/{{$topic->id}}" style="text-decoration: none">
+                    <div class="d-flex flex-wrap justify-content-center">
+                        <div class="card mb-3 bg-light">
+                            <div class="row g-0">
+                                <div class="col-md-4">
+                                    <img src="{{asset($topic->news_image)}}" class="img-fluid rounded-start" alt="...">
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{$topic->topic}}</h5>
+                                        <p class="card-text">{{$topic->about}}</p>
                                     </div>
                                 </div>
-                            </a>
-                        </div>
-                    @endforeach
-                </div>
-            </div>
+                            </div>
 
+                        </div>
+                    </div>
+
+                </a>
+            @endforeach
         </div>
 
 </div>

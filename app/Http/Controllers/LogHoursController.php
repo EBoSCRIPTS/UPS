@@ -153,7 +153,7 @@ class LogHoursController extends Controller
         return LogHoursModel::query()->where('user_id', Auth::user()->id)->pluck('date')->toArray();
     }
 
-    public function getPreviousMonth(): \Illuminate\View\View
+    public function getPreviousMonth(): \Illuminate\View\View|RedirectResponse
     {
         if ($this->checkIfClosedMonth(Auth::user()->id, Carbon::now()->subMonth()->monthName)) {
             return redirect('/');
@@ -274,7 +274,7 @@ class LogHoursController extends Controller
                 ->where('user_id', $submittedHours->user_id)
                 ->first();
             //idea is that one day costs 0.2VP, in the span of 3 worked months averaging 160hours employee will be able to automatically earn 1 month of paid vacation
-            $vp = $submittedHours->total_hours * 0.0021;
+            $vp = $submittedHours->total_hours * 0.00265;
 
             $employeeVacation->update([
                 'vacation_points' => $employeeVacation->vacation_points + $vp

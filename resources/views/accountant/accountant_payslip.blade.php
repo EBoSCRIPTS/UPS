@@ -98,7 +98,7 @@
                             <br>
                             <button type="button" class="btn btn-success btn-sm" id="printButton" onclick="printPayslip()">Print</button>
                             @if($isFullfilled == false)
-                            <a href="/accountant/payslip/{{$employee->department->id}}/{{$employee->id}}/{{\Carbon\Carbon::now()->year}}/{{$month}}/{{$hours->id}}/fulfill" class="btn btn-primary btn-sm">Fulfill</a>
+                            <a href="/accountant/payslip/{{$employee->department->id}}/{{$employee->id}}/{{\Carbon\Carbon::now()->year}}/{{$month}}/{{$hours->id}}/fulfill" class="btn btn-primary btn-sm" id="fulfill">Fulfill</a>
                             @endif
                         </div>
                     </div>
@@ -114,6 +114,8 @@
         const sidebar = document.getElementById('sidebar');
         const printButton = document.getElementById('printButton');
         const status = document.getElementById('status');
+        const fulfill = document.getElementById('fulfill')
+        fulfill.style.display = 'none';
         status.style.display = 'none';
         printButton.style.display = 'none';
         sidebar.style.display = 'none';

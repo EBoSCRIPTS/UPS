@@ -34,9 +34,9 @@
                             <p><strong>Type: {{$absence->type}}</strong></p>
                             @endif
                         <p>Comment: {{ $absence->reason }}</p>
+                            <p><a href="/absence/attachment/download/{{$absence->id}}">{{$absence->attachment ?? null}}</a></p>
                         <input type="submit" class="btn btn-danger" name="status" value="DENY">
                         <input type="submit" class="btn btn-success" name="status" value="APPROVE">
-                        <input type="hidden" name="approver_id" value="{{ Auth::user()->id }}">
                         </div>
                     </div>
                 </div>

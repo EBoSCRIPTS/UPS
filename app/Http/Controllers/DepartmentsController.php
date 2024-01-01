@@ -18,7 +18,7 @@ class DepartmentsController extends Controller
             'description' => 'required|string',
         ]);
 
-        $departament = new DepartmentsController([
+        $departament = new DepartmentsModel([
             'name' => $request->input('departament'),
             'description' => $request->input('description'),
         ]);
@@ -30,14 +30,14 @@ class DepartmentsController extends Controller
 
     public function showAllDepartments(): \Illuminate\View\View
     {
-        $departments = DepartmentsController::all();
+        $departments = DepartmentsModel::all();
 
-        return view('departaments', ['departments' => DepartmentsController::all()]);
+        return view('departaments', ['departments' => DepartmentsModel::all()]);
     }
 
     public function deleteDepartment(Request $request): RedirectResponse
     {
-        $department = DepartmentsController::query()->find($request->input('id'));
+        $department = DepartmentsModel::query()->find($request->input('id'));
 
         if (EmployeeInformationModel::query()->where('department_id', $request->input('id'))->get()->count() > 0) { //check if any employees are assigned to the department
             return back()->withInput()->withErrors([

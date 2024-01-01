@@ -18,9 +18,8 @@
 <body>
 <div class="row">
     @include('components.sidebar')
-    <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-3">
-        <div class="row">
-
+    <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-3" >
+        <div class="row d-flex justify-content-center align-items-center">
             <div class="col-sm-4">
                 <p class="h4">Add Tax</p>
                 <form action="{{route('accountant.add_tax', $department)}}" method="POST">

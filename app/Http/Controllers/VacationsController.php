@@ -46,9 +46,9 @@ class VacationsController extends Controller
         return back()->with('success', 'Balance updated');
     }
 
-    private function getPreviousVacations($employee_id): Collection|string
+    private function getPreviousVacations($user_id): Collection|string
     {
-        $vacations = EmployeeVacationsModel::query()->where('employee_id', $employee_id)->get();
+        $vacations = EmployeeVacationsModel::query()->where('user_id', $user_id)->get();
 
         if (sizeof($vacations) == 0) { //return a string (will be displayed) if no previous vacations
             return 'No previous vacations';

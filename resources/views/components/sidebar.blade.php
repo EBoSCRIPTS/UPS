@@ -1,4 +1,9 @@
 <script src="{{asset('js/userSearch.js')}}"></script>
+<style>
+    body{
+        overflow-x: hidden
+    }
+</style>
 @if(isset(Auth::user()->id))
     <div class="container-fluid">
         <div class="row flex-nowrap">
@@ -14,7 +19,7 @@
                         id="menu">
                         <li class="nav-item">
                             <a href="/" class="nav-link align-middle px-0">
-                                <i class="fs-4 bi-house"></i> <span class="ms-1" style="color: white">Home</span>
+                                <i class="fs-4 bi-house"></i> <span class="ms-1" style="color: white">HOME</span>
                             </a>
                         </li>
                         <li>

@@ -16,7 +16,7 @@
         <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-3">
             @include('components.tasks_navbar')
                 <div class="container" style="width: 80%">
-                    <p class="h2 text-center">Pick a department</p>
+                    <p class="h2 text-center">Pick a project</p>
                     <div class="row">
                         @foreach($projects as $project)
                             <div class="col-lg-6">

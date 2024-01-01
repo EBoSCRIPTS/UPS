@@ -24,7 +24,7 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="editModalLabel{{$user->id}}">Modal title</h5>
+                        <h5 class="modal-title" id="editModalLabel{{$user->id}}">Edit user</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
@@ -57,7 +57,7 @@
         <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-3">
             @include('components.errors')
             <div class="container" style="width: 80%">
-                <h1 class="display-3">Edit user</h1>
+                <h1 class="display-3 text-center">Edit user</h1>
                 <table class="table table-striped">
                     <thead>
                         <tr>

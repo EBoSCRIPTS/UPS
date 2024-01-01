@@ -17,6 +17,7 @@
 <div class="row">
     @include('components.sidebar')
     <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-3">
+        <div class="container">
         <p class="h-4"> Month of {{ $month }}
         @if(!isset($hide))
         <form action="{{route('loghours.previous_month')}}" method="POST">
@@ -31,7 +32,7 @@
             <table class="table">
                 <thead>
                 <tr>
-                    <th scope="col">Date + Day</th>
+                    <th scope="col">Date 'n' Day</th>
                     <th scope="col">Start</th>
                     <th scope="col">Finish</th>
                     <th scope="col">Break</th>
@@ -45,13 +46,13 @@
                         <input type="hidden" id="date{{$date}}" name="{{$date}}_date" value="{{$date}}"/>
                         <td>{{$date}} {{ Carbon\Carbon::parse($date)->locale('en')->dayName }}</td>
                         <td>
-                            <input type="time" id="start_time{{$date}}" name="{{$date}}_start_time" min="00:00" max="24:00" onchange="calculateWorkedHours('{{$date}}')"/>
+                            <input class="form-control" type="time" id="start_time{{$date}}" name="{{$date}}_start_time" min="00:00" max="24:00" onchange="calculateWorkedHours('{{$date}}')"/>
                         </td>
                         <td>
-                            <input type="time" id="end_time{{$date}}" name="{{$date}}_end_time" min="00:00" max="24:00" onchange="calculateWorkedHours('{{$date}}')"/>
+                            <input class="form-control" type="time" id="end_time{{$date}}" name="{{$date}}_end_time" min="00:00" max="24:00" onchange="calculateWorkedHours('{{$date}}')"/>
                         </td>
                         <td>
-                            <select id="break_time{{$date}}" name="{{$date}}_break_time" onchange="calculateWorkedHours('{{$date}}')">
+                            <select class="form-select" id="break_time{{$date}}" name="{{$date}}_break_time" onchange="calculateWorkedHours('{{$date}}')">
                                 <option value="0">No break</option>
                                 <option value="30">30min</option>
                                 <option value="60">1hr</option>
@@ -71,7 +72,7 @@
             </table>
             <input type="submit" class="btn btn-primary" value="Submit" onclick="return confirm('Are you sure?')"/>
         </form>
-
+        <hr>
         <form action="{{route('loghours.close_month')}}" method="POST">
             @csrf
             <input type="hidden" name="month" value="{{ $month }}"/>
@@ -115,6 +116,7 @@
                 @endforeach
                 </tbody>
             </table>
+        </div>
     </div>
 </div>
 

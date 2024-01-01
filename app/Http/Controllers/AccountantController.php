@@ -22,13 +22,13 @@ class AccountantController extends Controller
 {
     public function showAll(): View
     {
-        return view('accountant.accountant_view', ['departments' => DepartmentsController::all()]);
+        return view('accountant.accountant_view', ['departments' => DepartmentsModel::all()]);
     }
 
     //returns information to accountant department view
     public function showDept(Request $request): View
     {
-        $showDept = DepartmentsController::query()->find($request->id);
+        $showDept = DepartmentsModel::query()->find($request->id);
         $showEmployees = EmployeeInformationModel::query()->where('department_id', $request->id)->get();
         $logHours = new LogHoursController();
         $getFulfilled = AccountantFulfilledPayslipsModel::query()->where('department_id', $request->id)->get();

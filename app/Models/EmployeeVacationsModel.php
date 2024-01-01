@@ -10,7 +10,7 @@ class EmployeeVacationsModel extends Model
     protected $table = 'employee_vacations';
 
     protected $fillable = [
-        'employee_id',
+        'user_id',
         'date_from',
         'date_to',
         'is_paid',

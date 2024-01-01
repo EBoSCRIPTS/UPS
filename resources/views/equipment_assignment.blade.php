@@ -54,11 +54,9 @@
             </div>
                 <div class="col-md-6">
         @if(isset($assignments))
-            <form action="{{route('equipment.generate_agreement')}}" method="POST">
-                @csrf
-                <input type="hidden" name="employee" value="{{$employeeFor}}">
-                <button type="submit" class="btn btn-info btn-sm">Generate PDF Agreement</button>
-            </form>
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#pdfModal">
+                            Setup PDF agreement
+                        </button>
                 </div>
         </div>
         <table class="table">
@@ -94,3 +92,25 @@
 
 </div>
 </body>
+
+@if(isset($assignments))
+<div class="modal fade" id="pdfModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="pdfModalLabel">PDF setup</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="{{route('equipment.generate_agreement')}}" method="POST">
+                    @csrf
+                    <input type="hidden" name="employee" value="{{$employeeFor}}">
+                    <label for="equipmentText" class="form-label">Agreement text</label>
+                    <textarea name="equipmentText" id="equipmentText" cols="30" rows="10" class="form-control"></textarea>
+                    <button type="submit" class="btn btn-info btn-sm mt-2 float-end">Generate PDF Agreement</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@endif
