@@ -249,14 +249,19 @@ class LogHoursController extends Controller
             ->where('is_confirmed', 1)
             ->get();
 
-        $monthlyHours = [];
+        //get confirmed
+        $confirmedHours = LoggedHoursSubmittedModel::query()
+            ->where('is_confirmed', 2) //2 because of enum
+            ->get();
+
+        $weeklyHours = [];
 
         foreach ($submittedHours as $submittedHour) {
-            $monthlyExpected = EmployeeInformationModel::query()->where('user_id', $submittedHour->user_id)->pluck('weekly_hours')->first();
-            $monthlyHours[$submittedHour->user_id] = $monthlyExpected;
+            $weeklyExpected = EmployeeInformationModel::query()->where('user_id', $submittedHour->user_id)->pluck('weekly_hours')->first();
+            $weeklyHours[$submittedHour->user_id] = $weeklyExpected;
         };
 
-        return view('loghours_submit_review', ['submits' => $submittedHours, 'monthlyHours' => $monthlyHours]);
+        return view('loghours_submit_review', ['submits' => $submittedHours, 'weeklyHours' => $weeklyHours, 'confirmedHours' => $confirmedHours]);
     }
 
     public function submitHoursReview(Request $request): RedirectResponse

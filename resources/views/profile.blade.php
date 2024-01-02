@@ -17,7 +17,7 @@
         <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-3">
             <div class="container mt-3" style="width: 80%">
                 @include('components.errors')
-                <div class="row flex-nowrap justify-content-center">
+                <div class="row justify-content-center">
                     <div class="col-sm-4 bg-light" style="padding-top: 50px; padding-bottom: 50px"">
                         <img src="{{ asset($user->profile_picture) }}" alt="Profile Picture" class="rounded-circle mb-3 d-block mx-auto" width="150" height="150">
                         @if(isset($user->employee->department->name))

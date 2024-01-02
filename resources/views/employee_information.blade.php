@@ -115,12 +115,20 @@
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="editModal{{$employee->id}}">Modal title</h5>
+                                <h5 class="modal-title" id="editModal{{$employee->id}}">Edit employee information</h5>
                             </div>
                             <div class="modal-body">
                                 <form action="{{route('employee_information.update')}}" method="POST">
                                     @csrf
                                     <input type="hidden" name="employee_id" value="{{ $employee->id }}">
+
+                                    <label for="dept_name" class="form-label">Department</label>
+                                    <select name="dept_name" id="dept_name" class="form-select">
+                                        <option selected disabled>Pick a new department</option>
+                                        @foreach($departments as $dept)
+                                            <option value={{$dept->id}}>{{$dept->name}}</option>
+                                        @endforeach
+                                    </select>
 
                                     <label for="hour_pay" class="form-label">Hour Pay</label>
                                     <input type="text" class="form-control" id="hour_pay" name="hour_pay" placeholder="{{$employee->hour_pay}}"/>
@@ -131,7 +139,7 @@
                                     <label for="position" class="form-label">Position</label>
                                     <input type="text" class="form-control" id="position" name="position" placeholder="{{$employee->position}}"/>
 
-                                    <label for="hours" class="form-label">Weekly Hourss</label>
+                                    <label for="hours" class="form-label">Weekly Hours</label>
                                     <input type="number" class="form-control" id="hours" name="hours" placeholder="{{$employee->weekly_hours}}"/>
 
                                     <button type="submit" class="btn btn-primary mt-3">Save</button>

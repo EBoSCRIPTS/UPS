@@ -23,7 +23,10 @@
             @csrf
             <label for="type" class="form-label">Type</label>
             <input type="text" name="type" id="type" class="form-control">
-            <button type="submit" class="btn btn-primary mt-3">Add type</button></button>
+            <div class="btn-group">
+                <button type="submit" class="btn btn-primary mt-3">Add type</button>
+                <button type="button" class="btn btn-danger mt-3" data-bs-toggle="modal" data-bs-target="#deleteEquipmentTypeModal">Delete type</button>
+            </div>
         </form>
             </div>
 
@@ -65,7 +68,7 @@
                     </div>
             </div>
         </div>
-        <table class="table">
+        <table class="table" id="equipment-table">
             <thead>
                 <tr>
                     <th scope="col">Type</th>
@@ -89,7 +92,7 @@
         <hr class="hr"/>
         <p class="h4">List of available equipment</p>
 
-        <table class="table">
+        <table class="table" id="equipment-table">
             <thead>
                 <tr>
                     <th scope="col">Type</th>
@@ -120,6 +123,30 @@
     </div>
 </div>
 </body>
+
+<!-- Modal -->
+<div class="modal fade" id="deleteEquipmentTypeModal" tabindex="-1" aria-labelledby="deleteEquipmentTypeModal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteEquipmentTypeModal">Delete equipment type</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="{{route('equipment.delete_equipment_type')}}" method="POST">
+                    @csrf
+                @foreach($types as $type)
+                    <input type="hidden" name="id" value="{{$type->id}}">
+                    {{$type->name}}
+                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                    <br>
+                @endforeach
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {

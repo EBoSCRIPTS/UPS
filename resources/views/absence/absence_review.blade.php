@@ -43,9 +43,16 @@
             </form>
         @endforeach
             <hr class="hr" />
-            <p class="h2">Reviewed Requests</p>
+            <div class="row">
+                <div class="col-md-6">
+                    <p class="h2">Reviewed Requests</p>
+                </div>
+                <div class="col-md-6">
+                    <input type="text" id="searchFor" class="form-control" placeholder="Search...">
+                </div>
+            </div>
             @foreach($reviewedAbsences as $reviewedAbsence)
-                <div class="card mt-3 bg-light" >
+                <div class="card mt-3 bg-light reviewedCard">
                     <div class="card-box">
                         @if($reviewedAbsence->status == 'APPROVE')
                         <h5 class="card-header" style="color: green">Created at: {{ $reviewedAbsence->created_at }} |
@@ -71,7 +78,22 @@
         </div>
     </div>
 
-
-
 </div>
 </body>
+
+<script>
+    const inputField = document.getElementById('searchFor');
+    const card = document.getElementsByClassName('reviewedCard');
+
+    inputField.addEventListener('input', function(){
+        for (let i = 0; i < card.length; i++) {
+            if (card[i].innerText.toLowerCase().includes(inputField.value.toLowerCase())) {
+                card[i].style.display = 'block';
+            }
+            else {
+                card[i].style.display = 'none';
+            }
+        }
+    });
+
+</script>

@@ -19,46 +19,74 @@
 <div class="row">
     @include('components.sidebar')
     <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-3">
-        <div class="container" style="width: 80%">
+        <div class="container align-items-center" style="width: 80%">
             @include('components.errors')
-            <p class="h3">Review Hours</p>
+            <div class="row">
+                <div class="col-lg-6">
+                <p class="h3 text-center">Review Hours</p>
 
-            @if(count($submits) > 0)
-            <table class="table table-striped" style="max-width: 800px">
-                <thead>
-                    <tr>
-                        <th scope="col">Employee</th>
-                        <th scope="col">Submitted Hours</th>
-                        <th scope="col">Month Name</th>
-                        <th scope="col">Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($submits as $submit)
+                @if(count($submits) > 0)
+                <table class="table table-striped" style="max-width: 800px">
+                    <thead>
                         <tr>
-                            <td>
-                                {{$submit->user->first_name}} {{$submit->user->last_name}}
-                            </td>
-                            <td>{{$submit->total_hours}} of {{$monthlyHours[$submit->user_id]}}</td>
-                            <td>{{$submit->month_name}}</td>
-                            <div class="btn-group">
-                                <td>
-                                    <form action="{{route('loghours.review')}}" method="POST">
-                                        @csrf
-                                        <input type="hidden" name="id" value="{{$submit->id}}">
-                                        <button type="submit" class="btn btn-success" name="Approve" value="confirm">Approve</button>
-                                        <button type="submit" class="btn btn-danger" name="Reject" value="reject">Reject</button>
-                                    </form>
-                                </td>
-
-                            </div>
+                            <th scope="col">Employee name</th>
+                            <th scope="col">Total Hours</th>
+                            <th scope="col">Night Hours</th>
+                            <th scope="col">Month Name</th>
+                            <th scope="col">Action</th>
                         </tr>
-                    @endforeach
-                </tbody>
-            </table>
-            @else
-                <p>Nothing to review</p>
+                    </thead>
+                    <tbody>
+                        @foreach($submits as $submit)
+                            <tr>
+                                <td>{{$submit->user->first_name}} {{$submit->user->last_name}}</td>
+                                <td>{{$submit->total_hours}} of {{$weeklyHours[$submit->user_id]}}</td>
+                                <td>{{$submit->night_hours}}</td>
+                                <td>{{$submit->month_name}}</td>
+                                <div class="btn-group">
+                                    <td>
+                                        <form action="{{route('loghours.review')}}" method="POST">
+                                            @csrf
+                                            <input type="hidden" name="id" value="{{$submit->id}}">
+                                            <button type="submit" class="btn btn-success" name="Approve" value="confirm">Approve</button>
+                                            <button type="submit" class="btn btn-danger" name="Reject" value="reject">Reject</button>
+                                        </form>
+                                    </td>
+
+                                </div>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+                @else
+                    <p>Nothing to review</p>
             @endif
+                </div>
+                <div class="col-lg-6">
+                    <p class="h3 text-center">Reviewed Hours</p>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th scope="col">Employee name</th>
+                                <th scope="col">Total Hours</th>
+                                <th scope="col">Night Hours</th>
+                                <th scope="col">Month Name</th>
+                                <th scope="col">Confirmed on</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($confirmedHours as $ch)
+                                <tr>
+                                    <td>{{$ch->user->first_name}} {{$ch->user->last_name}}</td>
+                                    <td>{{$ch->total_hours}}</td>
+                                    <td>{{$ch->night_hours}}</td>
+                                    <td>{{$ch->month_name}}</td>
+                                    <td>{{$ch->created_at}}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                </div>
+            </div>
         </div>
     </div>
 

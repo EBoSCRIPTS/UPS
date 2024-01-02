@@ -127,6 +127,22 @@ class EquipmentController extends Controller
         return back()->with('success', 'Item deleted!');
     }
 
+    public function deleteEquipmentType(Request $request): RedirectResponse
+    {
+        $validated = $request->validate([
+            'id' => 'required|exists:equipment_type,id',
+        ]);
+
+        if(EquipmentItemsModel::query()->where('type_id', $request->input('id'))->get() != null) {
+            return back()->withErrors('error', 'Cannot delete type of equipment with assigned equipment');
+        }
+
+        $type = EquipmentTypeModel::query()->where('id', $request->input('id'))->first();
+        $type->delete();
+
+        return back()->with('success', 'Type of equipment deleted successfully');
+    }
+
     public function returnEquipment(Request $request): RedirectResponse
     {
         $equipment = EquipmentItemsModel::query()->where('id', $request->input('id'))->first();

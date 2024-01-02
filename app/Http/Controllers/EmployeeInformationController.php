@@ -94,11 +94,13 @@ class EmployeeInformationController extends Controller
             'hour_pay' => 'sometimes|nullable|decimal:2',
             'salary' => 'sometimes|nullable|decimal:2',
             'weekly_hours' => 'sometimes|nullable|numeric',
+            'dept_name' => 'sometimes|nullable|string|exists:departaments,id',
         ]);
 
         $employee = EmployeeInformationModel::query()->where('id', $request->input('employee_id'))->first();
 
         $employee->update([
+            'department_id' => $request->input('dept_name') ?? $employee->department_id,
             'hour_pay' => $request->input('hour_pay') ?? $employee->hour_pay,
             'salary' => $request->input('salary') ?? $employee->salary,
             'position' => $request->input('position') ?? $employee->position,

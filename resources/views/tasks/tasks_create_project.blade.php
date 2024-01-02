@@ -53,7 +53,7 @@
                                     <option value="{{$user->id}}">{{$user->first_name}} {{$user->last_name}}</option>
                                 @endforeach
                             </select>
-                            <button type="submit" class="btn btn-primary mt-5 float-end" onclick="return confirm('Are you sure?')">Submit</button>
+                            <button type="submit" class="btn btn-primary mt-5 float-end" onclick="return confirm('Are you sure?')">Finish creating new project</button>
                         </div>
                     </div>
                     <hr>
