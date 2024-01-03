@@ -23,7 +23,6 @@ async function getProjects(field_id) {
 }
 
 window.onload = function() {
-    console.log('load');
-    // getProjects('project_id');
-    // getProjects('project');
+    getProjects('project_id');
+    getProjects('project');
 }

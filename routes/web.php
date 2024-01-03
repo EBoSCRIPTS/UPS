@@ -25,7 +25,7 @@ use App\Http\Controllers\SubmittedTicketsController;
 Route::get('/', [NewsController::class, 'loadAllTopics']);
 
 /* Manager views */
-Route::get('/mng/register', [UserController::class, 'createUserView']);
+Route::get('/mng/register', [UserController::class, 'createUserView'])->middleware('admin');
 Route::get('/mng/allusers', [UserController::class, 'showAll'])->name('users')->middleware('admin');
 Route::get('/mng/edit', [UserController::class, 'showAll'])->name('users')->middleware('admin');
 

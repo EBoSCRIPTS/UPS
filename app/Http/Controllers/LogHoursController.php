@@ -66,68 +66,20 @@ class LogHoursController extends Controller
             }
         }
 
-        $nightHoursStart = strtotime('22:00');
-        $midnight = strtotime('24:00');
-        $sameDay = strtotime('00:00');
-        $nightHoursEnd = strtotime('06:00');
-
         foreach ($dates as $date) {
             if ($request->input($date . '_start_time') != null && $request->input($date . '_end_time') != null) {
-
-                $firstPart = 0; //variables for calculating night hours
-                $secondPart = 0;
-                $difference = 0;
-
                 $shiftStartTime = strtotime($request->input($date . '_start_time'));
                 $shiftEndTime = strtotime($request->input($date . '_end_time'));
+                $breakTime = $request->input($date . '_break_time')*60;
 
-                //if the employee starts shift after 22:00 and ends the next day
-                if($shiftStartTime >= $nightHoursStart){
-                    $firstPart = $midnight - $shiftStartTime;
-                    $secondPart = ($shiftEndTime - $midnight) + 86400; //add 24hours, otherwise next days are considered as todays
-
-                    if($shiftEndTime > $nightHoursEnd) {
-                        $difference = $shiftEndTime - $nightHoursEnd;
-                    }
-
-                    $nightHoursCalculate = ($firstPart + $secondPart - $difference) / 3600;
-                }
-
-                //if starts and ends on the same night(before midnight)
-                else if($shiftStartTime <= $nightHoursStart && $shiftEndTime < $midnight)
-                {
-                    $nightHoursCalculate = ($shiftEndTime - $nightHoursStart) / 3600;
-                }
-
-                //if the employee starts past midnight and ends any time next day
-                else if($shiftStartTime < $sameDay && $shiftEndTime >= $nightHoursEnd)
-                {
-                    $nightHoursCalculate = ($nightHoursEnd - $shiftStartTime)/3600;
-                }
-
-                //if the employee starts earlier than 22:00 and ends before or at 06:00
-                else if($shiftStartTime < $nightHoursStart){
-                    $firstPart = $midnight - $nightHoursStart;
-                    $secondPart = ($shiftEndTime - $midnight) + 86400;
-
-                    if($shiftEndTime > $nightHoursEnd) {
-                        $difference = $shiftEndTime - $nightHoursEnd;
-                    }
-
-                    $nightHoursCalculate = ($firstPart + $secondPart - $difference) / 3600;
-                }
-                $nightHoursCalculate = round($nightHoursCalculate);
-
-                if ($nightHoursCalculate < 0) {
-                    $nightHoursCalculate = 0; //if we mysterically get lower than 0(doesn't happen when dealing with normal nighthours)
-                }
+                $calculated = $this->calculateHours($shiftStartTime, $shiftEndTime, $breakTime);
 
                 $loggedHours = new LogHoursModel([
                     'user_id' => $request->input('user_id'),
                     'start_time' => $request->input($date . '_start_time'),
                     'end_time' => $request->input($date . '_end_time'),
-                    'total_hours' => $request->input($date . '_total_hours'),
-                    'night_hours' => $nightHoursCalculate,
+                    'total_hours' => $calculated[0],
+                    'night_hours' => $calculated[1],
                     'date' => $request->input($date . '_date'),
                 ]);
 
@@ -306,5 +258,74 @@ class LogHoursController extends Controller
             ->first();
 
         return $submittedHours;
+    }
+
+    public function calculateHours($shiftStartTime, $shiftEndTime, $breakTime): array
+    {
+        $nightHoursStart = strtotime('22:00');
+        $midnight = strtotime('24:00');
+        $sameDay = strtotime('00:00');
+        $nightHoursEnd = strtotime('06:00');
+
+        $difference = 0;
+
+        $totalTime = ($shiftEndTime - $shiftStartTime - $breakTime)/3600;
+        if ($totalTime < 0){
+            $totalTime = $totalTime + 24;
+        }
+
+        if($shiftStartTime > $shiftEndTime){ //if start time is bigger than endtime, we consider that endtime is the next day
+            $shiftEndTime += 86400;
+        }
+
+        //if the employee starts shift after 22:00 and ends the next day //ir 22 - 06
+        if($shiftStartTime >= $nightHoursStart) {
+            $firstPart = $midnight - $shiftStartTime;
+            $secondPart = $shiftEndTime - $midnight;
+            $nightHoursCalculate = ($firstPart + $secondPart) / 3600;
+        }
+
+        //if starts and ends on the same night(before midnight)
+        else if($shiftStartTime <= $nightHoursStart && $shiftEndTime >= $nightHoursStart)
+        {
+            $nightHoursCalculate = ($shiftEndTime - $nightHoursStart) / 3600;
+            if ($nightHoursCalculate < 0) {
+                $nightHoursCalculate = 0;
+            }
+        }
+        //if the employee starts past midnight and ends any time next day
+        else if($shiftStartTime <= $nightHoursEnd && $shiftEndTime <= $midnight)
+        {
+            if($shiftEndTime > $nightHoursEnd) {
+                $nightHoursCalculate = ($nightHoursEnd - $shiftStartTime) / 3600;
+            }
+            else{
+                $nightHoursCalculate = ($shiftEndTime-$shiftStartTime) / 3600;
+            }
+        }
+
+
+        //if the employee starts earlier than 22:00 and ends before or at 06:00
+        else if($shiftStartTime < $nightHoursStart && $shiftEndTime <= $nightHoursEnd){
+            $firstPart = $midnight - $nightHoursStart;
+            $secondPart = ($shiftEndTime - $midnight) + 86400;
+
+            if($shiftEndTime > $nightHoursEnd) {
+                $difference = $shiftEndTime - $nightHoursEnd;
+            }
+
+            $nightHoursCalculate = ($firstPart + $secondPart - $difference) / 3600;
+        }
+
+        if (isset($nightHoursCalculate)) {
+            $nightHoursCalculate = round($nightHoursCalculate);
+            $nightHoursCalculate = $nightHoursCalculate - $breakTime/3600;
+            if ($nightHoursCalculate < 0) {
+                $nightHoursCalculate = 0; //if we mysterically get lower than 0(doesn't happen when dealing with normal nighthours)
+            }
+        }
+        $totalTime = round($totalTime, 2);
+
+        return [Carbon::createFromTimeString(strval($totalTime))->format('H:i'), $nightHoursCalculate ?? 0];
     }
 }

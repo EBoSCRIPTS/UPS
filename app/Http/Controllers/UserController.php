@@ -82,7 +82,7 @@ class UserController extends Controller
 
         if ($user->role_id == 1) //admins cant delete admins
         {
-            return redirect('/mng/edit')->with('error', 'Cannot delete superadmin!');
+            return redirect('/mng/edit')->withErrors('error', 'Cannot delete superadmin!');
         }
 
         if ($user->created_at > Carbon::now()->subMinutes(3))

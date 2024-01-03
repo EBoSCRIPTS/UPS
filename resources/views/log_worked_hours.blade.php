@@ -90,7 +90,8 @@
                     <th scope="col">Date</th>
                     <th scope="col">Start</th>
                     <th scope="col">Finish</th>
-                    <th scope="col">Hours</th>
+                    <th scope="col">Total Hours</th>
+                    <th scope="col">Night Hours</th>
                     @if(!isset($closed))
                     <th scope="col">Delete</th>
                     @endif
@@ -105,6 +106,7 @@
                             <td>{{$userLog->start_time}}</td>
                             <td>{{$userLog->end_time}}</td>
                             <td>{{$userLog->total_hours}}</td>
+                            <td>{{$userLog->night_hours}}</td>
                             @if(!isset($closed))
                             <td>
                                 <button class="btn btn-danger">Delete</button>
