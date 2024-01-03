@@ -76,12 +76,14 @@
                                 <td>{{$user->email}}</td>
                                 <td>{{$user->role->name}}</td>
                                 <td>
+                                    @if($user->role->name!='Superadmin')
                                     <div class="btn-group">
                                         <form action="{{ route('user.delete') }}" method="POST" style="display: inline">
                                             @csrf
                                             <input type="hidden" name="id" value="{{ $user->id }}">
                                             <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
                                         </form>
+                                        @endif
                                         <form style="display: inline">
                                             @csrf
                                             <input type="hidden" name="id" value="{{ $user->id }}">

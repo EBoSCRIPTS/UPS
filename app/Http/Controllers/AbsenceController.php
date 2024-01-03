@@ -81,12 +81,12 @@ class AbsenceController extends Controller
     /* users own requests */
     public function getUserAbsence(): Collection
     {
-        return AbsenceModel::query()->where('user_id', Auth::id())->where('status', 'Sent')->orderBy('created_at', 'desc')->get();
+        return AbsenceModel::query()->where('user_id', Auth::user()->id)->where('status', 'Sent')->orderBy('created_at', 'desc')->get();
     }
 
     public function getUserAbsenceReviewed(): Collection
     {
-        return AbsenceModel::query()->where('user_id', Auth::id())->where('status', 'Approve')->orWhere('status', 'Deny')->orderBy('created_at', 'desc')->get();
+        return AbsenceModel::query()->where('user_id', Auth::user()->id)->whereIn('status', ['Approve', 'Deny'])->orderBy('created_at', 'desc')->get();
     }
 
     /* absence review page(for all) */

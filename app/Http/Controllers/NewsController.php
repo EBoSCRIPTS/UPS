@@ -23,6 +23,7 @@ class NewsController extends Controller
             'about' => 'required',
             'coverPhoto' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
+        dd($request->all());
 
         if ($request->hasFile('coverPhoto')) {
             $image = $request->file('coverPhoto');
@@ -111,6 +112,7 @@ class NewsController extends Controller
             $imageName = baseName($imageName);
             $imageName = $uploadFolder.$imageName;
         }
+        dd($request->all());
 
         $topic->update([
            'topic' => $request->input('topic') ?? $topic->topic,

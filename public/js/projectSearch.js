@@ -2,6 +2,7 @@ async function getProjects(field_id) {
     const response = await fetch('/api/get_all_projects');
     let selectField = document.getElementById(field_id);
     let data = await response.json();
+
     console.log(data);
 
     for (let i = 0; i < data.length; i++) {
@@ -22,6 +23,7 @@ async function getProjects(field_id) {
 }
 
 window.onload = function() {
-    getProjects('project_id');
-    getProjects('project');
+    console.log('load');
+    // getProjects('project_id');
+    // getProjects('project');
 }

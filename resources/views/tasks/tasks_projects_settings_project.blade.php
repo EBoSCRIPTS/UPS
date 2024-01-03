@@ -66,7 +66,11 @@
             <form action="{{route('tasks.change_project_leader', $project->id)}}" method="POST">
                 @csrf
                 <select class="form-select" name="project_leader">
-                    <option disabled selected></option>
+                    @if($project->leader_user_id != null)
+                    <option value="{{$project->leader_user_id}}" disabled selected>{{$project->leader->first_name}} {{$project->leader->last_name}}</option>
+                    @else
+                    <option disabled selected>Select a leader</option>
+                    @endif
                     @foreach($employees as $employee)
                         <option value="{{$employee->user_id}}">{{$employee->user->first_name}} {{$employee->user->last_name}}</option>
                     @endforeach

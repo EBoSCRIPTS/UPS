@@ -72,5 +72,6 @@ class Kernel extends HttpKernel
         'writer' => \App\Http\Middleware\WriterMiddleware::class,
         'accountant' => \App\Http\Middleware\AccountantMiddleware::class,
         'loggedIn' => \App\Http\Middleware\LoggedInMiddleware::class,
+        'employee' => \App\Http\Middleware\EmployeeMiddleware::class,
     ];
 }

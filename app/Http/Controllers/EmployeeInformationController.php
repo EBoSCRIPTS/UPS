@@ -55,6 +55,15 @@ class EmployeeInformationController extends Controller
 
         $information->save();
 
+        $userRoleUpdate = UserModel::query()->where('id', $request->input('employee_id'))->first();
+
+        if ($userRoleUpdate->role_id == 5) //if it's a user without advanced perms, change it to employee role
+        {
+            $userRoleUpdate->update([
+                'role_id' => 3
+            ]);
+        }
+
         $vacation = new VacationPointsModel([
             'user_id' => $request->input('employee_id'),
             'vacation_points' => 0
@@ -82,6 +91,15 @@ class EmployeeInformationController extends Controller
         }
 
         $employee = EmployeeInformationModel::query()->find($request->input('employee_id'));
+        $user = UserModel::query()->find($employee->user_id);
+
+        if ($user->role_id == 3) //if the user is an employee without advanced perms, change it back to user
+        {
+            $user->update([
+                'role_id' => 5
+            ]);
+        }
+
         $employee->delete();
 
         return redirect('/employee_information');

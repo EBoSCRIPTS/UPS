@@ -15,7 +15,7 @@ class ManagerMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if(auth()->check() && auth()->user()->role_id == 1 || auth()->user()->role_id == 3) {
+        if(auth()->check() && auth()->user()->getRole() == 1 || auth()->user()->getRole() == 3) {
             return $next($request);
         }
 

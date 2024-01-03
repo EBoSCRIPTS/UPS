@@ -15,7 +15,7 @@ class AccountantMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if(auth()->check() && auth()->user()->role_id == 1 || auth()->user()->role_id == 4) {
+        if(auth()->check() && auth()->user()->getRole() == 1 || auth()->user()->getRole() == 4) {
             return $next($request);
         }
 

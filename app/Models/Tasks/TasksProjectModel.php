@@ -3,6 +3,7 @@
 namespace App\Models\Tasks;
 
 use App\Models\DepartmentsModel;
+use App\Models\UserModel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -30,5 +31,11 @@ class TasksProjectModel extends Model
     {
         return $this->belongsTo(TasksParticipantsModel::class, 'id', 'project_id');
     }
+
+    public function leader(): BelongsTo
+    {
+        return $this->belongsTo(UserModel::class, 'leader_user_id', 'id');
+    }
+
 
 }

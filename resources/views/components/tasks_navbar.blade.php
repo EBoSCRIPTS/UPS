@@ -79,8 +79,8 @@
     </div>
 </div>
 
-<script src="{{asset('js/projectSearch.js')}}"></script>
 <script src="{{asset('js/userSearch.js')}}"></script>
+<script src="{{asset('js/projectSearch.js')}}"></script>
 <script>
     function assignToMe()
     {

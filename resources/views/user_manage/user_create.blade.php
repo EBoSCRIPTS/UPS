@@ -43,9 +43,10 @@
 
             <label for="role_id">Role</label>
             <select name="role_id" id="role_id" class="form-control">
-                <option value="1">Superadmin</option>
-                <option value="3">Manager</option>
-                <option value="2">Employee</option>
+                <option selected disabled>Pick a role..</option>
+                @foreach($roles as $role)
+                    <option value="{{$role->id}}">{{$role->name}}</option>
+                @endforeach
             </select>
 
         <button type="submit" class="btn btn-primary" style="margin-top: 10px">Submit</button>

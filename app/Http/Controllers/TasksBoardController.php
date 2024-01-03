@@ -222,7 +222,7 @@ class TasksBoardController extends Controller
             'leader_user_id' => $request->input('project_leader')
         ]);
 
-        return redirect('/tasks/project_settings/');
+        return back();
     }
 
     public function deleteProject(Request $request): RedirectResponse

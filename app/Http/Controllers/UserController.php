@@ -7,6 +7,7 @@ use App\Models\DepartmentsModel;
 use App\Models\EmployeeInformationModel;
 use App\Models\Equipment\EquipmentAssignmentModel;
 use App\Models\PerformanceReportsModel;
+use App\Models\RolesModel;
 use App\Models\Tasks\TasksParticipantsModel;
 Use App\Models\EmployeeVacationsModel;
 use App\Models\VacationPointsModel;
@@ -20,6 +21,11 @@ use Carbon\Carbon;
 
 class UserController extends Controller
 {
+    public function createUserView(Request $request): View
+    {
+        return view('user_manage.user_create', ['roles' => RolesModel::all()]);
+    }
+
     public function register(Request $request): RedirectResponse
     {
         $validated = $request->validate([
@@ -73,6 +79,11 @@ class UserController extends Controller
     public function deleteUser(Request $request): RedirectResponse
     {
         $user = UserModel::query()->find($request->input('id'));
+
+        if ($user->role_id == 1) //admins cant delete admins
+        {
+            return redirect('/mng/edit')->with('error', 'Cannot delete superadmin!');
+        }
 
         if ($user->created_at > Carbon::now()->subMinutes(3))
         {

@@ -23,6 +23,7 @@
                             </a>
                         </li>
                         <li>
+                            @if(Auth::user()->role_id != 5)
                             <a href="#submenu1" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
                                 <i class="fs-4 bi-speedometer2"></i> <span
                                     class="ms-1" style="color: white">DASHBOARD</span> </a>
@@ -58,6 +59,7 @@
                                 @endif
                             </ul>
                         </li>
+                        @endif
                         @if(isset(Auth::user()->role_id) && Auth::user()->role_id == 1 || Auth::user()->role_id == 3)
                             <li>
                                 <a href="#submenu2" data-bs-toggle="collapse" class="nav-link px-0 align-middle ">
@@ -65,7 +67,11 @@
                                 <ul class="collapse nav flex-column ms-1" id="submenu2" data-bs-parent="#menu">
                                     <li class="w-100">
                                         <a href="/absence/review" class="nav-link px-0"> <span
-                                                class="">Absence Review </span></a>
+                                                class="">Absence Review
+                                                <span class="badge bg-danger rounded-pill">
+                                                    {{\App\Models\AbsenceModel::query()->where('status', 'sent')->count()}}
+                                                </span>
+                                            </span></a>
                                     </li>
                                     <li>
                                         <a href="/loghours/view" class="nav-link px-0"> <span
@@ -73,7 +79,11 @@
                                     </li>
                                     <li>
                                         <a href="/loghours/review" class="nav-link px-0"> <span
-                                                class="">Review Submitted Log Hours</span></a>
+                                                class="">Review Submitted Log Hours</span>
+                                            <span class="badge bg-danger rounded-pill">
+                                                    {{\App\Models\LoggedHoursSubmittedModel::query()->where('is_confirmed', '0')->count()}}
+                                                </span>
+                                            </a>
                                     </li>
 
                                     <li>
@@ -123,16 +133,11 @@
                                     </li>
                                 </ul>
                         @endif
-                        @if(Auth::user()->role_id == 1 || Auth::user()->role_id == 3)
+                        @if(Auth::user()->role_id == 1 || Auth::user()->role_id == 4)
                             <li>
-                                <a href="#submenu4" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
+                                <a href="/accountant" class="nav-link px-0 align-middle">
                                     <i class="fs-4 bi-grid"></i> <span
-                                        class="ms-1 ">ACCOUNTANT VIEWS</span> </a>
-                                <ul class="collapse nav flex-column ms-1" id="submenu4" data-bs-parent="#menu">
-                                    <li class="w-100">
-                                        <a href="/accountant" class="nav-link px-0"> <span class="">Accountant Panel</span></a>
-                                    </li>
-                                </ul>
+                                        class="ms-1 ">ACCOUNTANT PANEL</span> </a>
                             </li>
                         @endif
 
@@ -140,7 +145,7 @@
                             <li>
                                 <a href="#submenu3" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
                                     <i class="fs-4 bi-grid"></i> <span
-                                        class="ms-1 ">ADMIN VIEWS</span> </a>
+                                        class="ms-1 ">USER CREATION</span> </a>
                                 <ul class="collapse nav flex-column ms-1" id="submenu3" data-bs-parent="#menu">
                                     <li class="w-100">
                                         <a href="/mng/register" class="nav-link px-0"> <span class="">Register New User</span></a>
@@ -205,7 +210,8 @@
 
             <style>
                 /* Add some custom styles for the collapsed sidebar */
-                @media(max-width: 756px) {
+
+                @media(max-width: 756px), (max-height: 756px) {
                     #sidebar {
                         position: fixed;
                         top: 0;

@@ -25,9 +25,7 @@ use App\Http\Controllers\SubmittedTicketsController;
 Route::get('/', [NewsController::class, 'loadAllTopics']);
 
 /* Manager views */
-Route::get('/mng/register', function () {
-    return view('user_manage.user_create');
-});
+Route::get('/mng/register', [UserController::class, 'createUserView']);
 Route::get('/mng/allusers', [UserController::class, 'showAll'])->name('users')->middleware('admin');
 Route::get('/mng/edit', [UserController::class, 'showAll'])->name('users')->middleware('admin');
 
@@ -43,12 +41,12 @@ Route::post('/profile/send_ticket', [SubmittedTicketsController::class, 'submitT
 Route::post('/logging_in', [AuthController::class, 'auth'])->name('logging_in');
 
 /* Absence views */
-Route::get('/absence', [AbsenceController::class, 'userAbsences'])->name('absence');
+Route::get('/absence', [AbsenceController::class, 'userAbsences'])->name('absence')->middleware('employee');
 Route::get('/absence/review', [AbsenceController::class, 'showAbsenceReview'])->name('absence.review')->middleware('manager');
-Route::get('/absence/vacation/{absence_id}', [VacationsController::class, 'getUserVacationInfo'])->name('absence.vacation');
-Route::post('/absence/create', [AbsenceController::class, 'addAbsence'])->name('absence.create');
-Route::post('/absence/update', [AbsenceController::class, 'updateAbsence'])->name('absence.update');
-Route::post('/absence/delete', [AbsenceController::class, 'deleteAbsence'])->name('absence.delete');
+Route::get('/absence/vacation/{absence_id}', [VacationsController::class, 'getUserVacationInfo'])->name('absence.vacation')->middleware('employee');;
+Route::post('/absence/create', [AbsenceController::class, 'addAbsence'])->name('absence.create')->middleware('employee');;
+Route::post('/absence/update', [AbsenceController::class, 'updateAbsence'])->name('absence.update')->middleware('employee');;
+Route::post('/absence/delete', [AbsenceController::class, 'deleteAbsence'])->name('absence.delete')->middleware('employee');;
 Route::get('/absence/attachment/download/{absence_id}', [AbsenceController::class, 'downloadAttachment'])->name('absence.attachment.download')->middleware('manager');
 
 /* User create views */
@@ -57,24 +55,24 @@ Route::post('/user/delete', [UserController::class, 'deleteUser'])->name('user.d
 Route::post('/user/edit', [UserController::class, 'editUser'])->name('user.edit')->middleware('admin');
 
 /* Log hours */
-Route::get('/loghours', [LogHoursController::class, 'getCurrentMonth'])->name('loghours');
-Route::post('/loghours/create', [LogHoursController::class, 'insertLoggedHours'])->name('loghours.create');
-Route::post('/loghours/previous_month', [LogHoursController::class, 'getPreviousMonth'])->name('loghours.previous_month');
+Route::get('/loghours', [LogHoursController::class, 'getCurrentMonth'])->name('loghours')->middleware('employee');;
+Route::post('/loghours/create', [LogHoursController::class, 'insertLoggedHours'])->name('loghours.create')->middleware('employee');;
+Route::post('/loghours/previous_month', [LogHoursController::class, 'getPreviousMonth'])->name('loghours.previous_month')->middleware('employee');;
 
-Route::get('/loghours/view', [ViewLoggedHoursController::class, 'ViewLogged'])->name('loghours.view');
-Route::post('/loghours/view/user', [ViewLoggedHoursController::class, 'showUserLoggedHours'])->name('loghours.view.user');
-Route::post('/loghours/view/delete', [LogHoursController::class, 'deleteLoggedHours'])->name('loghours.view.delete');
-Route::post('/loghours/close_month', [LoghoursController::class, 'closeMonthlyReport'])->name('loghours.close_month');
+Route::get('/loghours/view', [ViewLoggedHoursController::class, 'ViewLogged'])->name('loghours.view')->middleware('employee');;
+Route::post('/loghours/view/user', [ViewLoggedHoursController::class, 'showUserLoggedHours'])->name('loghours.view.user')->middleware('employee');;
+Route::post('/loghours/view/delete', [LogHoursController::class, 'deleteLoggedHours'])->name('loghours.view.delete')->middleware('employee');;
+Route::post('/loghours/close_month', [LoghoursController::class, 'closeMonthlyReport'])->name('loghours.close_month')->middleware('employee');;
 
-Route::get('/loghours/review', [LogHoursController::class, 'getSubmittedHours']);
-Route::post('/loghours/review/update', [LogHoursController::class, 'submitHoursReview'])->name('loghours.review');
-Route::post('/loghours/review/update_balance/{user_id}', [VacationsController::class, 'updateBalance'])->name('loghours.update_balance');
+Route::get('/loghours/review', [LogHoursController::class, 'getSubmittedHours'])->middleware('manager');
+Route::post('/loghours/review/update', [LogHoursController::class, 'submitHoursReview'])->name('loghours.review')->middleware('manager');
+Route::post('/loghours/review/update_balance/{user_id}', [VacationsController::class, 'updateBalance'])->name('loghours.update_balance')->middleware('manager');
 
 /* Departaments */
 Route::get('/departments', [DepartmentsController::class, 'showAllDepartments'])->name('showAllDepartments')->middleware('manager');
 Route::post('/departments/create', [DepartmentsController::class, 'addDepartment'])->name('departments.create')->middleware('manager');
 Route::post('/departments/delete', [DepartmentsController::class, 'deleteDepartment'])->name('departments.delete')->middleware('manager');
-Route::get('/departments/my', [DepartmentsController::class, 'loadUserDepartment'])->name('my_department');
+Route::get('/departments/my', [DepartmentsController::class, 'loadUserDepartment'])->name('my_department')->middleware('employee');
 Route::get('/departments/my/ticket_register/{ticket_id}', [SubmittedTicketsController::class, 'ticketRegistrationUpdate'])->name('register_ticket');
 
 
@@ -176,7 +174,7 @@ Route::post('/equipment/generate_agreement', [PDFController::class, 'generateEqu
 
 
 /* REST API routes */
-Route::get('/api/all_users_json/{first_name}', [UserSearchController::class, 'userSpecific'])->middleware('loggedIn');
+Route::get('/api/all_users_json/{name}', [UserSearchController::class, 'userSpecific'])->middleware('loggedIn');
 Route::get('/api/get_all_projects', [TasksController::class, 'projectsApi'])->middleware('loggedIn');
 
 /* TEST PAGES */
