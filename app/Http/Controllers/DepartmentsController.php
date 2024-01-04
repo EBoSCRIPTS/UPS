@@ -25,7 +25,7 @@ class DepartmentsController extends Controller
 
         $departament->save();
 
-        return back();
+        return back()->with('success', 'Department added successfully');
     }
 
     public function showAllDepartments(): \Illuminate\View\View
@@ -47,7 +47,7 @@ class DepartmentsController extends Controller
 
         $department->delete();
 
-        return back();
+        return back()->with('success', 'Department deleted successfully');
     }
 
     public function loadUserDepartment(Request $request): \Illuminate\View\View|RedirectResponse

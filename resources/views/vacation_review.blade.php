@@ -57,10 +57,10 @@
                             <label for="calculate_balance">Calculate Spending Points:</label>
                         </div>
                         <div class="col-sm-4">
-                            <input type="number" id="calculate_balance" name="calculate_balance" placeholder="Workdays spent">
+                            <input class="form-control" type="number" id="calculate_balance" name="calculate_balance" placeholder="Workdays spent">
                         </div>
                         <div class="col-sm-2">
-                            <button type="button" onclick="calculatePoints()">Calculate</button>
+                            <button type="button" class="btn btn-success" onclick="calculatePoints()">Calculate</button>
                         </div>
                        </div>
 
@@ -69,10 +69,18 @@
 
                         <form action="{{route('loghours.update_balance', $employeeDetails->user_id)}}" method="POST">
                             @csrf
-                            <input type="hidden" id="employee_id" name="employee_id" value="{{$employeeDetails->user_id}}">
-                            <label for="balance">Revoke points</label>
-                            <input type="text" id="balance" name="balance" placeholder="revoke_points">
-                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('By revoking you approve the vacation')">Revoke</button>
+                            <div class="row">
+                                <input type="hidden" id="employee_id" name="employee_id" value="{{$employeeDetails->user_id}}">
+                                <div class="col-sm-5">
+                                    <label for="balance">Revoke points:</label>
+                                </div>
+                                <div class="col-sm-4">
+                                    <input class="form-control" type="text" id="balance" name="balance" placeholder="revoke_points">
+                                </div>
+                                <div class="col-sm-2">
+                                    <button type="submit" class="btn btn-danger " onclick="return confirm('By revoking you approve the vacation')">Revoke</button>
+                                </div>
+                            </div>
                         </form>
                     </div>
                 </div>

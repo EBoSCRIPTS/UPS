@@ -71,7 +71,7 @@ class EmployeeInformationController extends Controller
 
         $vacation->save();
 
-        return redirect('/employee_information');
+        return redirect('/employee_information')->with('success', 'Employee created successfully');
     }
 
     public function deleteEmployee(Request $request): RedirectResponse
@@ -102,7 +102,7 @@ class EmployeeInformationController extends Controller
 
         $employee->delete();
 
-        return redirect('/employee_information');
+        return redirect('/employee_information')->with('success', 'Employee deleted successfully');
     }
 
     public function editEmployee(Request $request): RedirectResponse

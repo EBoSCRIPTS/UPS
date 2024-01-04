@@ -6,11 +6,11 @@ use App\Models\UserModel;
 use Tests\TestCase;
 
 
-class UserModelTest extends TestCase
+class UserTest extends TestCase
 {
     public function test_superadmin_delete_safestop()
     {
-        $admin = UserModel::factory()->create(['role_id' => 1]);
+        $admin= UserModel::factory()->create(['role_id' => 1]);
 
         $response = $this->actingAs($admin)
             ->post('/user/delete', ['id' => $admin->id]);

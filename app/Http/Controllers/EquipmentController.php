@@ -74,7 +74,7 @@ class EquipmentController extends Controller
 
         $newEquipment->save();
 
-        return back()->with('success', 'Equipment added successfully');
+        return back()->with('success', 'Equipment item added successfully');
     }
 
     public function assignEquipment(Request $request): RedirectResponse
@@ -83,8 +83,6 @@ class EquipmentController extends Controller
             'employee' => 'required|exists:employee_information,id',
             'equipment' => 'required|exists:equipment_items,id',
         ]);
-
-        $employee = EquipmentAssignmentModel::query()->where('employee_id', $request->input('employee_id'))->first();
 
         $give = new EquipmentAssignmentModel([
             'employee_id' => $request->input('employee'),

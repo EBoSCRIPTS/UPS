@@ -324,8 +324,24 @@ class LogHoursController extends Controller
                 $nightHoursCalculate = 0; //if we mysterically get lower than 0(doesn't happen when dealing with normal nighthours)
             }
         }
-        $totalTime = round($totalTime, 2);
+        else{
+            $nightHoursCalculate = 0;
+        }
 
-        return [Carbon::createFromTimeString(strval($totalTime))->format('H:i'), $nightHoursCalculate ?? 0];
+        $totalTime = round($totalTime, 2);
+        $timeConvert = explode('.',$totalTime);
+        if (sizeof($timeConvert) < 2) { //if we technically get a round value we add '0' so it looks better when displayed
+            $timeConvert[1] = '0';
+        }
+
+        $timeConvert[1] = $timeConvert[1] * 0.6;
+
+        if($timeConvert[1] == 0){ //add '00' so it looks better when displayed
+            $timeConvert[1] = '00';
+        }
+
+        $totalTime = $timeConvert[0] . ':' . $timeConvert[1];
+
+        return [$totalTime, $nightHoursCalculate];
     }
 }

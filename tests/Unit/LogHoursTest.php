@@ -1,12 +1,15 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Unit;
 
 use App\Http\Controllers\LogHoursController;
-use App\Models\LogHoursModel;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
+use App\Models\UserModel;
 use Tests\TestCase;
+use Mockery;
+use Illuminate\Http\Request;
+use Carbon\Carbon;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Auth;
 
 class LogHoursTest extends TestCase
 {
@@ -23,7 +26,7 @@ class LogHoursTest extends TestCase
 
         $time = $controller->calculateHours($startTime, $endTime, $breakTime);
 
-        $this->assertEquals('08:00', $time[0]);
+        $this->assertEquals('8:00', $time[0]);
     }
 
     public function test_night_hours_calculation_start_prev_end_next(): void
@@ -49,5 +52,17 @@ class LogHoursTest extends TestCase
         $time = $controller->calculateHours($startTime, $endTime, 0);
 
         $this->assertEquals(5, $time[1]);
+    }
+
+    public function test_night_hours_calculation_start_same_end_same_before_midnight(): void
+    {
+        $controller = new LogHoursController();
+
+        $startTime = strtotime('20:00');
+        $endTime = strtotime('23:45');
+
+        $time = $controller->calculateHours($startTime, $endTime, 0);
+
+        $this->assertEquals(2, $time[1]);
     }
 }

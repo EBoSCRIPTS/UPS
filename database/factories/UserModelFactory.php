@@ -24,7 +24,7 @@ class UserModelFactory extends Factory
             'first_name' => fake()->name(),
             'last_name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
-            'phone_number' => 1234563789,
+            'phone_number' => random_int(1000000000, 9999999999),
             'password' => static::$password ??= Hash::make('password'),
         ];
     }
