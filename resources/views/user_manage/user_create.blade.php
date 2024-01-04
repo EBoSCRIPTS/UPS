@@ -44,7 +44,10 @@
             <select name="role_id" id="role_id" class="form-control">
                 <option selected disabled>Pick a role..</option>
                 @foreach($roles as $role)
+                    @if($role->id == 2)
+                    @else
                     <option value="{{$role->id}}">{{$role->name}}</option>
+                    @endif
                 @endforeach
             </select>
 
