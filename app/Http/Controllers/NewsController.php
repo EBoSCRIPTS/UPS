@@ -21,9 +21,8 @@ class NewsController extends Controller
             'topic' => 'required|string|max:100',
             'editorContent' => 'required',
             'about' => 'required',
-            'coverPhoto' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'coverPhoto' => 'image',
         ]);
-        dd($request->all());
 
         if ($request->hasFile('coverPhoto')) {
             $image = $request->file('coverPhoto');
@@ -52,7 +51,7 @@ class NewsController extends Controller
     public function loadNewsTopic(Request $request): \Illuminate\View\View
     {
         $topic = NewsTopicModel::query()->where('id', $request->topic_id)->get()->toArray();
-        $comments = NewsCommentsModel::query()->where('topic_id', $request->topic_id)->get();
+        $comments = NewsCommentsModel::query()->where('topic_id', $request->topic_id)->orderBy('created_at', 'desc')->get();
 
         foreach($comments as $comment){
             $comment->agree = NewsCommentsRatingModel::query()->where('comment_id', $comment->id)->where('agree', 1)->count();
@@ -112,7 +111,6 @@ class NewsController extends Controller
             $imageName = baseName($imageName);
             $imageName = $uploadFolder.$imageName;
         }
-        dd($request->all());
 
         $topic->update([
            'topic' => $request->input('topic') ?? $topic->topic,

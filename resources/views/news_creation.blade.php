@@ -38,9 +38,10 @@
 
                 <label for="coverPhoto">Cover Image</label>
                 <input type="file" name="coverPhoto" class="form-control">
-                <button id="submitButton" type="submit" class="btn btn-primary mt-2 float-end">Create new topic</button>
+                <button id="submitButton" type="submit" class="btn btn-primary mt-2">Create new topic</button>
             </form>
             <hr>
+            <div class="row">
             <p class="h2">Edit Topics</p>
             <table class="table table-striped">
                 <thead>
@@ -65,6 +66,8 @@
                     </tr>
                     @endforeach
                 </tbody>
+            </table>
+            </div>
         </div>
     </div>
 

@@ -1,6 +1,12 @@
 <script src="{{asset('js/userSearch.js')}}"></script>
 <style>
+    @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+    @import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css");
+</style>
+
+<style>
     body{
+        font-family: 'Roboto', sans-serif;
         overflow-x: hidden
     }
 </style>
@@ -16,16 +22,16 @@
                         <input id="searchBarInput" name="first_name" type="text" class="form-control" placeholder="Search for user" oninput="userSearchDebounced()">
                     </div>
                     <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start"
-                        id="menu">
+                        id="menu" style="color: white">
                         <li class="nav-item">
-                            <a href="/" class="nav-link align-middle px-0">
-                                <i class="fs-4 bi-house"></i> <span class="ms-1" style="color: white">HOME</span>
+                            <a href="/" class="nav-link align-middle px-0 mt-2">
+                                <i class="fs-4 bi-house" style="color: white"></i> <span class="ms-1" style="color: white">HOME</span>
                             </a>
                         </li>
                         <li>
                             @if(Auth::user()->role_id != 5)
                             <a href="#submenu1" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
-                                <i class="fs-4 bi-speedometer2"></i> <span
+                                <i class="fs-4 bi-speedometer2" style="color: white"></i> <span
                                     class="ms-1" style="color: white">DASHBOARD</span> </a>
                             <ul class="collapse nav flex-column ms-1" id="submenu1" data-bs-parent="#menu">
                                 <li class="w-100">
@@ -44,7 +50,7 @@
                         </li>
                         <li>
                             <a href="#submenu6" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
-                                <i class="fs-4 bi-speedometer2"></i> <span class="ms-1 " style="color: white">TASKS</span>
+                                <i class="fs-4 bi-clipboard" style="color: white"></i> <span class="ms-1 " style="color: white">TASKS</span>
                             </a>
                             <ul class="collapse nav flex-column ms-1" id="submenu6" data-bs-parent="#menu">
                                 <li>
@@ -62,44 +68,51 @@
                         @endif
                         @if(isset(Auth::user()->role_id) && Auth::user()->role_id == 1 || Auth::user()->role_id == 3)
                             <li>
-                                <a href="#submenu2" data-bs-toggle="collapse" class="nav-link px-0 align-middle ">
-                                    <i class="fs-4 bi-bootstrap"></i> <span class="ms-1 ">MANAGER VIEWS</span></a>
-                                <ul class="collapse nav flex-column ms-1" id="submenu2" data-bs-parent="#menu">
+                                <a href="#submenuReview" data-bs-toggle="collapse" class="nav-link px-0 align-middle ">
+                                    <i class="fs-4 bi-search"></i> <span class="ms-1 ">REVIEW REQUESTS</span></a>
+                                <ul class="collapse nav flex-column ms-1" id="submenuReview" data-bs-parent="#menu">
                                     <li class="w-100">
                                         <a href="/absence/review" class="nav-link px-0"> <span
                                                 class="">Absence Review
+                                                @if(\App\Models\AbsenceModel::query()->where('status', 'sent')->count() > 0)
                                                 <span class="badge bg-danger rounded-pill">
                                                     {{\App\Models\AbsenceModel::query()->where('status', 'sent')->count()}}
                                                 </span>
+                                                @endif
                                             </span></a>
+                                    </li>
+                                    <li>
+                                        <a href="/loghours/review" class="nav-link px-0"> <span
+                                                class="">Review Submitted Log Hours</span>
+                                            @if(\App\Models\LoggedHoursSubmittedModel::query()->where('is_confirmed', '0')->count() > 0)
+                                            <span class="badge bg-danger rounded-pill">
+                                                {{\App\Models\LoggedHoursSubmittedModel::query()->where('is_confirmed', '0')->count()}}
+                                            </span>
+                                            @endif
+                                        </a>
                                     </li>
                                     <li>
                                         <a href="/loghours/view" class="nav-link px-0"> <span
                                                 class="">View Logged Hours</span></a>
                                     </li>
-                                    <li>
-                                        <a href="/loghours/review" class="nav-link px-0"> <span
-                                                class="">Review Submitted Log Hours</span>
-                                            <span class="badge bg-danger rounded-pill">
-                                                    {{\App\Models\LoggedHoursSubmittedModel::query()->where('is_confirmed', '0')->count()}}
-                                                </span>
-                                            </a>
-                                    </li>
+                                </ul>
+                            </li>
 
-                                    <li>
-                                        <a href="/departments" class="nav-link px-0"> <span class="">Departments</span></a>
-                                    </li>
+
+                            <li>
+                                <a href="#submenu2" data-bs-toggle="collapse" class="nav-link px-0 align-middle ">
+                                    <i class="fs-4 bi-list"></i> <span class="ms-1 ">MANAGER VIEWS</span></a>
+                                <ul class="collapse nav flex-column ms-1" id="submenu2" data-bs-parent="#menu">
                                     <li>
                                         <a href="/employee_information" class="nav-link px-0"> <span
                                                 class="">Employee Information</span></a>
                                     </li>
                                     <li>
-                                        <a href="/tasks/project_settings" class="nav-link px-0"> <span
-                                                class="">Project Settings</span></a>
+                                        <a href="/departments" class="nav-link px-0"> <span class="">Departments</span></a>
                                     </li>
                                     <li>
-                                        <a href="/send_mail" class="nav-link px-0"> <span
-                                                class="">Send Email To All Users</span></a>
+                                        <a href="/tasks/project_settings" class="nav-link px-0"> <span
+                                                class="">Project Settings</span></a>
                                     </li>
                                 </ul>
                             </li>
@@ -108,7 +121,7 @@
                         @if(Auth::user()->is_writer == 1)
                             <li>
                                 <a href="#submenu7" data-bs-toggle="collapse" class="nav-link px-0 align-middle ">
-                                    <i class="fs-4 bi-bootstrap"></i> <span class="ms-1 ">NEWS</span></a>
+                                    <i class="fs-4 bi-newspaper"></i> <span class="ms-1 ">NEWS</span></a>
                                 <ul class="collapse nav flex-column ms-1" id="submenu7" data-bs-parent="#menu">
                                     <li class="w-100">
                                         <a href="/news/create_topic" class="nav-link px-0"> <span
@@ -120,7 +133,7 @@
                         @if(isset(Auth::user()->role_id) && Auth::user()->role_id == 1 || Auth::user()->role_id == 3)
                             <li>
                                 <a href="#submenu5" data-bs-toggle="collapse" class="nav-link px-0 align-middle ">
-                                    <i class="fs-4 bi-bootstrap"></i> <span class="ms-1 ">EQUIPMENT</span></a>
+                                    <i class="fs-4 bi-bag"></i> <span class="ms-1 ">EQUIPMENT</span></a>
                                 <ul class="collapse nav flex-column ms-1" id="submenu5" data-bs-parent="#menu">
                                     <li class="w-100">
                                         <a href="/equipment/register" class="nav-link px-0"> <span
@@ -132,11 +145,18 @@
                                                 class="">Assign Equipment </span></a>
                                     </li>
                                 </ul>
+                            </li>
+
+                            <li>
+                                <a href="/send_mail" class="nav-link px-0 align-middle ">
+                                    <i class="fs-4 bi-envelope"></i> SEND MAIL
+                                </a>
+                           </li>
                         @endif
                         @if(Auth::user()->role_id == 1 || Auth::user()->role_id == 4)
                             <li>
                                 <a href="/accountant" class="nav-link px-0 align-middle">
-                                    <i class="fs-4 bi-grid"></i> <span
+                                    <i class="fs-4 bi-calculator"></i> <span
                                         class="ms-1 ">ACCOUNTANT PANEL</span> </a>
                             </li>
                         @endif

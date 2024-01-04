@@ -16,13 +16,13 @@ class UserSearchController extends Controller
         $users = UserModel::query()
             ->where(function ($query) use ($lookingFor) {
                 //if user is looking for somebody specific
-                if (strpos($searchTerm, ' ') == true) { //if user is looking for someone specific(first and last name) then find him here
-                    list($firstName, $lastName) = explode(' ', $searchTerm, 2);
+                if (strpos($lookingFor, ' ') == true) { //if user is looking for someone specific(first and last name) then find him here
+                    list($firstName, $lastName) = explode(' ', $lookingFor, 2);
                     $query->whereRaw('LOWER(first_name) LIKE ?', ['%' . $firstName . '%'])
                         ->whereRaw('LOWER(last_name) LIKE ?', ['%' . $lastName . '%']);
                 } else { //if user is only looking up using first or last name
-                    $query->orWhereRaw('LOWER(first_name) LIKE ?', ['%' . $searchTerm . '%'])
-                        ->orWhereRaw('LOWER(last_name) LIKE ?', ['%' . $searchTerm . '%']);
+                    $query->orWhereRaw('LOWER(first_name) LIKE ?', ['%' . $lookingFor . '%'])
+                        ->orWhereRaw('LOWER(last_name) LIKE ?', ['%' . $lookingFor . '%']);
                 }
             })
             ->select('first_name', 'last_name', 'id')

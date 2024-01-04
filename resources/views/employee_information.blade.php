@@ -30,7 +30,7 @@
                 @endforeach
             </select>
 
-            <label for="departament" class="form-label">Departament</label>
+            <label for="departament" class="form-label">Department</label>
             <select class="form-select" name="department_id">
                 @foreach($departments as $department)
                     <option name="department_id" value="{{ $department->id }}">{{ $department->name }}</option>
@@ -111,7 +111,7 @@
                         </td>
                     </tr>
                @endif
-                <div class="modal fade" id="editModal{{$employee->id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal fade" id="editModal{{$employee->id}}" tabindex="-1" aria-labelledby="editModal{{$employee->id}}_label" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
@@ -149,9 +149,8 @@
                         </div>
                         </div>
                     </div>
-                </div>
              @endforeach
-            </tbody>
+                </tbody>
                 </table>
             </div>
         @endforeach
