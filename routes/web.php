@@ -19,6 +19,7 @@ use App\Http\Controllers\NewsController;
 use App\Http\Controllers\ProjectPerformanceController;
 use App\Http\Controllers\VacationsController;
 use App\Http\Controllers\SubmittedTicketsController;
+use App\Http\Controllers\TestController;
 
 
 /* Home view */
@@ -95,14 +96,15 @@ Route::post('/accountant/settings/{department_id}/add_tax', [AccountantControlle
 Route::get('/accountant/settings/{department_id}/delete_tax/{tax_id}', [AccountantController::class, 'deleteTax'])->name('accountant.delete_tax')->middleware('accountant');
 
 /* Tasks view */
-Route::get('/tasks', [TasksController::class, 'loadMyTasks'])->name('tasks.show')->middleware('loggedIn');
-Route::get('/tasks/projects/{project_id}', [TasksController::class, 'loadProjectTasks'])->name('tasks.projects');
-Route::get('/tasks/projects/{project_id}/all_tasks', [TasksBoardController::class, 'loadAllProjectTasks'])->name('tasks.projects.all_tasks');
-Route::get('/tasks/projects/{project_id}/statistics', [TasksBoardController::class, 'getProjectStatistics'])->name('tasks.projects.statistics');
-Route::post('/tasks/projects/{project_id}/statistics/generate_period', [TasksBoardController::class, 'getStatisticsForPeriod'])->name('tasks.projects.statistics.generate_for_period');
-Route::post('/tasks/projects/{project_id}/statistics/generate_excel', [TasksBoardController::class, 'generateExcelForProjectStatistics'])->name('tasks.project.generate_xlsx');
-
-Route::get('/tasks/create_new_project', [TasksController::class, 'loadNewProjectsPage']);
+Route::middleware('loggedIn')->group(function () {
+    Route::get('/tasks', [TasksController::class, 'loadMyTasks'])->name('tasks.show')->middleware('loggedIn');
+    Route::get('/tasks/projects/{project_id}', [TasksController::class, 'loadProjectTasks'])->name('tasks.projects');
+    Route::get('/tasks/projects/{project_id}/all_tasks', [TasksBoardController::class, 'loadAllProjectTasks'])->name('tasks.projects.all_tasks');
+    Route::get('/tasks/projects/{project_id}/statistics', [TasksBoardController::class, 'getProjectStatistics'])->name('tasks.projects.statistics');
+    Route::post('/tasks/projects/{project_id}/statistics/generate_period', [TasksBoardController::class, 'getStatisticsForPeriod'])->name('tasks.projects.statistics.generate_for_period');
+    Route::post('/tasks/projects/{project_id}/statistics/generate_excel', [TasksBoardController::class, 'generateExcelForProjectStatistics'])->name('tasks.project.generate_xlsx');
+});
+Route::get('/tasks/create_new_project', [TasksController::class, 'loadNewProjectsPage'])->middleware('manager');
 
 
 Route::get('/tasks/project_settings', [TasksController::class, 'loadAvailableProjects'])->middleware('manager');
@@ -121,34 +123,38 @@ Route::get('/tasks/projects/{project_id}/performance_report/soft_delete/{report_
 Route::post('/tasks/create_new_project/insert', [TasksController::class, 'createNewProject'])->name('create_new_project')->middleware('manager');
 
 
-Route::get('/tasks/create_new_task', function(){
+Route::get('/tasks/create_new_task', function () {
     view('tasks_create_task');
 });
 
-Route::get('/tasks/ticket/{ticket_id}', [TasksController::class, 'loadTicket'])->name('tasks.ticket');
-Route::post('/tasks/create_new_task/create', [TasksController::class, 'newTask'])->name('create_new_task');
-Route::post('/tasks/ticket/update_ticket/', [TasksController::class, 'updateStatus'])->name('tasks.update_status');
-Route::post('/tasks/ticket/add_comment', [TasksController::class, 'addComment'])->name('tasks.add_comment');
-Route::post('/tasks/ticket/update', [TasksController::class, 'updateTaskDescription'])->name('tasks.update_description');
-Route::post('/tasks/ticket/update_assignee/{ticket_id}', [TasksController::class, 'updateAssignee'])->name('tasks.update_assignee');
-Route::post('/tasks/ticket/update_title/{ticket_id}', [TasksController::class, 'updateTitle'])->name('tasks.update_title');
-Route::post('/tasks/ticket/update_draft/', [TasksController::class, 'updateTaskDraftStatus'])->name('tasks.update_draft');
-Route::post('/tasks/ticket/change_priority', [TasksController::class, 'updatePriority'])->name('tasks.update_priority');
-Route::post('/tasks/ticket/delete', [TasksController::class, 'deleteTicket'])->name('tasks.delete_ticket');
-Route::post('/tasks/ticket/complete', [TasksController::class, 'completeTicket'])->name('tasks.complete_ticket');
+Route::middleware('loggedIn')->group(function () {
+    Route::get('/tasks/ticket/{ticket_id}', [TasksController::class, 'loadTicket'])->name('tasks.ticket');
+    Route::post('/tasks/create_new_task/create', [TasksController::class, 'newTask'])->name('create_new_task');
+    Route::post('/tasks/ticket/update_ticket/', [TasksController::class, 'updateStatus'])->name('tasks.update_status');
+    Route::post('/tasks/ticket/add_comment', [TasksController::class, 'addComment'])->name('tasks.add_comment');
+    Route::post('/tasks/ticket/update', [TasksController::class, 'updateTaskDescription'])->name('tasks.update_description');
+    Route::post('/tasks/ticket/update_assignee/{ticket_id}', [TasksController::class, 'updateAssignee'])->name('tasks.update_assignee');
+    Route::post('/tasks/ticket/update_title/{ticket_id}', [TasksController::class, 'updateTitle'])->name('tasks.update_title');
+    Route::post('/tasks/ticket/update_draft/', [TasksController::class, 'updateTaskDraftStatus'])->name('tasks.update_draft');
+    Route::post('/tasks/ticket/change_priority', [TasksController::class, 'updatePriority'])->name('tasks.update_priority');
+    Route::post('/tasks/ticket/delete', [TasksController::class, 'deleteTicket'])->name('tasks.delete_ticket');
+    Route::post('/tasks/ticket/complete', [TasksController::class, 'completeTicket'])->name('tasks.complete_ticket');
+});
 
 /* Equipment views */
-Route::get('/equipment/register', [EquipmentController::class, 'showRegistered'])->name('equipment.register');
+Route::middleware('manager')->group(function(){
+    Route::get('/equipment/register', [EquipmentController::class, 'showRegistered'])->name('equipment.register');
 
-Route::post('/equipment/register/insert', [EquipmentController::class, 'addEquipmentType'])->name('equipment.add_equipment_type');
-Route::post('/equipment/register/add', [EquipmentController::class, 'addEquipment'])->name('equipment.add_equipment');
+    Route::post('/equipment/register/insert', [EquipmentController::class, 'addEquipmentType'])->name('equipment.add_equipment_type');
+    Route::post('/equipment/register/add', [EquipmentController::class, 'addEquipment'])->name('equipment.add_equipment');
 
-Route::get('/equipment/equipment_assignment', [EquipmentController::class, 'loadAssignables'])->name('equipment.assignment');
-Route::post('/equipment/equipment_assignment/assign', [EquipmentController::class, 'assignEquipment'])->name('equipment.assign_equipment');
-Route::post('/equipment/get_user_assignments', [EquipmentController::class, 'loadAssignables'])->name('equipment.get_equipment_for_user');
-Route::post('/equipment/delete_equipment_item', [EquipmentController::class, 'deleteEquipment'])->name('equipment.delete_equipment');
-Route::post('/equipment/return_equipment_item', [EquipmentController::class, 'returnEquipment'])->name('equipment.return_equipment');
-Route::post('/equipment/delete_type/', [EquipmentController::class, 'deleteEquipmentType'])->name('equipment.delete_equipment_type');
+    Route::get('/equipment/equipment_assignment', [EquipmentController::class, 'loadAssignables'])->name('equipment.assignment');
+    Route::post('/equipment/equipment_assignment/assign', [EquipmentController::class, 'assignEquipment'])->name('equipment.assign_equipment');
+    Route::post('/equipment/get_user_assignments', [EquipmentController::class, 'loadAssignables'])->name('equipment.get_equipment_for_user');
+    Route::post('/equipment/delete_equipment_item', [EquipmentController::class, 'deleteEquipment'])->name('equipment.delete_equipment');
+    Route::post('/equipment/return_equipment_item', [EquipmentController::class, 'returnEquipment'])->name('equipment.return_equipment');
+    Route::post('/equipment/delete_type/', [EquipmentController::class, 'deleteEquipmentType'])->name('equipment.delete_equipment_type');
+});
 
 /* Topic creation views */
 Route::get('/news/create_topic', [NewsController::class, 'createTopic'])->name('news.create_topic')->middleware('writer');
@@ -164,7 +170,7 @@ Route::post('/news/topic/edit/update/', [NewsController::class, 'updateTopic'])-
 Route::post('/news/topic/delete/{topic_id}', [NewsController::class, 'deleteNewsTopic'])->name('news.delete_topic')->middleware('writer');
 
 /* MAIL Related views */
-Route::get('/send_mail', function(){
+Route::get('/send_mail', function () {
     return view('send_mail');
 })->middleware('manager');
 Route::post('/send_mail/submit', [MailController::class, 'sendMailToAll'])->name('send_mail')->middleware('manager');
@@ -178,4 +184,4 @@ Route::get('/api/all_users_json/{name}', [UserSearchController::class, 'userSpec
 Route::get('/api/get_all_projects', [TasksController::class, 'projectsApi'])->middleware('loggedIn');
 
 /* TEST PAGES */
-Route::get('/test_page', [EmployeeInformationController::class, 'getAllEmployees']);
+Route::get('/test_page', [TestController::class, 'toastrNot']);

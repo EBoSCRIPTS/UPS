@@ -3,11 +3,12 @@
 namespace Database\Factories\Equipment;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Carbon\Carbon;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\EquipmentAssignmentsModel>
  */
-class EquipmentAssignmentsModelFactory extends Factory
+class EquipmentAssignmentModelFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -17,7 +18,7 @@ class EquipmentAssignmentsModelFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'date_given' => Carbon::now()->toDate(),
         ];
     }
 }

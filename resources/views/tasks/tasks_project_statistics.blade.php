@@ -18,6 +18,7 @@
 <div class="row">
     @include('components.sidebar')
     <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-3">
+        @include('components.errors')
         <div class="container" style="width: 80%">
         <p class="h2 text-center">Project statistics</p>
         <hr class="hr"/>
@@ -48,7 +49,7 @@
             <div class="row mb-3">
                 <div class="col-md-6">
                     <p class="h4">Generate statistics for a different time period</p>
-                <for1 action="{{route('tasks.projects.statistics.generate_for_period',  $project_id)}}" method="POST">
+                <form action="{{route('tasks.projects.statistics.generate_for_period',  $project_id)}}" method="POST">
                         @csrf
                     <div class="row">
                         <div class="col-sm-4">
@@ -65,7 +66,7 @@
                             <button type="submit" class="btn btn-primary mt-4">Generate for period</button>
                         </div>
                     </div>
-                </for1>
+                </form>
                 </div>
                 <div class="col-md-6">
                     <p class="h4">Generate excel</p>

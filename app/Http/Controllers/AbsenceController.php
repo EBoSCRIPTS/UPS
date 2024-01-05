@@ -9,9 +9,6 @@ use Illuminate\Http\Request;
 use App\Models\AbsenceModel;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\View;
 
 class AbsenceController extends Controller
 {
@@ -40,6 +37,7 @@ class AbsenceController extends Controller
             'start_date' => 'required|date|before:end_date',
             'end_date' => 'required|date|after_or_equal:start_date',
             'reason' => 'required|string',
+            'attachment' => 'mimes:pdf,docx,jpg,jpeg,png|max:10240',
         ]);
 
         if($request->input('status') == null) {
@@ -61,13 +59,13 @@ class AbsenceController extends Controller
         $duration = $startDate->diffInDays($endDate);
 
         $absence = new AbsenceModel([
-            'user_id' => $request->input('user_id'),
+            'user_id' => $request->user()->id,
             'start_date' => $request->input('start_date'),
             'end_date' => $request->input('end_date'),
             'duration' => $duration,
             'type' => $request->input('reason'),
             'reason' => $request->input('comment'),
-            'status' => $request->input('status'),
+            'status' => 'Sent',
             'attachment' => $fileName ?? null,
             'approver_id' => $request->input('approver_id'),
             'date_approved' => $request->input('date_approved'),
@@ -134,12 +132,18 @@ class AbsenceController extends Controller
     public function deleteAbsence(Request $request): RedirectResponse
     {
         $validated = $request->validate([
-            'id' => 'required|integer|exists:absences,id',
+            'id' => 'required|integer|exists:req_absence,id',
         ]);
 
+        if ($this->checkIfAbsenceReviewed($request->id))
+        {
+            return redirect('/absence/review')->with('error', 'Absence cannot be deleted, it has already been reviewed!');
+        }
+
         $absence = AbsenceModel::query()->find($request->id);
+
         $absence->delete();
-        return redirect('/absence/review')->with('success', 'Absence deleted!');
+        return redirect('/absence/')->with('success', 'Absence deleted!');
     }
 
     public function downloadAttachment(Request $request){
@@ -147,5 +151,16 @@ class AbsenceController extends Controller
         $attachmentLocation = $absence->attachment;
 
         return response()->download(storage_path('app/public/abs_req/'.$attachmentLocation));
+    }
+
+    public function checkIfAbsenceReviewed($absenceId): bool
+    {
+        $absence = AbsenceModel::query()->find($absenceId);
+
+        if ($absence->status != 'Sent'){
+            return true;
+        }
+
+        return false;
     }
 }

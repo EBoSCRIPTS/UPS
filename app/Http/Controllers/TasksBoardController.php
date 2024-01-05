@@ -133,9 +133,10 @@ class TasksBoardController extends Controller
             ->where('created_at', '<=', $request->input('endDate'))->get()->toArray();
 
         $completedThisMonth = 0;
-
         $completedTaskPoints = 0;
         $allTasksPoints = 0;
+
+        $avgPerformanceScore = $this->checkAverageRating($request->project_id);
 
         for ($i = 0; $i < sizeof($tasksThisMonth); $i++) {
             $allTasksPoints += $tasksThisMonth[$i]['task_points'];
@@ -151,12 +152,13 @@ class TasksBoardController extends Controller
                 'month' => $currentMonth,
                 'completedTaskPoints' => $completedTaskPoints,
                 'allTasksPoints' => $allTasksPoints,
+                'avgPerformanceScore' => $avgPerformanceScore,
                 'project_id' => $request->project_id]);
     }
 
     public function getProjectSettings(Request $request): \Illuminate\View\View|RedirectResponse
     {
-        if ($this->checkIfHasPerms($request->project_id) == false) { //check if user is either manager/admin project leader
+        if ($this->checkIfProjectSettingsAccess($request->project_id) == false) { //check if user is either manager/admin project leader
             return redirect('/');
         }
 
@@ -222,18 +224,18 @@ class TasksBoardController extends Controller
             'leader_user_id' => $request->input('project_leader')
         ]);
 
-        return back();
+        return back()->with('success', 'Project leader updated');
     }
 
-    public function deleteProject(Request $request): RedirectResponse
+    public function deleteProject(Request $request, $id): RedirectResponse
     {
-        $project = TasksProjectModel::query()->where('id', $request->project_id)->first();
-
-        if ($project == null || $this->checkIfHasPerms($request->project_id) == false){
+        if ($this->checkIfProjectSettingsAccess($request->project_id) == false){
             return back()->withInput()->withErrors([
                 'project' => 'Project not found or you don\'t have permissions to delete it'
             ]);
         }
+
+        $project = TasksProjectModel::query()->where('id', $request->project_id)->first();
 
         if (TasksParticipantsModel::query()->where('project_id', $request->project_id)->first() != null){
             return back()->withInput()->withErrors([
@@ -248,17 +250,23 @@ class TasksBoardController extends Controller
 
     public function generateExcelForProjectStatistics(Request $request): BinaryFileResponse
     {
+        $validated = $request->validate([
+            'project_id' => 'required|integer|exists:tasks_project,id',
+            'startDate' => 'required|date|before:endDate',
+            'endDate' => 'required|date|after:startDate',
+        ]);
+
         return MaatwebsiteExcel::download(new TaskExport($request->input('startDate'), $request->input('endDate'), $request->input('project_id')), 'project_statistics.xlsx',\Maatwebsite\Excel\Excel::XLSX);
     }
 
     //use this to check if user is either manager/admin project leader
-    private function checkIfHasPerms($project_id): bool
+    public function checkIfProjectSettingsAccess($project_id): bool
     {
-        if (Auth::user()->role_id == 1 || Auth::user()->role_id == 3) { //admin and manager should always be able to edit
-            return true;
-        }
-
-        if (TasksProjectModel::query()->where('id', $project_id)->pluck('leader_user_id')->first() == Auth::user()->id) {
+        if (request()->user()->role_id == 1 || request()->user()->role_id == 3
+            || TasksProjectModel::query()
+                ->where('id', $project_id)
+                ->pluck('leader_user_id')
+                ->first() == request()->user()->id) { //admin, manager or proj leader
             return true;
         }
         else {
@@ -273,6 +281,7 @@ class TasksBoardController extends Controller
             ->where('month', Carbon::now()->monthName)
             ->orWhere('month', Carbon::now()->subMonth()->monthName)
             ->where('year', Carbon::now()->year)
+            ->orWhere('year', Carbon::now()->subYear()->year)
             ->avg('rating');
     }
 }

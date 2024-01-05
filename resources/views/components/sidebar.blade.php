@@ -1,15 +1,15 @@
 <script src="{{asset('js/userSearch.js')}}"></script>
+
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
     @import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css");
-</style>
 
-<style>
     body{
         font-family: 'Roboto', sans-serif;
         overflow-x: hidden
     }
 </style>
+
 @if(isset(Auth::user()->id))
     <div class="container-fluid">
         <div class="row flex-nowrap">

@@ -31,15 +31,15 @@ class TasksController extends Controller
     public function createNewProject(Request $request): RedirectResponse
     {
         $validated = $request->validate([
-            'project_name' => 'required|string|max:100',
+            'project_name' => 'required|string|max:100|unique:tasks_project.name',
             'department_id' => 'required|integer|exists:departaments,id',
-            'project_manager_id' => 'required|integer|exists:users,id',
+            'project_manager_id' => 'sometimes|nullable|integer|exists:users,id',
         ]);
 
         $newProject = new TasksProjectModel([
             'name' => $request->input('project_name'),
             'department_id' => $request->input('department_id'),
-            'leader_user_id' => $request->input('project_manager_id'),
+            'leader_user_id' => $request->input('project_manager_id') ?? null,
         ]);
 
         $newProject->save();
@@ -65,7 +65,7 @@ class TasksController extends Controller
             $projectMember->save();
         }
 
-        return redirect('/tasks/create_new_project');
+        return back('/tasks/create_new_project')->with('success', 'Project created successfully');
     }
 
 
@@ -75,6 +75,7 @@ class TasksController extends Controller
     {
         return view('tasks.tasks_projects_settings', ['projects' => TasksProjectModel::all()]);
     }
+
 
 
     public function projectsApi(): JsonResponse  //important to keep this, helps reduce amount of code needed for loading data for each page that requires if user is assigned information
@@ -130,7 +131,7 @@ class TasksController extends Controller
 
         $newTask->save();
 
-        return redirect('/tasks/ticket/' . $newTask->id);
+        return redirect('/tasks/ticket/' . $newTask->id)->with('success', 'Task created successfully');
     }
 
 
@@ -176,7 +177,7 @@ class TasksController extends Controller
             'description' => $request->input('ticket_description'),
         ]);
 
-        return redirect('/tasks/ticket/' . $request->ticket_id);
+        return back()->with('success', 'Ticket description updated successfully');
     }
 
 
@@ -341,13 +342,12 @@ class TasksController extends Controller
     {
         $validated = $request->validate([
             'ticket_id' => 'required|integer|exists:tasks_task,id',
-            'priority' => 'sometimes|string|in:low,medium,high,critical',
         ]);
 
         $task = TasksTaskModel::query()->where('id', $request->input('ticket_id'))->first();
         $priorities = ['low', 'medium', 'high', 'critical'];
 
-        if ($request->input('back') && $task->priority != 'low') //check if we can hop backwards because we all priorities are hardcoded
+        if ($request->input('back') && $task->priority != 'low') //check if we can hop backwards because all priorities are hardcoded
         {
             $curPriority = $task->priority;
 
@@ -388,7 +388,7 @@ class TasksController extends Controller
     {
         $validated = $request->validate([
             'ticket_id' => 'sometimes|integer|exists:tasks_task,id',
-            'title' => 'required|string|max:255',
+            'title' => 'required|string|min:3|max:255',
         ]);
 
         $task = TasksTaskModel::query()->where('id', $request->ticket_id)->first();

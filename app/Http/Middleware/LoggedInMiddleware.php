@@ -19,6 +19,6 @@ class LoggedInMiddleware
             return $next($request);
         }
 
-        return redirect('/');
+        return redirect('/login');
     }
 }
