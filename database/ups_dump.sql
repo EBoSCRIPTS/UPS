@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 23, 2023 at 10:08 AM
+-- Generation Time: Jan 05, 2024 at 10:18 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -45,10 +45,12 @@ CREATE TABLE `accountant_department_settings` (
 
 CREATE TABLE `accountant_fulfilled_payslips` (
   `id` int(11) NOT NULL,
-  `employee_Id` int(11) NOT NULL,
+  `employee_id` int(11) NOT NULL,
   `department_id` int(11) NOT NULL,
   `loghours_submitted_id` int(11) NOT NULL,
   `month` varchar(100) NOT NULL,
+  `year` year(4) NOT NULL,
+  `fulfilled_by` int(11) NOT NULL COMMENT 'user_id references to user table ',
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
   `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -79,7 +81,7 @@ CREATE TABLE `employee_information` (
   `department_id` int(11) NOT NULL COMMENT 'refers to departments table',
   `hour_pay` decimal(10,2) DEFAULT NULL,
   `salary` decimal(10,2) DEFAULT NULL,
-  `monthly_hours` int(11) NOT NULL,
+  `weekly_hours` int(11) NOT NULL,
   `position` text NOT NULL,
   `bank_name` varchar(100) DEFAULT NULL,
   `bank_account_name` varchar(100) DEFAULT NULL,
@@ -96,7 +98,7 @@ CREATE TABLE `employee_information` (
 
 CREATE TABLE `employee_vacations` (
   `id` int(11) NOT NULL,
-  `employee_Id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
   `date_from` date NOT NULL,
   `date_to` date NOT NULL,
   `is_paid` enum('0','1','','') NOT NULL,
@@ -263,7 +265,6 @@ CREATE TABLE `req_absence` (
   `reason` text NOT NULL,
   `status` text NOT NULL DEFAULT 'Sent',
   `comment` text DEFAULT NULL,
-  `sent_by` text NOT NULL,
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
   `attachment` blob DEFAULT NULL,
   `approver_id` int(11) DEFAULT NULL,
@@ -321,7 +322,7 @@ CREATE TABLE `tasks_project` (
   `id` int(11) NOT NULL,
   `name` varchar(100) NOT NULL,
   `department_id` int(11) NOT NULL,
-  `leader_employee_id` int(11) NOT NULL
+  `leader_user_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -387,8 +388,8 @@ CREATE TABLE `users` (
   `email` varchar(255) NOT NULL,
   `phone_number` varchar(15) NOT NULL,
   `password` varchar(255) NOT NULL,
-  `created_at` date NOT NULL DEFAULT current_timestamp(),
-  `updated_at` date NOT NULL DEFAULT current_timestamp(),
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp(),
   `role_id` int(10) UNSIGNED NOT NULL,
   `is_writer` enum('0','1','','') NOT NULL DEFAULT '0',
   `soft_deleted` int(11) DEFAULT 0,
@@ -434,7 +435,8 @@ ALTER TABLE `departaments`
 --
 ALTER TABLE `employee_information`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `fk_dept_id` (`department_id`);
+  ADD KEY `fk_dept_id` (`department_id`),
+  ADD KEY `user_id` (`user_id`);
 
 --
 -- Indexes for table `employee_vacations`
@@ -515,7 +517,8 @@ ALTER TABLE `roles`
 -- Indexes for table `submitted_tickets`
 --
 ALTER TABLE `submitted_tickets`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_id` (`user_id`,`registered_by_user_id`);
 
 --
 -- Indexes for table `tasks_participants`
@@ -527,7 +530,8 @@ ALTER TABLE `tasks_participants`
 -- Indexes for table `tasks_project`
 --
 ALTER TABLE `tasks_project`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_dept_id` (`department_id`);
 
 --
 -- Indexes for table `tasks_status`
@@ -539,7 +543,9 @@ ALTER TABLE `tasks_status`
 -- Indexes for table `tasks_task`
 --
 ALTER TABLE `tasks_task`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_project_id` (`project_id`),
+  ADD KEY `fk_made_by` (`made_by`);
 
 --
 -- Indexes for table `tasks_task_comments`
@@ -712,12 +718,6 @@ ALTER TABLE `vacation_points`
 --
 -- Constraints for dumped tables
 --
-
---
--- Constraints for table `employee_information`
---
-ALTER TABLE `employee_information`
-  ADD CONSTRAINT `fk_dept_id` FOREIGN KEY (`department_id`) REFERENCES `departaments` (`id`);
 
 --
 -- Constraints for table `equipment_items`
