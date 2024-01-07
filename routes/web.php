@@ -26,28 +26,32 @@ use App\Http\Controllers\TestController;
 Route::get('/', [NewsController::class, 'loadAllTopics']);
 
 /* Manager views */
-Route::get('/mng/register', [UserController::class, 'createUserView'])->middleware('admin');
-Route::get('/mng/allusers', [UserController::class, 'showAll'])->name('users')->middleware('admin');
-Route::get('/mng/edit', [UserController::class, 'showAll'])->name('users')->middleware('admin');
+Route::middleware('admin')->group(function () {
+    Route::get('/mng/register', [UserController::class, 'createUserView']);
+    Route::get('/mng/edit', [UserController::class, 'showAll'])->name('users');
+});
 
 /* Profile views */
 Route::get('/login', function () {
     return view('login');
 });
 Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
-Route::get('/profile/{id}', [UserController::class, 'getUserInfo'])->name('profile');
-Route::post('/profile/{id}/change_password', [UserController::class, 'changePassword'])->name('user.change_password');
-Route::post('/profile/{id}/update_banking', [UserController::class, 'updateBanking'])->name('user.update_banking');
-Route::post('/profile/send_ticket', [SubmittedTicketsController::class, 'submitTicket'])->name('user.send_ticket');
 Route::post('/logging_in', [AuthController::class, 'auth'])->name('logging_in');
+
+Route::middleware('loggedIn')->group(function () {
+    Route::get('/profile/{id}', [UserController::class, 'getUserInfo'])->name('profile');
+    Route::post('/profile/{id}/change_password', [UserController::class, 'changePassword'])->name('user.change_password');
+    Route::post('/profile/{id}/update_banking', [UserController::class, 'updateBanking'])->name('user.update_banking');
+    Route::post('/profile/send_ticket', [SubmittedTicketsController::class, 'submitTicket'])->name('user.send_ticket');
+});
 
 /* Absence views */
 Route::get('/absence', [AbsenceController::class, 'userAbsences'])->name('absence')->middleware('employee');
 Route::get('/absence/review', [AbsenceController::class, 'showAbsenceReview'])->name('absence.review')->middleware('manager');
 Route::get('/absence/vacation/{absence_id}', [VacationsController::class, 'getUserVacationInfo'])->name('absence.vacation')->middleware('employee');;
 Route::post('/absence/create', [AbsenceController::class, 'addAbsence'])->name('absence.create')->middleware('employee');;
-Route::post('/absence/update', [AbsenceController::class, 'updateAbsence'])->name('absence.update')->middleware('employee');;
-Route::post('/absence/delete', [AbsenceController::class, 'deleteAbsence'])->name('absence.delete')->middleware('employee');;
+Route::post('/absence/update', [AbsenceController::class, 'updateAbsence'])->name('absence.update')->middleware('employee');
+Route::post('/absence/delete', [AbsenceController::class, 'deleteAbsence'])->name('absence.delete')->middleware('employee');
 Route::get('/absence/attachment/download/{absence_id}', [AbsenceController::class, 'downloadAttachment'])->name('absence.attachment.download')->middleware('manager');
 
 /* User create views */
@@ -61,7 +65,7 @@ Route::post('/loghours/create', [LogHoursController::class, 'insertLoggedHours']
 Route::post('/loghours/previous_month', [LogHoursController::class, 'getPreviousMonth'])->name('loghours.previous_month')->middleware('employee');;
 
 Route::get('/loghours/view', [ViewLoggedHoursController::class, 'ViewLogged'])->name('loghours.view')->middleware('employee');;
-Route::post('/loghours/view/user', [ViewLoggedHoursController::class, 'showUserLoggedHours'])->name('loghours.view.user')->middleware('employee');;
+Route::get('/loghours/view/{user_id}', [ViewLoggedHoursController::class, 'showUserLoggedHours'])->name('loghours.view.user')->middleware('employee');;
 Route::post('/loghours/view/delete', [LogHoursController::class, 'deleteLoggedHours'])->name('loghours.view.delete')->middleware('employee');;
 Route::post('/loghours/close_month', [LoghoursController::class, 'closeMonthlyReport'])->name('loghours.close_month')->middleware('employee');;
 
@@ -85,15 +89,18 @@ Route::post('/employee_information/update', [EmployeeInformationController::clas
 
 
 /* Accountant views */
-Route::get('/accountant', [AccountantController::class, 'showAll'])->name('accountant')->middleware('accountant');
-Route::get('/accountant/{id}', [AccountantController::class, 'showDept'])->name('accountant_view_department')->middleware('accountant');
-Route::post('/accountant/user', [AccountantController::class, 'loadEmployeeInformation'])->name('accountant_view_department')->middleware('accountant');
-Route::get('/accountant/settings/{department_id}', [AccountantController::class, 'getDepartmentSettings'])->name('department_settings')->middleware('accountant');
-Route::get('/accountant/payslip/{department_id}/{user_id}/{year}/{month}', [AccountantController::class, 'getEmployeePayslipDetails'])->middleware('accountant');
-Route::get('/accountant/payslip/{department_id}/{employee_id}/{year}/{month}/{hours_id}/fulfill', [AccountantController::class, 'employeePayslipFulfill'])->middleware('accountant');
+Route::middleware('accountant')->group(function () {
+    Route::get('/accountant', [AccountantController::class, 'showAll'])->name('accountant');
+    Route::get('/accountant/{id}', [AccountantController::class, 'showDept'])->name('accountant_view_department');
+    Route::post('/accountant/user', [AccountantController::class, 'loadEmployeeInformation'])->name('accountant_view_department');
+    Route::get('/accountant/settings/{department_id}', [AccountantController::class, 'getDepartmentSettings'])->name('department_settings');
+    Route::get('/accountant/payslip/{department_id}/{user_id}/{year}/{month}', [AccountantController::class, 'getEmployeePayslipDetails']);
+    Route::post('/accountant/payslip/{department_id}/{employee_id}/{year}/{month}/{hours_id}/fulfill', [AccountantController::class, 'employeePayslipFulfill'])->name('accountant.payslip_fulfill');
+    Route::get('/accountant/payslip/{department_id}/{employee_id}/{year}/{month}/download', [AccountantController::class, 'downloadPayslip']);
+    Route::post('/accountant/settings/{department_id}/add_tax', [AccountantController::class, 'addTax'])->name('accountant.add_tax');
+    Route::get('/accountant/settings/{department_id}/delete_tax/{tax_id}', [AccountantController::class, 'deleteTax'])->name('accountant.delete_tax');
+});
 
-Route::post('/accountant/settings/{department_id}/add_tax', [AccountantController::class, 'addTax'])->name('accountant.add_tax')->middleware('accountant');
-Route::get('/accountant/settings/{department_id}/delete_tax/{tax_id}', [AccountantController::class, 'deleteTax'])->name('accountant.delete_tax')->middleware('accountant');
 
 /* Tasks view */
 Route::middleware('loggedIn')->group(function () {
@@ -148,9 +155,9 @@ Route::middleware('manager')->group(function(){
     Route::post('/equipment/register/insert', [EquipmentController::class, 'addEquipmentType'])->name('equipment.add_equipment_type');
     Route::post('/equipment/register/add', [EquipmentController::class, 'addEquipment'])->name('equipment.add_equipment');
 
-    Route::get('/equipment/equipment_assignment', [EquipmentController::class, 'loadAssignables'])->name('equipment.assignment');
+    Route::get('/equipment/equipment_assignment/', [EquipmentController::class, 'loadAssignables'])->name('equipment.assignment');
     Route::post('/equipment/equipment_assignment/assign', [EquipmentController::class, 'assignEquipment'])->name('equipment.assign_equipment');
-    Route::post('/equipment/get_user_assignments', [EquipmentController::class, 'loadAssignables'])->name('equipment.get_equipment_for_user');
+    Route::get('/equipment/equipment_assignment/{id}', [EquipmentController::class, 'loadAssignables'])->name('equipment.get_equipment_for_user');
     Route::post('/equipment/delete_equipment_item', [EquipmentController::class, 'deleteEquipment'])->name('equipment.delete_equipment');
     Route::post('/equipment/return_equipment_item', [EquipmentController::class, 'returnEquipment'])->name('equipment.return_equipment');
     Route::post('/equipment/delete_type/', [EquipmentController::class, 'deleteEquipmentType'])->name('equipment.delete_equipment_type');

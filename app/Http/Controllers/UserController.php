@@ -187,12 +187,6 @@ class UserController extends Controller
 
     public function updateBanking(Request $request): RedirectResponse
     {
-        $validated = $request->validate([
-            'bank_name' => 'required',
-            'account_name' => 'required|unique:employee_information,bank_account_name',
-            'account_number' => 'required|unique:employee_information,bank_account',
-        ]);
-
         $employee = EmployeeInformationModel::query()->where('user_id', Auth::user()->id)->first();
 
         if($employee == null) { //as we store this in employee table we can't update info if users not registered as an employee yet
@@ -200,6 +194,12 @@ class UserController extends Controller
                 'employee_error' => 'You aren\'t registered as an employee yet!'
             ]);
         }
+
+        $validated = $request->validate([
+            'bank_name' => 'required',
+            'account_name' => 'required|unique:employee_information,bank_account_name',
+            'account_number' => 'required|unique:employee_information,bank_account',
+        ]);
 
         $employee->update([
            'bank_name' => $request->input('bank_name'),

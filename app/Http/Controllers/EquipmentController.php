@@ -108,8 +108,8 @@ class EquipmentController extends Controller
 
         $equipment = EquipmentItemsModel::query()->where('is_assigned', 0)->get();
 
-        if($request->has('employee')) { //instead of making a new method we handle equipment for user request her(get equipment for user section)
-            $user = EquipmentAssignmentModel::query()->where('employee_id', $request->input('employee'))->get();
+        if(isset($request->id)) { //instead of making a new method we handle equipment for user request her(get equipment for user section)
+            $user = EquipmentAssignmentModel::query()->where('employee_id', $request->id)->get();
 
             return view('equipment_assignment', ['employees' => $employee, 'equipments' => $equipment, 'assignments' => $user, 'employeeFor' => $request->input('employee')]);
         }

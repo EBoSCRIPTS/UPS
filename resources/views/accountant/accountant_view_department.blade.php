@@ -127,25 +127,12 @@
                                         <td>{{$fulfilled->employee->user->first_name}} {{$fulfilled->employee->user->last_name}}</td>
                                         <td>{{$fulfilled->year}}-{{$fulfilled->month}}</td>
                                         <td>{{$fulfilled->created_at}}</td>
-                                        <td><a href="/accountant/payslip/{{$department->id}}/{{$fulfilled->employee->user_id}}/{{$fulfilled->year}}/{{$fulfilled->month}}">Go to</a></td>
+                                        <td><a href="/accountant/payslip/{{$department->id}}/{{$fulfilled->employee_id}}/{{$fulfilled->year}}/{{$fulfilled->month}}/download">Download</a></td>
                                     </tr>
                             @endforeach
                         </tbody>
             </div>
-
-
         </div>
-
-{{--        <div class="row" style="margin-top: 50px">--}}
-{{--            <div class="col-sm-6">--}}
-{{--                <p class="h3 text-center">Expected expenses</p>--}}
-{{--                <div class="d-flex" style="height: 90%">--}}
-{{--                    <canvas id="pieChart"></canvas>--}}
-{{--                </div>--}}
-{{--            </div>--}}
-{{--        </div>--}}
-
-
     </div>
 </div>
 </body>

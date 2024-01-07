@@ -20,59 +20,64 @@
     @include('components.sidebar')
     <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-3">
         <div class="container" style="width: 80%">
-            <div class="card bg-light">
+            @include('components.errors')
+            <button type="button" class="btn btn-primary" id="editButton" onclick="editPayslip()">EDIT PAYSLIP</button>
+            <div class="card bg-light mt-3" id="payslipCard">
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-6">
                             <h3>Payslip preview
-                            @if($isFullfilled == true)
-                                <span class="badge bg-success" id="status">Fullfilled</span>
+                                @if($isFullfilled == true)
+                                    <span class="badge bg-success" id="status">Fullfilled</span>
                                 @else
-                                <span class="badge bg-danger" id="status">Not fullfilled</span>
+                                    <span class="badge bg-danger" id="status">Not fullfilled</span>
                                 @endif
                             </h3>
                         </div>
                         <div class="col-md-6">
-                           <h3 class="float-end" contenteditable="true">Issued date: ->input here<-</h3>
+                            <h3 class="float-end" contenteditable="true">Issued date: ->input here<-</h3>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-6">
                             <table class="table">
                                 <thead>
-                                    <tr>
-                                        <th scope="col">Info</th>
-                                        <th scope="col">Hours</th>
-                                        <th scope="col">Amount</th>
+                                <tr>
+                                    <th scope="col">Info</th>
+                                    <th scope="col">Hours</th>
+                                    <th scope="col">Amount</th>
                                 </thead>
                                 <tbody>
+                                <tr>
+                                    <td>Base monthly salary before taxes</td>
+                                    <td>{{$hours->total_hours - $hours->night_hours - $hours->overtime_hours}}</td>
+                                    <td style="color: green">{{$baseSalary}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Extra pay during night hours</td>
+                                    <td>{{$hours->night_hours}}</td>
+                                    <td style="color: green">{{$nightSalary}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Overtime hours</td>
+                                    <td>{{$overtimeHours}}</td>
+                                    <td style="color: green">{{$overtimeSalary}}</td>
+                                </tr>
+                                @foreach($taxes as $tax)
                                     <tr>
-                                        <td>Base monthly salary before taxes</td>
-                                        <td>{{$hours->total_hours}}</td>
-                                        <td style="color: green">{{$baseSalary}}</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Extra pay during night hours</td>
-                                        <td>{{$hours->night_hours}}</td>
-                                        <td style="color: green">{{$nightSalary}}</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Overtime hours</td>
-                                        <td>{{$overtimeHours}}</td>
-                                        <td style="color: green">{{$overtimeSalary}}</td>
-                                    </tr>
-                                    @foreach($taxes as $tax)
-                                        <tr>
-                                            <td>{{$tax['tax_name']}}</td>
-                                            <td></td>
-                                            <td style="color: red">-{{round(($tax['tax_rate'] / 100) * ($baseSalary + $nightSalary + $overtimeSalary), 2)}}</td>
-                                        </tr>
-                                    @endforeach
-                                    <tr>
-                                        <td>TOTAL:</td>
+                                        <td>{{$tax['tax_name']}}</td>
                                         <td></td>
-                                        <td><strong style="color: green">{{($baseSalary + $nightSalary + $overtimeSalary) - ($baseSalary + $nightSalary + $overtimeSalary) * 0.3}}</strong></td>
+                                        <td style="color: red">
+                                            -{{round(($tax['tax_rate'] / 100) * ($baseSalary + $nightSalary + $overtimeSalary), 2)}}</td>
                                     </tr>
+                                @endforeach
+                                <tr>
+                                    <td>TOTAL:</td>
+                                    <td></td>
+                                    <td><strong
+                                            style="color: green">{{($baseSalary + $nightSalary + $overtimeSalary) - ($baseSalary + $nightSalary + $overtimeSalary) * 0.3}}</strong>
+                                    </td>
+                                </tr>
                                 </tbody>
                             </table>
                         </div>
@@ -87,7 +92,7 @@
                             <hr>
                             <h4 contenteditable="true">Payment for period: HERE</h4>
                             @if($employee->hour_pay != null)
-                            <small>Base pay per hour: {{$employee->hour_pay}}</small>
+                                <small>Base pay per hour: {{$employee->hour_pay}}</small>
                                 <br>
                             @else
                                 <small>Set monthly salary: {{$employee->salary}}</small>
@@ -96,30 +101,57 @@
                             <br>
                             <small>Base weekly hours amount does not include overtime or extra nighthour pay</small>
                             <br>
-                            <button type="button" class="btn btn-success btn-sm" id="printButton" onclick="printPayslip()">Print</button>
+                            <button type="button" class="btn btn-success btn-sm" id="printButton"
+                                    onclick="printPayslip()">Print
+                            </button>
                             @if($isFullfilled == false)
-                            <a href="/accountant/payslip/{{$employee->department->id}}/{{$employee->id}}/{{\Carbon\Carbon::now()->year}}/{{$month}}/{{$hours->id}}/fulfill" class="btn btn-primary btn-sm" id="fulfill">Fulfill</a>
+                                <form action="{{route('accountant.payslip_fulfill', ['department_id' => $employee->department_id,'employee_id' => $employee->id, 'year' => Carbon\Carbon::now()->year, 'month' => $month, 'hours_id' => $hours->id])}}" method="POST" enctype="multipart/form-data" id="fulfillForm">
+                                    @csrf
+                                    <label for="pdf" class="form-label">Upload payslip</label>
+                                    <input type="file" id="pdf" name="pdf" class="form-control" required>
+
+                                   <button type="submit" class="btn btn-primary mt-2" id="fulfill">Fulfill</button>
+                                </form>
                             @endif
+                            <br>
                         </div>
                     </div>
+                </div>
             </div>
         </div>
     </div>
-
-</div>
+    </div>
 </body>
 
 <script>
-    function printPayslip(){
+    function printPayslip() {
         const sidebar = document.getElementById('sidebar');
         const printButton = document.getElementById('printButton');
         const status = document.getElementById('status');
         const fulfill = document.getElementById('fulfill')
-        fulfill.style.display = 'none';
+        const editButton = document.getElementById('editButton')
+        const fulfillForm = document.getElementById('fulfillForm')
+        if (fulfill != null) {
+            fulfill.style.display = 'none';
+        }
+        fulfillForm.style.display = 'none';
+        editButton.style.display = 'none';
         status.style.display = 'none';
         printButton.style.display = 'none';
         sidebar.style.display = 'none';
         window.print();
         window.location.reload();
+    }
+
+    function editPayslip() {
+        document.getElementById('editButton').addEventListener('click', function () {
+            const payslipCard = document.getElementById('payslipCard');
+            console.log(payslipCard.contentEditable);
+            if (payslipCard.contentEditable == true) {
+                payslipCard.contentEditable = false;
+            } else {
+                payslipCard.contentEditable = true;
+            }
+        })
     }
 </script>

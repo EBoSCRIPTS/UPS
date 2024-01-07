@@ -22,7 +22,7 @@
         <div class="container align-items-center" style="width: 80%">
             @include('components.errors')
             <div class="row">
-                <div class="col-lg-6">
+                <div class="col-lg-8">
                 <p class="h3 text-center">Review Hours</p>
 
                 @if(count($submits) > 0)
@@ -39,8 +39,8 @@
                     <tbody>
                         @foreach($submits as $submit)
                             <tr>
-                                <td>{{$submit->user->first_name}} {{$submit->user->last_name}}</td>
-                                <td>{{$submit->total_hours}} of {{$weeklyHours[$submit->user_id]}}</td>
+                                <td><a href="/loghours/view/{{$submit->user->id}}" onclick="window.open(this.href, 'window', 'width=800,height=600');">{{$submit->user->first_name}} {{$submit->user->last_name}}</a></td>
+                                <td>{{$submit->total_hours}}</td>
                                 <td>{{$submit->night_hours}}</td>
                                 <td>{{$submit->month_name}}</td>
                                 <div class="btn-group">
@@ -48,6 +48,8 @@
                                         <form action="{{route('loghours.review')}}" method="POST">
                                             @csrf
                                             <input type="hidden" name="id" value="{{$submit->id}}">
+                                            <label for="overtimeHours" class="form-label">Overtime hours</label>
+                                            <input type="text" class="form-control mb-2" name="overtime_hours">
                                             <button type="submit" class="btn btn-success" name="Approve" value="confirm">Approve</button>
                                             <button type="submit" class="btn btn-danger" name="Reject" value="reject">Reject</button>
                                         </form>
@@ -62,7 +64,7 @@
                     <p>Nothing to review</p>
             @endif
                 </div>
-                <div class="col-lg-6">
+                <div class="col-lg-4">
                     <p class="h3 text-center">Reviewed Hours</p>
                     <table class="table table-striped">
                         <thead>

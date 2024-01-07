@@ -2,8 +2,12 @@
 
 namespace Tests\Unit;
 
+use App\Http\Controllers\TasksController;
+use App\Models\DepartmentsModel;
+use App\Models\EmployeeInformationModel;
 use App\Models\Tasks\TasksProjectModel;
 use App\Models\Tasks\TasksStatusModel;
+use App\Models\Tasks\TasksTaskModel;
 use App\Models\UserModel;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Tests\TestCase;
@@ -15,7 +19,25 @@ class TasksTest extends TestCase
 {
     use WithoutMiddleware;
 
-    /** @test */
+    public function test_create_project()
+    {
+        $user = UserModel::factory()->create(['role_id' => 2]);
+        $department = DepartmentsModel::factory()->create();
+        $employee = EmployeeInformationModel::factory()->create(['user_id' => $user->id, 'department_id' => $department->id]);
+
+        $response = $this->actingAs($user)->post('/tasks/create_new_project/insert', [
+            'project_name' => 'Test Project'.time(),
+            'department_id' => $department->id,
+            'project_manager_id' => $user->id,
+            'counter' => 1,
+            'project_status_field1' => 'Status 1',
+        ]);
+
+        $this->assertDatabaseHas('tasks_project', [
+            'name' => 'Test Project'.time(),
+            'department_id' => $department->id,
+        ]);
+    }
 
     public function test_access_to_project_settings_as_user()
     {
@@ -91,7 +113,7 @@ class TasksTest extends TestCase
     }
 
     /** @test */
-    public function it_fails_if_project_has_participants()
+    public function test_fails_if_project_has_participants()
     {
         $project = TasksProjectModel::factory()->create();
         $user = UserModel::factory()->create(['role_id' => 1]);
@@ -103,8 +125,7 @@ class TasksTest extends TestCase
         $response->assertSessionHasErrors('project');
     }
 
-    /** @test */
-    public function it_deletes_the_project_successfully()
+    public function test_deletes_the_project_successfully()
     {
         $user = UserModel::factory()->create(['role_id' => 1]);
         $project = TasksProjectModel::factory()->create(['id' => random_int(1000, 9000)]);

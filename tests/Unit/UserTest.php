@@ -2,6 +2,7 @@
 
 namespace Tests\Unit;
 
+use App\Models\DepartmentsModel;
 use App\Models\UserModel;
 use Tests\TestCase;
 
@@ -32,7 +33,7 @@ class UserTest extends TestCase
         $response->assertRedirect('/');
     }
 
-    public function user_nonemployee_update_banking()
+    public function  test_user_nonemployee_update_banking()
     {
         $user = UserModel::factory()->create(['role_id' => 5]);
 
@@ -41,6 +42,31 @@ class UserTest extends TestCase
 
         $user->delete();
 
-        $response->assertRedirect('/profile/' . $user->id);
+        $response->assertSessionHasErrors('employee_error');
+    }
+
+    public function test_submit_ticket()
+    {
+        $user = UserModel::factory()->create(['role_id' => 3]);
+
+        $department = DepartmentsModel::factory()->create();
+
+        $response = $this->actingAs($user)
+            ->post('/profile/send_ticket', [
+            'title' => 'Test Ticket',
+            'description' => 'This is a test description',
+            'department_id' => $department->id,
+        ]);
+
+        $response->assertRedirect();
+        $response->assertSessionHas('success', 'Ticket submitted!');
+
+        $this->assertDatabaseHas('submitted_tickets', [
+            'user_id' => $user->id,
+            'ticket_title' => 'Test Ticket',
+            'ticket_text' => 'This is a test description',
+            'department_id' => $department->id,
+            'is_registered' => 0,
+        ]);
     }
 }

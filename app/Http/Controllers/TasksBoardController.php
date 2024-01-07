@@ -243,18 +243,32 @@ class TasksBoardController extends Controller
             ]);
         }
 
+        //if project gets deleted, remove task assignees
+        $getAllTasks = TasksTaskModel::query()->where('project_id', $request->project_id)->get();
+        foreach ($getAllTasks as $task){
+            $task->update([
+                'assigned_to' => null
+            ]);
+        }
+
         $project->delete();
 
         return redirect('/tasks/projects/');
     }
 
-    public function generateExcelForProjectStatistics(Request $request): BinaryFileResponse
+    public function generateExcelForProjectStatistics(Request $request): BinaryFileResponse|RedirectResponse
     {
         $validated = $request->validate([
             'project_id' => 'required|integer|exists:tasks_project,id',
             'startDate' => 'required|date|before:endDate',
             'endDate' => 'required|date|after:startDate',
         ]);
+
+        if (!$this->checkIfProjectSettingsAccess($request->input('project_id'))){
+            return back()->withInput()->withErrors([
+                'project' => 'Project not found or you don\'t have permissions to export performance reports!'
+            ]);
+        }
 
         return MaatwebsiteExcel::download(new TaskExport($request->input('startDate'), $request->input('endDate'), $request->input('project_id')), 'project_statistics.xlsx',\Maatwebsite\Excel\Excel::XLSX);
     }

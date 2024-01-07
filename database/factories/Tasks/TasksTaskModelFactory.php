@@ -16,7 +16,7 @@ class TasksTaskModelFactory extends Factory
             'description' => 'task description'.time(),
             'made_by' => 1,
             'assigned_to' => 1,
-            'status_key' => 1,
+            'status_key' => 0,
             'priority' => 'critical',
             'task_points' => 5,
             'is_draft' => 0,

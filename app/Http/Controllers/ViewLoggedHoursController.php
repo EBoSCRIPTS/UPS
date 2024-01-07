@@ -17,7 +17,10 @@ class ViewLoggedHoursController extends Controller
 
     public function showUserLoggedHours(Request $request) //when loading user specific hours
     {
-        $loggedHours = LogHoursModel::query()->where('user_id', $request->input('user_id'))->get();
+        $loggedHours = LogHoursModel::query()
+            ->where('user_id', $request->user_id)
+            ->orderBy('created_at', 'desc')
+            ->get();
         $users = UserModel::query()->where('soft_deleted', 0)->get();
 
         return view('view_logged_hours', ['loggedHours' => $loggedHours, 'users' => $users]);

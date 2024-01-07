@@ -2,7 +2,11 @@
 
 namespace Tests\Unit;
 
+use App\Models\AbsenceModel;
+use App\Models\EmployeeVacationsModel;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
+use Illuminate\Http\Client\Request;
+use Illuminate\Support\Facades\Auth;
 use Tests\TestCase;
 use Illuminate\Support\Facades\Storage;
 use Mockery;
@@ -17,7 +21,7 @@ class AbsenceTest extends TestCase
     public function test_add_absence(): void
     {
         $user = UserModel::factory()->create([
-            'role_id' => 2
+            'role_id' => 3
         ]);
         $this->actingAs($user);
 
@@ -84,4 +88,27 @@ class AbsenceTest extends TestCase
 
         $response->assertSessionHas('error', 'Absence cannot be deleted, it has already been reviewed!');
     }
+
+    public function test_update_an_absence_correctly()
+    {
+        $user = UserModel::factory()->create([
+            'role_id' => 2
+        ]);
+        $this->actingAs($user);
+
+        $absence = AbsenceModel::factory()->create([
+            'user_id' => $user->id,
+            'duration' => 2,
+            'type' => 'Sick',
+        ]);
+
+        $response = $this->actingAs($user)->post('/absence/update', [
+            'id' => $absence->id,
+            'approver_id' => 1,
+            'status' => 'Approved',
+        ]);
+
+        $response->assertSessionHas('success');
+    }
+
 }

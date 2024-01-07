@@ -3,16 +3,14 @@
 namespace Tests\Unit;
 
 use App\Http\Controllers\LogHoursController;
+use App\Models\LogHoursModel;
 use App\Models\UserModel;
+use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Tests\TestCase;
-use Mockery;
-use Illuminate\Http\Request;
-use Carbon\Carbon;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Auth;
 
 class LogHoursTest extends TestCase
 {
+    use WithoutMiddleware;
     /**
      * A basic feature test example.
      */
@@ -64,5 +62,49 @@ class LogHoursTest extends TestCase
         $time = $controller->calculateHours($startTime, $endTime, 0);
 
         $this->assertEquals(2, $time[1]);
+    }
+
+    public function test_if_can_log_hours(): void
+    {
+        $user = UserModel::factory()->create(['role_id' => 3]);
+
+        $data = [
+            'user_id' => $user->id,
+            '2024-01-01_start_time' => '09:00',
+            '2024-01-01_end_time' => '18:00',
+            '2024-01-01_date' => '2024-01-01',
+        ];
+
+        $response = $this->actingAs($user)
+            ->post('/loghours/create', $data);
+
+        $response->assertRedirect('/loghours');
+        $response->assertSessionHas('success', 'Hours inserted!');
+    }
+
+    public function test_delete_logged_hours()
+    {
+        $user = UserModel::factory()->create(['role_id' => 3]);
+
+        $loggedHour = LogHoursModel::factory()->create([
+            'user_id' => $user->id,
+            'start_time' => '09:00',
+            'end_time' => '18:00',
+            'date' => '2023-01-01',
+            'total_hours' => '8:00',
+            'night_hours' => 0
+        ]);
+
+        $deleteData = ['id' => $loggedHour->id];
+
+        $response = $this->actingAs($user)->post('/loghours/view/delete', $deleteData);
+
+        $this->assertDatabaseMissing('logged_hours', [
+            'id' => $loggedHour->id,
+            'user_id' => $user->id,
+        ]);
+
+        $response->assertRedirect('/loghours');
+        $response->assertSessionHas('success', 'Hours deleted!');
     }
 }

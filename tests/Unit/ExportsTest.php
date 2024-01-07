@@ -18,12 +18,12 @@ class ExportsTest extends TestCase
         $data = [
             'startDate' => '2023-01-01',
             'endDate' => '2023-01-31',
-            'project_id' => 5,
+            'project_id' => 1,
         ];
         Excel::fake();
 
         $response = $this->actingAs($user)
-            ->post('/tasks/projects/5/statistics/generate_excel', $data);
+            ->post('/tasks/projects/1/statistics/generate_excel', $data);
 
         Excel::assertDownloaded('project_statistics.xlsx');
     }
@@ -57,5 +57,21 @@ class ExportsTest extends TestCase
         $response->assertStatus(200);
         $this->assertTrue(strlen($response->getContent()) > 0);
         $this->assertEquals('application/pdf', $response->headers->get('content-type'));
+    }
+
+    public function test_if_unauthorized_user_can_export_perf_reports()
+    {
+        $user = UserModel::factory()->create(['role_id' => 5]);
+        $data = [
+            'startDate' => '2023-01-01',
+            'endDate' => '2023-01-31',
+            'project_id' => 1,
+        ];
+        Excel::fake();
+
+        $response = $this->actingAs($user)
+            ->post('/tasks/projects/1/statistics/generate_excel', $data);
+
+        $response->assertSessionHasErrors('project', 'Project not found or you don\'t have permissions to export performance reports!');
     }
 }

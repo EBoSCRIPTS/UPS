@@ -13,11 +13,12 @@ class LoggedHoursSubmittedModel extends Model
     protected $table = 'logged_hours_submitted';
 
     protected $fillable = [
-       'user_id',
-       'total_hours',
+        'user_id',
+        'total_hours',
         'night_hours',
+        'overtime_hours',
         'month_name',
-       'created_at',
+        'created_at',
         'is_confirmed'
     ];
 

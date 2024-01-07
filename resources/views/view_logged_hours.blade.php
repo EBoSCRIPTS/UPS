@@ -21,16 +21,17 @@
             <p class="h2 text-center">Logged Hours</p>
             <div class="row">
                     <div class="col-md-4">
-                        <form action="{{route('loghours.view.user')}}" method="POST">
-                            @csrf
-                                <select name="user_id" class="form-select">
-                                    @foreach($users as $user)
-                                     <option value="{{$user->id}}">{{($user->first_name)}} {{$user->last_name}}</option>
-                                    @endforeach
-                                </select>
+                        <select name="user_id" class="form-select" id="userHours">
+                            @if(isset($loggedHours) && sizeof($loggedHours) > 0)
+                                <option value="{{$loggedHours}}" selected>{{$loggedHours[0]->user->first_name}} {{$loggedHours[0]->user->last_name}}</option>
+                            @endif
+                            @foreach($users as $user)
+                                <option value="{{$user->id}}">{{($user->first_name)}} {{$user->last_name}}</option>
+                            @endforeach
+                        </select>
                     </div>
                 <div class="col-md-4">
-                    <input type="submit" value="Submit" class="btn btn-primary"/>
+                    <button type="button" class="btn btn-primary" id="checkHours">Check hours</button>
                 </div>
                 </div>
         </form>
@@ -48,7 +49,12 @@
             <tbody>
         @foreach($loggedHours as $loggedHour)
             <tr>
+                    @if(\Carbon\Carbon::parse($loggedHour->date)->isWeekend())
+                        <td class="table-danger">{{$loggedHour->date}}</td>
+                    @else
                     <td>{{$loggedHour->date}}</td>
+                   @endif
+
                     <td>{{$loggedHour->user->first_name}} {{$loggedHour->user->last_name}}</td>
                     <td>{{$loggedHour->start_time}}</td>
                     <td>{{$loggedHour->end_time}}</td>
@@ -63,3 +69,15 @@
 
 </div>
 </body>
+
+<script>
+    document.getElementById('checkHours').addEventListener('click', function() {
+        const selectedEmployeeId = document.getElementById('userHours').value;
+
+        if(selectedEmployeeId !== '---') {
+            window.location.href = '/loghours/view/' + selectedEmployeeId;
+        } else {
+            alert('Please select an employee.');
+        }
+    });
+</script>

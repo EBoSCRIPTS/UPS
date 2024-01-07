@@ -31,7 +31,7 @@ class TasksController extends Controller
     public function createNewProject(Request $request): RedirectResponse
     {
         $validated = $request->validate([
-            'project_name' => 'required|string|max:100|unique:tasks_project.name',
+            'project_name' => 'required|string|max:100|unique:tasks_project,name',
             'department_id' => 'required|integer|exists:departaments,id',
             'project_manager_id' => 'sometimes|nullable|integer|exists:users,id',
         ]);
@@ -56,16 +56,20 @@ class TasksController extends Controller
 
         $projectStatusFields->save();
 
-        foreach($request->input('project_members') as $pm){
-            $projectMember = new TasksParticipantsModel([
-                'project_id' => $newProject->id,
-                'employee_id' => $pm,
-            ]);
+        if ($request->input('project_members') == null) return back('/tasks/')->with('success', 'Project created successfully');
 
-            $projectMember->save();
+        else{
+            foreach($request->input('project_members') as $pm){
+                $projectMember = new TasksParticipantsModel([
+                    'project_id' => $newProject->id,
+                    'employee_id' => $pm,
+                ]);
+
+                $projectMember->save();
+            }
         }
 
-        return back('/tasks/create_new_project')->with('success', 'Project created successfully');
+        return back('/tasks/')->with('success', 'Project created successfully');
     }
 
 

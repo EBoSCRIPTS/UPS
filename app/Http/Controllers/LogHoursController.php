@@ -95,6 +95,10 @@ class LogHoursController extends Controller
             ->where('id', $request->input('id'))
             ->where('user_id', Auth::user()->id)->first();
 
+        if ($loggedHours->user_id != Auth::user()->id) {
+            return redirect('/');
+        }
+
         $loggedHours->delete();
 
         return redirect('/loghours')->with('success', 'Hours deleted!');
@@ -236,9 +240,9 @@ class LogHoursController extends Controller
             $employeeVacation->update([
                 'vacation_points' => $employeeVacation->vacation_points + $vp
             ]);
-
             $submittedHours->update([
-                'is_confirmed' => 2
+                'overtime_hours' => $request->input('overtime_hours'),
+                'is_confirmed' => 2,
             ]);
         }
 
@@ -249,15 +253,14 @@ class LogHoursController extends Controller
         return back();
     }
 
+    //returns confirmed hours that accountant can review
     public function getSubmittedAndConfirmed($user_id, $month): object|null //for accountant view
     {
-        $submittedHours = LoggedHoursSubmittedModel::query()
+        return LoggedHoursSubmittedModel::query()
             ->where('is_confirmed', 2)
             ->where('month_name', $month)
             ->where('user_id', $user_id)
             ->first();
-
-        return $submittedHours;
     }
 
     public function calculateHours($shiftStartTime, $shiftEndTime, $breakTime): array

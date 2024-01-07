@@ -41,16 +41,13 @@
         <p class="h3">Get equipment for user</p>
         <div class="row">
             <div class="col-md-6">
-        <form action="{{route('equipment.get_equipment_for_user')}}" method="POST">
-            @csrf
-            <select name="employee" id="employee" class="form-select">
-                <option value="---" selected>Select an employee</option>
+            <select name="employee" id="employeeEquipment" class="form-select">
+                <option value="---" selected disabled>Select an employee</option>
                 @foreach($employees as $employee)
                     <option value="{{$employee->id}}">{{$employee->user->first_name}} {{$employee->user->last_name}}</option>
-            @endforeach
+                @endforeach
             </select>
-            <button type="submit" class="btn btn-primary mt-2">Get equipment</button>
-        </form>
+            <button id="getEquipmentButton" type="button" class="btn btn-primary mt-2">Get equipment</button>
             </div>
                 <div class="col-md-6">
         @if(isset($assignments))
@@ -59,6 +56,9 @@
                         </button>
                 </div>
         </div>
+            @if(sizeof($assignments) > 0)
+            <p class="text-center">Equipment for: {{$assignments[0]->employee->user->first_name}} {{$assignments[0]->employee->user->last_name}}</p>
+            @endif
         <table class="table">
             <thead>
                 <tr>
@@ -114,3 +114,15 @@
     </div>
 </div>
 @endif
+
+<script>
+    document.getElementById('getEquipmentButton').addEventListener('click', function() {
+        const selectedEmployeeId = document.getElementById('employeeEquipment').value;
+
+        if(selectedEmployeeId !== '---') {
+            window.location.href = '/equipment/equipment_assignment/' + selectedEmployeeId;
+        } else {
+            alert('Please select an employee.');
+        }
+    });
+</script>

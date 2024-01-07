@@ -19,6 +19,7 @@ class AccountantFulfilledPayslipsModel extends Model
         'year',
         'loghours_submitted_id',
         'fulfilled_by',
+        'payslip_file',
     ];
 
     public function employee(): BelongsTo
