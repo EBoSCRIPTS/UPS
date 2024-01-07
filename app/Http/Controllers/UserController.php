@@ -166,7 +166,7 @@ class UserController extends Controller
 
         $user = UserModel::query()->where('id', $request->id)->select('id', 'password')->first();
 
-        if (!Hash::check($request->input('old_password'), $user->password)) { //if passwords don't match force user back
+        if (!Hash::check($request->input('old_password'), $user->password)) { //if passwords don't match force the user back
             return redirect('/home')->with('error', 'Wrong password!');
         }
 

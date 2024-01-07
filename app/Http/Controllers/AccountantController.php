@@ -148,8 +148,8 @@ class AccountantController extends Controller
             ->where('month_name', $request->month)
             ->first();
 
-        if (isset($employee->hour_pay)) {
-            $overtimeHours = $getHours->overtime_hours;
+        if (isset($employee->hour_pay)) { //get calculations if employee gets paid per hour rate
+            $overtimeHours = $getHours->overtime_hours; //find overtime hours
 
             $isFullfilled = AccountantFulfilledPayslipsModel::query()
                 ->where('loghours_submitted_id', $getHours->id)
@@ -167,7 +167,7 @@ class AccountantController extends Controller
             $nightPay = 0;
             $overtimeHours = 0;
         } else {
-            // Handle the case when neither hour_pay nor salary is set for the employee
+            // handle the case when neither hour_pay nor salary is set for the employee
             return redirect()->back()->with('error', 'Employee information is incomplete.');
         }
 
@@ -178,7 +178,7 @@ class AccountantController extends Controller
             ->get()
             ->toArray();
 
-        $uniqueTaxes = array_unique(array_column($getTaxes, 'tax_name'));
+        $uniqueTaxes = array_unique(array_column($getTaxes, 'tax_name')); //get applicable taxes based on salary
 
         $totalTaxPrec = array_sum(array_column($getTaxes, 'tax_rate')) / 100;
 

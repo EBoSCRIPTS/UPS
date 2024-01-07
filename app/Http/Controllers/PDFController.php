@@ -11,7 +11,7 @@ use App\Models\Equipment\EquipmentItemsModel;
 
 class PDFController extends Controller
 {
-    public function generateEquipmentAgreement(Request $request)
+    public function generateEquipmentAgreement(Request $request) //generate equipment agreement PDF file
     {
         $validated = $request->validate([
             'employee' => 'required|exists:employee_information,id',
@@ -23,13 +23,13 @@ class PDFController extends Controller
         $getUserEquipment = EquipmentAssignmentModel::query()->where('employee_id', $employee)->get()->toArray();
         $employeeName = EmployeeInformationModel::query()->where('id', $employee)->first();
 
-        $userEquipment = [];
+        $userEquipment = []; //create array to store employee equipment
 
         for ($i = 0; $i < sizeof($getUserEquipment); $i++) {
             $userEquipment[$i] = $getUserEquipment[$i]['equipment_id'];
         }
 
-        $eqName = [];
+        $eqName = []; //store the names and serial number of equipment
 
         for ($i = 0; $i < sizeof($userEquipment); $i++) {
             $eqName[$i] = EquipmentItemsModel::query()->where('id', $userEquipment[$i])->select('name', 'serial_number')->first()->toArray();
@@ -43,8 +43,8 @@ class PDFController extends Controller
             'text' => $request->input('equipmentText')
         ];
 
-        $pdf = PDF::loadView('PDF.EquipmentAgreement', $data);
+        $pdf = PDF::loadView('PDF.EquipmentAgreement', $data); //call PDF creator function
 
-        return $pdf->download();
+        return $pdf->download(); //prompt the user with PDF download
     }
 }

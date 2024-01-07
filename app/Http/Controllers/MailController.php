@@ -19,12 +19,14 @@ class MailController extends Controller
             'attachments' => 'file',
         ]);
 
-        $getAllEmails = UserModel::query()->select('email')->get()->toArray();
+        $getAllEmails = UserModel::query()->select('email')->get()->toArray(); //get all user emails
 
-        $file = $request->file('attachments');
-        $localUpload = app_path() . '/public/uploads/mail_all';
-        $ext = $file->getClientOriginalExtension();
-        $file->move($localUpload, $file->getClientOriginalName() . '.' . $ext);
+        if ($request->hasFile('attachments')) { //check if we request has an attachment, if yes, store it for the sending process
+            $file = $request->file('attachments');
+            $localUpload = app_path() . '/public/uploads/mail_all';
+            $ext = $file->getClientOriginalExtension();
+            $file->move($localUpload, $file->getClientOriginalName() . '.' . $ext);
+        }
 
         $content = [
             'subject' => $request->input('subject'),

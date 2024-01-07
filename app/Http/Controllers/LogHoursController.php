@@ -52,11 +52,11 @@ class LogHoursController extends Controller
             'user_id' => 'required|exists:users,id',
         ]);
 
-        if ($this->checkIfClosedMonth(Auth::user()->id, $request->input('month'))) {
+        if ($this->checkIfClosedMonth(Auth::user()->id, $request->input('month'))) { //stop user from inserting data if month is confirmed as closed
             return redirect('/');
         }
 
-        if ($request->input('month') == Carbon::now()->subMonth()->monthName) {
+        if ($request->input('month') == Carbon::now()->subMonth()->monthName) { //check if user submitted last month data
             for ($i = 0; $i < Carbon::now()->subMonth()->daysInMonth; $i++) {
                 $dates[] = Carbon::now()->subMonth()->startOfMonth()->addDays($i)->format('Y-m-d');
             }
@@ -66,7 +66,7 @@ class LogHoursController extends Controller
             }
         }
 
-        foreach ($dates as $date) {
+        foreach ($dates as $date) { //loops through all the passed dates and inserts them into the database
             if ($request->input($date . '_start_time') != null && $request->input($date . '_end_time') != null) {
                 $shiftStartTime = strtotime($request->input($date . '_start_time'));
                 $shiftEndTime = strtotime($request->input($date . '_end_time'));
@@ -266,13 +266,13 @@ class LogHoursController extends Controller
     public function calculateHours($shiftStartTime, $shiftEndTime, $breakTime): array
     {
         $nightHoursStart = strtotime('22:00');
-        $midnight = strtotime('24:00');
-        $sameDay = strtotime('00:00');
         $nightHoursEnd = strtotime('06:00');
+        $midnight = strtotime('24:00'); //get the midnight ("next day") time
 
         $difference = 0;
 
         $totalTime = ($shiftEndTime - $shiftStartTime - $breakTime) / 3600;
+        //important to keep the same IF order, otherwise the code will not calculate properly.
         if ($totalTime < 0) {
             $totalTime = $totalTime + 24;
         }

@@ -1,28 +1,28 @@
-async function userSearch() {
+async function userSearch() { //function that calls user search endpoint to get the searched user profile
     if (document.getElementById('searchBarInput').value.length >= 3) {
         const searchBar = document.querySelector('.searchbar');
         let updateResult = document.getElementById('updateResult');
 
-        if (updateResult) {
+        if (updateResult) { //remove previous results
             searchBar.removeChild(updateResult);
         }
 
         const response = await fetch('/api/all_users_json/' + document.getElementById('searchBarInput').value);
         let data = await response.json();
 
-        updateResult = document.createElement('a');
+        updateResult = document.createElement('a'); //prepare new results
         updateResult.id = 'updateResult';
         updateResult.className = 'row';
         updateResult.style = 'background-color: white; text-transform: uppercase; text-decoration: none; color: black; margin: 0 auto';
 
-        for (let i = 0; i < data.length; i++) {
+        for (let i = 0; i < data.length; i++) { //assign href values to each found user
             updateResult.href = '/profile/' + data[i].id;
             updateResult.innerHTML = data[i].first_name + ' ' + data[i].last_name;
             searchBar.appendChild(updateResult.cloneNode(true));
         }
     }
 
-    if (document.getElementById('assign_to').value.length >= 3) {
+    if (document.getElementById('assign_to').value.length >= 3) { //this part is specifically used for assigning users for a task
         const searchBar = document.querySelector('.searchAssignee');
         let assigneeResult = document.getElementById('updateAssignees');
 
@@ -56,7 +56,7 @@ async function userSearch() {
 
     }
 
-    if (document.getElementById('searchBarInput').value.length < 3) {
+    if (document.getElementById('searchBarInput').value.length < 3) { //if the user has cleared searchbar, lets remove all the data
         while (document.getElementById('updateResult')) {
             document.getElementById('updateResult').remove();
         }
@@ -64,12 +64,10 @@ async function userSearch() {
 
     if (document.getElementById('assign_to').value.length < 3) {
         while (document.getElementById('assigneeResult')) {
-            console.log(' remove');
             document.getElementById('assigneeResult').remove();
         }
     }
 }
-
 
 function debounce(func, delay) {
     let timeoutId;

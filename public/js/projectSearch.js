@@ -1,26 +1,30 @@
-async function getProjects(field_id) {
-    const response = await fetch('/api/get_all_projects');
-    let selectField = document.getElementById(field_id);
-    let data = await response.json();
+async function getProjects(fieldId) {
+    try {
+        const response = await fetch('/api/get_all_projects');
 
-    console.log(data);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
 
-    for (let i = 0; i < data.length; i++) {
-        let projectOption = document.createElement('option');
-        projectOption.value = data[i].id;
-        projectOption.text = data[i].name;
-        projectOption.href = data[i].id;
-        selectField.append(projectOption);
+        const projects = await response.json();
+        const selectField = document.getElementById(fieldId);
+
+        projects.forEach(project => {
+            const option = new Option(project.name, project.id);
+            selectField.appendChild(option);
+        });
+
+        if (fieldId === 'project_id') { //redirect user to the chosen project
+            selectField.addEventListener('change', () => {
+                window.location.href = `/tasks/projects/${selectField.value}`;
+            });
+        }
+    } catch (error) {
+        console.error('Failed to fetch projects:', error);
     }
-
-    if (field_id === 'project_id') {
-        selectField.addEventListener('change', function () {
-            const selectedValue = this.value;
-            window.location.href = '/tasks/projects/' + selectedValue;
-        })
-    }
-
 }
+
+
 
 window.onload = function () {
     getProjects('project_id');

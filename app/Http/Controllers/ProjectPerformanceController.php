@@ -89,6 +89,5 @@ class ProjectPerformanceController extends Controller
     public function generatePerformanceReportXlsx(Request $request): BinaryFileResponse
     {
         return MaatwebsiteExcel::download(new PerformanceExport($request->project_id), 'performance_report.xlsx', \Maatwebsite\Excel\Excel::XLSX);
-
     }
 }
