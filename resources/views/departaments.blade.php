@@ -20,42 +20,44 @@
         <div class="container" style="width: 80%">
             <p class="h2">Departments</p>
             @include('components.errors')
-        <form action="{{route('departments.create')}}" method="POST">
-            @csrf
-            <label name="departament" for="departament" class="form-label">Departament</label>
-            <input type="text" class="form-control" id="departament" name="departament"/>
+            <form action="{{route('departments.create')}}" method="POST">
+                @csrf
+                <label name="departament" for="departament" class="form-label">Departament</label>
+                <input type="text" class="form-control" id="departament" name="departament"/>
 
-            <label name="description" for="description" class="form-label">Description</label>
-            <textarea class="form-control" id="description" name="description"></textarea>
+                <label name="description" for="description" class="form-label">Description</label>
+                <textarea class="form-control" id="description" name="description"></textarea>
 
-            <button type="submit" class="btn btn-primary mt-2">Add</button>
-        </form>
+                <button type="submit" class="btn btn-primary mt-2">Add</button>
+            </form>
 
-        <table class="table">
-            <thead>
-            <tr>
-                <th scope="col">Dept name</th>
-                <th scope="col">Description</th>
-                <th scope="col">Action</th>
-            </tr>
-            </thead>
-
-            <tbody>
-                @foreach($departments as $department)
+            <table class="table">
+                <thead>
                 <tr>
-                    <td>{{$department->name}}</td>
-                    <td>{{$department->description}}</td>
-                    <td>
-                        <form action="{{route('departments.delete')}}" method="POST">
-                            @csrf
-                            <input type="hidden" name="id" value="{{$department->id}}">
-                            <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
-                        </form>
-                    </td>
+                    <th scope="col">Dept name</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Action</th>
                 </tr>
+                </thead>
+
+                <tbody>
+                @foreach($departments as $department)
+                    <tr>
+                        <td>{{$department->name}}</td>
+                        <td>{{$department->description}}</td>
+                        <td>
+                            <form action="{{route('departments.delete')}}" method="POST">
+                                @csrf
+                                <input type="hidden" name="id" value="{{$department->id}}">
+                                <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure?')">
+                                    Delete
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
                 @endforeach
-            </tbody>
-        </table>
+                </tbody>
+            </table>
         </div>
     </div>
 </div>

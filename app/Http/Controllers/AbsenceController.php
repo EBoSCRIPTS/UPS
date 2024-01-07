@@ -40,15 +40,15 @@ class AbsenceController extends Controller
             'attachment' => 'mimes:pdf,docx,jpg,jpeg,png|max:10240',
         ]);
 
-        if($request->input('status') == null) {
+        if ($request->input('status') == null) {
             $request->merge(['status' => 'Sent']);
         }
 
-        if ($request->hasFile('attachment')){
+        if ($request->hasFile('attachment')) {
             $attachment = $request->file('attachment');
-            $fileName = time().'.'.$request->user()->first_name.'-'.$request->user()->last_name.'.'.$attachment->getClientOriginalExtension();
+            $fileName = time() . '.' . $request->user()->first_name . '-' . $request->user()->last_name . '.' . $attachment->getClientOriginalExtension();
             $attachment->move(storage_path('app/public/abs_req'), $fileName);
-            $fileName = storage_path('/app/public/abs_req/'.$fileName);
+            $fileName = storage_path('/app/public/abs_req/' . $fileName);
 
             $fileName = basename($fileName);
         }
@@ -108,7 +108,7 @@ class AbsenceController extends Controller
 
         $absence = AbsenceModel::query()->where('id', $request->input('id'))->first();
 
-        if ($absence->type == 'Vacation'){ //if we approve the vacation lets put it in a separate table for vacations
+        if ($absence->type == 'Vacation') { //if we approve the vacation lets put it in a separate table for vacations
             $logVacation = new EmployeeVacationsModel([
                 'employee_id' => $absence->user_id,
                 'date_from' => $absence->start_date,
@@ -135,8 +135,7 @@ class AbsenceController extends Controller
             'id' => 'required|integer|exists:req_absence,id',
         ]);
 
-        if ($this->checkIfAbsenceReviewed($request->id))
-        {
+        if ($this->checkIfAbsenceReviewed($request->id)) {
             return redirect('/absence/review')->with('error', 'Absence cannot be deleted, it has already been reviewed!');
         }
 
@@ -146,18 +145,19 @@ class AbsenceController extends Controller
         return redirect('/absence/')->with('success', 'Absence deleted!');
     }
 
-    public function downloadAttachment(Request $request){
+    public function downloadAttachment(Request $request)
+    {
         $absence = AbsenceModel::query()->find($request->absence_id);
         $attachmentLocation = $absence->attachment;
 
-        return response()->download(storage_path('app/public/abs_req/'.$attachmentLocation));
+        return response()->download(storage_path('app/public/abs_req/' . $attachmentLocation));
     }
 
     public function checkIfAbsenceReviewed($absenceId): bool
     {
         $absence = AbsenceModel::query()->find($absenceId);
 
-        if ($absence->status != 'Sent'){
+        if ($absence->status != 'Sent') {
             return true;
         }
 

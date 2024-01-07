@@ -11,7 +11,7 @@ class UserTest extends TestCase
 {
     public function test_superadmin_delete_safestop()
     {
-        $admin= UserModel::factory()->create(['role_id' => 1]);
+        $admin = UserModel::factory()->create(['role_id' => 1]);
 
         $response = $this->actingAs($admin)
             ->post('/user/delete', ['id' => $admin->id]);
@@ -33,7 +33,7 @@ class UserTest extends TestCase
         $response->assertRedirect('/');
     }
 
-    public function  test_user_nonemployee_update_banking()
+    public function test_user_nonemployee_update_banking()
     {
         $user = UserModel::factory()->create(['role_id' => 5]);
 
@@ -53,10 +53,10 @@ class UserTest extends TestCase
 
         $response = $this->actingAs($user)
             ->post('/profile/send_ticket', [
-            'title' => 'Test Ticket',
-            'description' => 'This is a test description',
-            'department_id' => $department->id,
-        ]);
+                'title' => 'Test Ticket',
+                'description' => 'This is a test description',
+                'department_id' => $department->id,
+            ]);
 
         $response->assertRedirect();
         $response->assertSessionHas('success', 'Ticket submitted!');

@@ -25,20 +25,19 @@ class ProjectPerformanceController extends Controller
             ->get();
 
         $userPerformance = [];
-        $addedValuesCount= [];
+        $addedValuesCount = [];
 
-        foreach($reportedMonthPerformance as $performance){
-            if(!isset($userPerformance[$performance->user_id]) && !isset($addedValuesCount[$performance->user_id])){
+        foreach ($reportedMonthPerformance as $performance) {
+            if (!isset($userPerformance[$performance->user_id]) && !isset($addedValuesCount[$performance->user_id])) {
                 $userPerformance[$performance->user_id] = $performance->rating;
                 $addedValuesCount[$performance->user_id] = 1;
-            }
-            else {
+            } else {
                 $userPerformance[$performance->user_id] += $performance->rating;
                 $addedValuesCount[$performance->user_id]++;
             }
         }
 
-        foreach($userPerformance as $key => $value){
+        foreach ($userPerformance as $key => $value) {
             $userPerformance[$key] = $value / $addedValuesCount[$key];
             $userPerformance[$key] = intval($userPerformance[$key], 0);
         }
@@ -89,7 +88,7 @@ class ProjectPerformanceController extends Controller
 
     public function generatePerformanceReportXlsx(Request $request): BinaryFileResponse
     {
-        return MaatwebsiteExcel::download(new PerformanceExport($request->project_id), 'performance_report.xlsx',\Maatwebsite\Excel\Excel::XLSX);
+        return MaatwebsiteExcel::download(new PerformanceExport($request->project_id), 'performance_report.xlsx', \Maatwebsite\Excel\Excel::XLSX);
 
     }
 }

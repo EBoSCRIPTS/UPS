@@ -21,16 +21,14 @@ class EquipmentController extends Controller
 
         $assignedArray = [];
         $nameArray = [];
-        foreach($equipment as $eq)
-        {
+        foreach ($equipment as $eq) {
             $assignedTo = EquipmentAssignmentModel::query()->where('equipment_id', $eq->id)
                 ->with('employee.user')
                 ->pluck('employee_id')->first();
             $assignedArray[$eq->id] = $assignedTo;
         }
 
-        foreach($assignedArray as $key => $value)
-        {
+        foreach ($assignedArray as $key => $value) {
             $employeeInformation = EmployeeInformationModel::query()->where('id', $value)->first();
             $fullName = $employeeInformation->user->first_name . ' ' . $employeeInformation->user->last_name;
             $nameArray[$key] = $fullName;
@@ -38,9 +36,9 @@ class EquipmentController extends Controller
 
         return view('equipment_registration',
             ['equipments' => $equipment,
-            'types' => $type,
-            'availableEquipments' => $notAssigned,
-            'assignedEquipment' => $nameArray]);
+                'types' => $type,
+                'availableEquipments' => $notAssigned,
+                'assignedEquipment' => $nameArray]);
     }
 
     public function addEquipmentType(Request $request): RedirectResponse
@@ -108,7 +106,7 @@ class EquipmentController extends Controller
 
         $equipment = EquipmentItemsModel::query()->where('is_assigned', 0)->get();
 
-        if(isset($request->id)) { //instead of making a new method we handle equipment for user request her(get equipment for user section)
+        if (isset($request->id)) { //instead of making a new method we handle equipment for user request her(get equipment for user section)
             $user = EquipmentAssignmentModel::query()->where('employee_id', $request->id)->get();
 
             return view('equipment_assignment', ['employees' => $employee, 'equipments' => $equipment, 'assignments' => $user, 'employeeFor' => $request->input('employee')]);
@@ -131,7 +129,7 @@ class EquipmentController extends Controller
             'id' => 'required|exists:equipment_type,id',
         ]);
 
-        if(EquipmentItemsModel::query()->where('type_id', $request->input('id'))->get() != null) {
+        if (EquipmentItemsModel::query()->where('type_id', $request->input('id'))->get() != null) {
             return back()->withErrors('error', 'Cannot delete type of equipment with assigned equipment');
         }
 

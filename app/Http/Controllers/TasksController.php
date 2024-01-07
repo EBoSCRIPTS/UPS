@@ -19,7 +19,7 @@ use App\Models\DepartmentsModel;
 
 class TasksController extends Controller
 {
-    public function loadNewProjectsPage() : \Illuminate\View\View
+    public function loadNewProjectsPage(): \Illuminate\View\View
     {
         $users = UserModel::query()->select('id', 'first_name', 'last_name')->get();
         $employees = EmployeeInformationModel::query()->select('id', 'user_id')->get();
@@ -44,8 +44,8 @@ class TasksController extends Controller
 
         $newProject->save();
 
-        $statuses= [];
-        for($i = 1; $i <= $request->input('counter'); $i++){
+        $statuses = [];
+        for ($i = 1; $i <= $request->input('counter'); $i++) {
             $statuses[] = $request->input('project_status_field' . $i);
         }
 
@@ -58,8 +58,8 @@ class TasksController extends Controller
 
         if ($request->input('project_members') == null) return back('/tasks/')->with('success', 'Project created successfully');
 
-        else{
-            foreach($request->input('project_members') as $pm){
+        else {
+            foreach ($request->input('project_members') as $pm) {
                 $projectMember = new TasksParticipantsModel([
                     'project_id' => $newProject->id,
                     'employee_id' => $pm,
@@ -81,12 +81,11 @@ class TasksController extends Controller
     }
 
 
-
     public function projectsApi(): JsonResponse  //important to keep this, helps reduce amount of code needed for loading data for each page that requires if user is assigned information
     {
         $getEmployeeId = EmployeeInformationModel::query()->where('user_id', Auth::user()->id)->pluck('id')->first();
         $projects = TasksParticipantsModel::query()
-            ->where('employee_id', $getEmployeeId )
+            ->where('employee_id', $getEmployeeId)
             ->join('tasks_project', 'tasks_project.id', '=', 'tasks_participants.project_id')
             ->get();
 
@@ -109,13 +108,9 @@ class TasksController extends Controller
         if ($request->input('task_label') == 'feature') //store html values to reduce cluster in blade
         {
             $label = '<span class="badge bg-success">Feature</span>';
-        }
-        elseif ($request->input('task_label') == 'bug')
-        {
+        } elseif ($request->input('task_label') == 'bug') {
             $label = '<span class="badge bg-warning">Bug</span>';
-        }
-        elseif ($request->input('task_label') == 'ticket')
-        {
+        } elseif ($request->input('task_label') == 'ticket') {
             $label = '<span class="badge bg-info">Ticket</span>';
         }
 
@@ -124,7 +119,7 @@ class TasksController extends Controller
             'description' => $request->input('description'),
             'project_id' => $request->input('project'),
             'made_by' => Auth::user()->id,
-            'assigned_to' => substr($request->input('assign_to'), 0,1) ?? null, //get the ID value from input field
+            'assigned_to' => substr($request->input('assign_to'), 0, 1) ?? null, //get the ID value from input field
             'status_id' => $getTaskStatusesForProject[0]['id'],
             'status_key' => 0,
             'priority' => $request->input('priority'),
@@ -169,7 +164,7 @@ class TasksController extends Controller
                 'users' => $users]);
     }
 
-    public function updateTaskDescription (Request $request): RedirectResponse
+    public function updateTaskDescription(Request $request): RedirectResponse
     {
         $validated = $request->validate([
             'ticket_description' => 'required|string',
@@ -196,14 +191,13 @@ class TasksController extends Controller
 
         $myTasks = TasksTaskModel::query()->where('assigned_to', $request->user()->id)->get();
         $projectStatus = TasksStatusModel::query()->where('project_id', $request->project_id)->select('statuses')->get()->toArray();
-        $projectName = TasksProjectModel::query()->where('id', $request->project_id)->select('id','name', 'leader_user_id')->first();
+        $projectName = TasksProjectModel::query()->where('id', $request->project_id)->select('id', 'name', 'leader_user_id')->first();
         $projectStatus = json_decode($projectStatus['0']['statuses']);
         $projectParticipants = TasksParticipantsModel::query()->where('project_id', $request->project_id)->get();
 
-        if($projectTasks->toArray() != null) {
+        if ($projectTasks->toArray() != null) {
             $currentStatus = $projectTasks[0]['status_key'];
-        }
-        else{
+        } else {
             $currentStatus = null;
         }
 
@@ -233,7 +227,7 @@ class TasksController extends Controller
 
             return redirect('/tasks/ticket/' . $request->ticket_id);
         }
-        if ($request->back && $currentStatus > 0){ //check if we can hop backwards
+        if ($request->back && $currentStatus > 0) { //check if we can hop backwards
             $status = $currentStatus - 1;
 
             $ticket->update([
@@ -306,9 +300,7 @@ class TasksController extends Controller
                 'assigned_to' => $request->input('user_id'),
                 'is_completed' => 0
             ]);
-        }
-
-        else {
+        } else {
             $ticket->update([
                 'assigned_to' => null,
                 'is_completed' => 1,
@@ -326,13 +318,12 @@ class TasksController extends Controller
         ]);
 
         $task = TasksTaskModel::query()->where('id', $request->input('ticket_id'))->first();
-        if($task->is_draft == 1){
+        if ($task->is_draft == 1) {
             $task->update([
                 'is_draft' => 0
             ]);
             $task->save();
-        }
-        else{
+        } else {
             $task->update([
                 'is_draft' => 1
             ]);
@@ -355,10 +346,8 @@ class TasksController extends Controller
         {
             $curPriority = $task->priority;
 
-            for ($i = 0; $i < sizeof($priorities); $i++)
-            {
-                if ($curPriority == $priorities[$i])
-                {
+            for ($i = 0; $i < sizeof($priorities); $i++) {
+                if ($curPriority == $priorities[$i]) {
                     $curPriority = $priorities[$i - 1];
                     $task->update([
                         'priority' => $curPriority
@@ -372,10 +361,8 @@ class TasksController extends Controller
         {
             $curPriority = $task->priority;
 
-            for ($i = 0; $i < sizeof($priorities); $i++)
-            {
-                if ($curPriority == $priorities[$i])
-                {
+            for ($i = 0; $i < sizeof($priorities); $i++) {
+                if ($curPriority == $priorities[$i]) {
                     $curPriority = $priorities[$i + 1];
                     $task->update([
                         'priority' => $curPriority

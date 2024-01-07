@@ -13,14 +13,13 @@ async function getDepartments() {
     }
 }
 
-window.onload = function() {
+window.onload = function () {
     getDepartments();
     sessionStorage.clear()
     sessionStorage.setItem('count', 0);
 }
 
-function addField()
-{
+function addField() {
     let count = sessionStorage.getItem('count');
     count = Number(count);
     count = count + 1;

@@ -14,9 +14,9 @@ class EquipmentAssignmentModel extends Model
     protected $table = 'equipment_assignment';
 
     protected $fillable = [
-      'equipment_id',
-      'employee_id',
-      'date_given',
+        'equipment_id',
+        'employee_id',
+        'date_given',
     ];
 
     public $timestamps = false;

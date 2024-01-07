@@ -18,7 +18,7 @@
 <body>
 <div class="row">
     @include('components.sidebar')
-    <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-3" >
+    <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-3">
         <div class="row d-flex justify-content-center align-items-center">
             <div class="col-sm-4">
                 <p class="h4">Add Tax</p>
@@ -38,26 +38,28 @@
             </div>
             <div class="col-sm-4">
                 @if(isset($settings))
-                <table class="table table-striped">
-                    <thead>
+                    <table class="table table-striped">
+                        <thead>
                         <tr>
                             <th>Tax Name</th>
                             <th>Tax Rate</th>
                             <th>Starts from</th>
                             <th>Action</th>
                         </tr>
-                    </thead>
-                    <tbody>
+                        </thead>
+                        <tbody>
                         @foreach($settings as $setting)
-                        <tr>
-                            <td>{{$setting->tax_name}}</td>
-                            <td>{{$setting->tax_rate}}%</td>
-                            <td>{{$setting->tax_salary_from}}</td>
-                            <td><a href="/accountant/settings/{{$department}}/delete_tax/{{$setting->id}}">Delete</a></td>
-                        </tr>
+                            <tr>
+                                <td>{{$setting->tax_name}}</td>
+                                <td>{{$setting->tax_rate}}%</td>
+                                <td>{{$setting->tax_salary_from}}</td>
+                                <td>
+                                    <a href="/accountant/settings/{{$department}}/delete_tax/{{$setting->id}}">Delete</a>
+                                </td>
+                            </tr>
                         @endforeach
-                    </tbody>
-                </table>
+                        </tbody>
+                    </table>
                 @endif
             </div>
 

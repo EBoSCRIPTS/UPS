@@ -39,12 +39,11 @@ class DepartmentsController extends Controller
     {
         $department = DepartmentsModel::query()->find($request->input('id'));
 
-         if ($this->checkIfDeptHasEmployees($request->input('id'))){ //check if any employees are assigned to the department
+        if ($this->checkIfDeptHasEmployees($request->input('id'))) { //check if any employees are assigned to the department
             return back()->withInput()->withErrors([
                 'error' => 'There are employees in this department. You can not delete it!'
             ]);
-        }
-        else {
+        } else {
             $department->delete();
         }
 
@@ -55,7 +54,7 @@ class DepartmentsController extends Controller
     {
         $employeeDept = EmployeeInformationModel::query()->where('user_id', $request->user()->id)->pluck('department_id')->first();
 
-        if($employeeDept == null){
+        if ($employeeDept == null) {
             return back()->withInput()->withErrors([
                 'error' => 'You are not assigned to any department!'
             ]);
@@ -82,7 +81,7 @@ class DepartmentsController extends Controller
     {
         $employees = EmployeeInformationModel::query()->where('department_id', $deptId)->get();
 
-        if($employees->count() > 0){
+        if ($employees->count() > 0) {
             return true;
         }
         return false;

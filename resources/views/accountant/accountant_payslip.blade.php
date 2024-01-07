@@ -105,12 +105,14 @@
                                     onclick="printPayslip()">Print
                             </button>
                             @if($isFullfilled == false)
-                                <form action="{{route('accountant.payslip_fulfill', ['department_id' => $employee->department_id,'employee_id' => $employee->id, 'year' => Carbon\Carbon::now()->year, 'month' => $month, 'hours_id' => $hours->id])}}" method="POST" enctype="multipart/form-data" id="fulfillForm">
+                                <form
+                                    action="{{route('accountant.payslip_fulfill', ['department_id' => $employee->department_id,'employee_id' => $employee->id, 'year' => Carbon\Carbon::now()->year, 'month' => $month, 'hours_id' => $hours->id])}}"
+                                    method="POST" enctype="multipart/form-data" id="fulfillForm">
                                     @csrf
                                     <label for="pdf" class="form-label">Upload payslip</label>
                                     <input type="file" id="pdf" name="pdf" class="form-control" required>
 
-                                   <button type="submit" class="btn btn-primary mt-2" id="fulfill">Fulfill</button>
+                                    <button type="submit" class="btn btn-primary mt-2" id="fulfill">Fulfill</button>
                                 </form>
                             @endif
                             <br>
@@ -120,7 +122,7 @@
             </div>
         </div>
     </div>
-    </div>
+</div>
 </body>
 
 <script>

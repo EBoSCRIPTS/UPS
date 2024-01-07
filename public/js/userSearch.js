@@ -1,6 +1,3 @@
-
-
-
 async function userSearch() {
     if (document.getElementById('searchBarInput').value.length >= 3) {
         const searchBar = document.querySelector('.searchbar');
@@ -59,18 +56,14 @@ async function userSearch() {
 
     }
 
-    if(document.getElementById('searchBarInput').value.length < 3)
-    {
-        while(document.getElementById('updateResult'))
-        {
+    if (document.getElementById('searchBarInput').value.length < 3) {
+        while (document.getElementById('updateResult')) {
             document.getElementById('updateResult').remove();
         }
     }
 
-    if(document.getElementById('assign_to').value.length < 3)
-    {
-        while(document.getElementById('assigneeResult'))
-        {
+    if (document.getElementById('assign_to').value.length < 3) {
+        while (document.getElementById('assigneeResult')) {
             console.log(' remove');
             document.getElementById('assigneeResult').remove();
         }

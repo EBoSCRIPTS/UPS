@@ -11,11 +11,11 @@ class AccountantMiddleware
     /**
      * Handle an incoming request.
      *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     * @param \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response) $next
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if(auth()->check() && auth()->user()->getRole() == 1 || auth()->user()->getRole() == 4) {
+        if (auth()->check() && auth()->user()->getRole() == 1 || auth()->user()->getRole() == 4) {
             return $next($request);
         }
 

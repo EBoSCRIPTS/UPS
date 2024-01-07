@@ -11,7 +11,7 @@ use App\Models\Tasks\TasksStatusModel;
 use App\Models\Tasks\TasksTaskModel;
 use App\Models\UserModel;
 use Illuminate\Http\RedirectResponse;
-Use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Excel;
@@ -35,8 +35,8 @@ class TasksBoardController extends Controller
         $projectStatuses = TasksStatusModel::query()->where('project_id', $request->project_id)->first();
 
         $editStatus = $request->input('status');
-        foreach($editStatus as $key => $value){
-            if($value == null){
+        foreach ($editStatus as $key => $value) {
+            if ($value == null) {
                 unset($editStatus[$key]);
             }
         }
@@ -48,7 +48,7 @@ class TasksBoardController extends Controller
         ]);
 
         $loadAllProjectTasks = TasksTaskModel::query()->where('project_id', $request->project_id)->get();
-        foreach($loadAllProjectTasks as $loadAllProjectTask) { //update all status keys to 0 to avoid any conflicts when editing
+        foreach ($loadAllProjectTasks as $loadAllProjectTask) { //update all status keys to 0 to avoid any conflicts when editing
             $loadAllProjectTask->update([
                 'status_key' => 0
             ]);
@@ -73,9 +73,9 @@ class TasksBoardController extends Controller
         $completedTaskPoints = 0;
         $allTasksPoints = 0;
 
-        for($i = 0; $i < sizeof($tasksThisMonth); $i++){
+        for ($i = 0; $i < sizeof($tasksThisMonth); $i++) {
             $allTasksPoints += $tasksThisMonth[$i]['task_points'];
-            if($tasksThisMonth[$i]['is_completed'] == 1){
+            if ($tasksThisMonth[$i]['is_completed'] == 1) {
                 $completedTaskPoints += $tasksThisMonth[$i]['task_points'];
                 $completedThisMonth++;
             }
@@ -170,7 +170,7 @@ class TasksBoardController extends Controller
         $projectStatuses = json_decode($projectStatuses[0]['statuses']);
 
         return view('tasks.tasks_projects_settings_project',
-            [   'project' => $project,
+            ['project' => $project,
                 'statuses' => $projectStatuses,
                 'projectUsers' => $projectUsers,
                 'employees' => $allUsers]);
@@ -229,7 +229,7 @@ class TasksBoardController extends Controller
 
     public function deleteProject(Request $request, $id): RedirectResponse
     {
-        if ($this->checkIfProjectSettingsAccess($request->project_id) == false){
+        if ($this->checkIfProjectSettingsAccess($request->project_id) == false) {
             return back()->withInput()->withErrors([
                 'project' => 'Project not found or you don\'t have permissions to delete it'
             ]);
@@ -237,7 +237,7 @@ class TasksBoardController extends Controller
 
         $project = TasksProjectModel::query()->where('id', $request->project_id)->first();
 
-        if (TasksParticipantsModel::query()->where('project_id', $request->project_id)->first() != null){
+        if (TasksParticipantsModel::query()->where('project_id', $request->project_id)->first() != null) {
             return back()->withInput()->withErrors([
                 'project' => 'Project has participants. Please remove them before deleting'
             ]);
@@ -245,7 +245,7 @@ class TasksBoardController extends Controller
 
         //if project gets deleted, remove task assignees
         $getAllTasks = TasksTaskModel::query()->where('project_id', $request->project_id)->get();
-        foreach ($getAllTasks as $task){
+        foreach ($getAllTasks as $task) {
             $task->update([
                 'assigned_to' => null
             ]);
@@ -264,13 +264,13 @@ class TasksBoardController extends Controller
             'endDate' => 'required|date|after:startDate',
         ]);
 
-        if (!$this->checkIfProjectSettingsAccess($request->input('project_id'))){
+        if (!$this->checkIfProjectSettingsAccess($request->input('project_id'))) {
             return back()->withInput()->withErrors([
                 'project' => 'Project not found or you don\'t have permissions to export performance reports!'
             ]);
         }
 
-        return MaatwebsiteExcel::download(new TaskExport($request->input('startDate'), $request->input('endDate'), $request->input('project_id')), 'project_statistics.xlsx',\Maatwebsite\Excel\Excel::XLSX);
+        return MaatwebsiteExcel::download(new TaskExport($request->input('startDate'), $request->input('endDate'), $request->input('project_id')), 'project_statistics.xlsx', \Maatwebsite\Excel\Excel::XLSX);
     }
 
     //use this to check if user is either manager/admin project leader
@@ -282,8 +282,7 @@ class TasksBoardController extends Controller
                 ->pluck('leader_user_id')
                 ->first() == request()->user()->id) { //admin, manager or proj leader
             return true;
-        }
-        else {
+        } else {
             return false;
         }
     }

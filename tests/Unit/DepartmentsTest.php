@@ -19,7 +19,7 @@ class DepartmentsTest extends TestCase
         $this->withoutExceptionHandling();
 
         $data = [
-            'departament' => 'unit test'.time(),
+            'departament' => 'unit test' . time(),
             'description' => 'unit test description',
         ];
 

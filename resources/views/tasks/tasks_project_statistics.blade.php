@@ -6,8 +6,11 @@
 
     <title>Project Statistics</title>
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+            crossorigin="anonymous"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
@@ -20,26 +23,27 @@
     <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-3">
         @include('components.errors')
         <div class="container" style="width: 80%">
-        <p class="h2 text-center">Project statistics</p>
-        <hr class="hr"/>
-        <p class="h5 text-center">Statistics for the month of {{$month}}</p>
-        <div class="d-flex flex-wrap justify-content-center">
-            <div class="p-2">
-                <p class="h5">Tasks statistics</p>
-                <canvas id="doughnutChart" style="width: 100%; margin-right: 100px"></canvas>
-            </div>
-            <div class="d-flex">
-                <div class="vr"></div>
-            </div>
+            <p class="h2 text-center">Project statistics</p>
+            <hr class="hr"/>
+            <p class="h5 text-center">Statistics for the month of {{$month}}</p>
+            <div class="d-flex flex-wrap justify-content-center">
+                <div class="p-2">
+                    <p class="h5">Tasks statistics</p>
+                    <canvas id="doughnutChart" style="width: 100%; margin-right: 100px"></canvas>
+                </div>
+                <div class="d-flex">
+                    <div class="vr"></div>
+                </div>
 
-            <div class="p-2">
-                <p class="h5">Points statistics</p>
-                <canvas id="barChart" style="width: 100%; height: 100%; margin-left: 100px"></canvas>
+                <div class="p-2">
+                    <p class="h5">Points statistics</p>
+                    <canvas id="barChart" style="width: 100%; height: 100%; margin-left: 100px"></canvas>
+                </div>
             </div>
-        </div>
             <hr class="hr"/>
             <p class="h3 text-center">Summary</p>
-            <p class="lead"> The team has registered {{$createdTasksCount}} tasks in the month of {{$month}}, out of which {{$completedThisMonth}} have been completed</p>
+            <p class="lead"> The team has registered {{$createdTasksCount}} tasks in the month of {{$month}}, out of
+                which {{$completedThisMonth}} have been completed</p>
             <p class="lead"> Total task points {{$allTasksPoints}}, completed task points {{$completedTaskPoints}}</p>
 
             <small>Drafted tasks don't count towards the statistics</small>
@@ -49,24 +53,25 @@
             <div class="row mb-3">
                 <div class="col-md-6">
                     <p class="h4">Generate statistics for a different time period</p>
-                <form action="{{route('tasks.projects.statistics.generate_for_period',  $project_id)}}" method="POST">
+                    <form action="{{route('tasks.projects.statistics.generate_for_period',  $project_id)}}"
+                          method="POST">
                         @csrf
-                    <div class="row">
-                        <div class="col-sm-4">
-                            <label for="startDate">Start Date:</label>
-                            <input style="width: 200px" type="date" class="form-control" name="startDate" required>
-                        </div>
-                        <div class="col-sm-4">
-                            <label for="startDate">End Date:</label>
-                            <input style="width: 200px" type="date" class="form-control" name="endDate" required>
-                        </div>
-                        <div class="col-sm-4">
-                            <input type="hidden" name="project_id" value="{{$project_id}}">
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <label for="startDate">Start Date:</label>
+                                <input style="width: 200px" type="date" class="form-control" name="startDate" required>
+                            </div>
+                            <div class="col-sm-4">
+                                <label for="startDate">End Date:</label>
+                                <input style="width: 200px" type="date" class="form-control" name="endDate" required>
+                            </div>
+                            <div class="col-sm-4">
+                                <input type="hidden" name="project_id" value="{{$project_id}}">
 
-                            <button type="submit" class="btn btn-primary mt-4">Generate for period</button>
+                                <button type="submit" class="btn btn-primary mt-4">Generate for period</button>
+                            </div>
                         </div>
-                    </div>
-                </form>
+                    </form>
                 </div>
                 <div class="col-md-6">
                     <p class="h4">Generate excel</p>
@@ -142,7 +147,7 @@
             responsive: true,
             legend: {display: false},
             scales: {
-                y: { minBarLength: 0 }
+                y: {minBarLength: 0}
             },
             plugins: {
                 legend: {
@@ -152,15 +157,12 @@
         }
     });
 
-    function getColor(value)
-    {
-        if (value < 45){
+    function getColor(value) {
+        if (value < 45) {
             return '#FF0000';
-        }
-        else if (value < 75){
+        } else if (value < 75) {
             return '#FFA500';
-        }
-        else {
+        } else {
             return '#008000';
         }
     }

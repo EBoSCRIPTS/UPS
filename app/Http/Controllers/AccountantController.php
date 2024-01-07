@@ -34,14 +34,14 @@ class AccountantController extends Controller
         $getFulfilled = AccountantFulfilledPayslipsModel::query()->where('department_id', $request->id)->get();
 
 
-        foreach($showEmployees as $employee){
+        foreach ($showEmployees as $employee) {
             $absences = AbsenceModel::query()->where('user_id', $employee->user_id)
-                    ->where('status', '=', 'APPROVE')
-                    ->where('start_date', '>=', Carbon::now()->submonths(2)->startOfMonth())
-                    ->where('end_date', '<=', Carbon::now()->endOfMonth())
-                    ->get();
+                ->where('status', '=', 'APPROVE')
+                ->where('start_date', '>=', Carbon::now()->submonths(2)->startOfMonth())
+                ->where('end_date', '<=', Carbon::now()->endOfMonth())
+                ->get();
 
-            if(sizeof($absences) > 0){
+            if (sizeof($absences) > 0) {
                 $getAbsences[$employee->id] = $absences;
             }
         }
@@ -107,7 +107,7 @@ class AccountantController extends Controller
     {
         $settings = AccountantDepartmentSettingsModel::query()->where('department_id', $request->department_id)->get();
 
-        return view('accountant.accountant_department_settings', ['settings' => $settings, 'department' => $request->department_id] );
+        return view('accountant.accountant_department_settings', ['settings' => $settings, 'department' => $request->department_id]);
     }
 
     public function addTax(Request $request): RedirectResponse
@@ -209,9 +209,9 @@ class AccountantController extends Controller
 
         if ($request->hasFile('pdf')) { //store image in server storage
             $attachment = $request->file('pdf');
-            $fileName = 'payslip.'.time().'.'.$employeeName->user->first_name.'-'.$employeeName->user->last_name.'.'.$attachment->getClientOriginalExtension();
+            $fileName = 'payslip.' . time() . '.' . $employeeName->user->first_name . '-' . $employeeName->user->last_name . '.' . $attachment->getClientOriginalExtension();
             $attachment->move(storage_path('app/public/accountant_payslips'), $fileName);
-            $fileName = storage_path('/app/public/accountant_payslips/'.$fileName);
+            $fileName = storage_path('/app/public/accountant_payslips/' . $fileName);
 
             $fileName = basename($fileName);
         }
@@ -241,6 +241,6 @@ class AccountantController extends Controller
             ->first();
         $file = $payslip->payslip_file;
 
-        return response()->download(storage_path('app/public/accountant_payslips/'.$file));
+        return response()->download(storage_path('app/public/accountant_payslips/' . $file));
     }
 }

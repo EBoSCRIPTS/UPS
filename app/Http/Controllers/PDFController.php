@@ -25,14 +25,13 @@ class PDFController extends Controller
 
         $userEquipment = [];
 
-        for($i = 0; $i < sizeof($getUserEquipment); $i++){
+        for ($i = 0; $i < sizeof($getUserEquipment); $i++) {
             $userEquipment[$i] = $getUserEquipment[$i]['equipment_id'];
         }
 
         $eqName = [];
 
-        for($i = 0; $i < sizeof($userEquipment); $i++)
-        {
+        for ($i = 0; $i < sizeof($userEquipment); $i++) {
             $eqName[$i] = EquipmentItemsModel::query()->where('id', $userEquipment[$i])->select('name', 'serial_number')->first()->toArray();
         }
 

@@ -24,7 +24,7 @@ class EmployeeInformationController extends Controller
         $getNotSigned = []; //keep value of those users that are not registered as employees
 
         foreach ($users as $user) {
-            if(in_array($user->id, $employees->pluck('user_id')->toArray())) {
+            if (in_array($user->id, $employees->pluck('user_id')->toArray())) {
                 continue;
             }
             $getNotSigned[] = $user;
@@ -76,7 +76,7 @@ class EmployeeInformationController extends Controller
 
     public function deleteEmployee(Request $request): RedirectResponse
     {
-        if  (EquipmentAssignmentModel::query()->where('employee_id', $request->input('employee_id'))->get() != null) //dont delete employee if we still have equipment assigned to him
+        if (EquipmentAssignmentModel::query()->where('employee_id', $request->input('employee_id'))->get() != null) //dont delete employee if we still have equipment assigned to him
         {
             return back()->withInput()->withErrors([
                 'equipment' => 'This employee has equipment assigned. Please remove it before deleting.'
@@ -84,7 +84,7 @@ class EmployeeInformationController extends Controller
         }
         $participantDelete = TasksParticipantsModel::query()->where('employee_id', $request->input('employee_id'))->get();
 
-        if($participantDelete != null) { //remove employee from every project he is assigned to
+        if ($participantDelete != null) { //remove employee from every project he is assigned to
             foreach ($participantDelete as $participant) {
                 $participant->delete();
             }

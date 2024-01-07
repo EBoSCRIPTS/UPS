@@ -14,6 +14,7 @@ use Tests\TestCase;
 class EmployeeTest extends TestCase
 {
     use WithoutMiddleware;
+
     /**
      * A basic unit test example.
      */
@@ -37,7 +38,7 @@ class EmployeeTest extends TestCase
         $response->assertSessionHas('success', 'Employee created successfully');
     }
 
-    public function test_employee_deletion_with_equipment (): void
+    public function test_employee_deletion_with_equipment(): void
     {
         $user = UserModel::factory()->create(['role_id' => 2]);
         $employee = EmployeeInformationModel::factory()->create(['user_id' => $user->id, 'department_id' => 99999]);

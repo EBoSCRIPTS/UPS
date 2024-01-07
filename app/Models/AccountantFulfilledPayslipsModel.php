@@ -27,7 +27,7 @@ class AccountantFulfilledPayslipsModel extends Model
         return $this->belongsTo(EmployeeInformationModel::class, 'employee_id', 'id');
     }
 
-    public function fulfilledBy():  BelongsTo
+    public function fulfilledBy(): BelongsTo
     {
         return $this->belongsTo(UserModel::class, 'fulfilled_by', 'id');
     }

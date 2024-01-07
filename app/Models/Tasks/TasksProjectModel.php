@@ -15,8 +15,8 @@ class TasksProjectModel extends Model
     protected $table = 'tasks_project';
 
     protected $fillable = [
-      'name',
-      'department_id',
+        'name',
+        'department_id',
         'leader_user_id',
     ];
 

@@ -12,10 +12,10 @@ class NewsCommentsRatingModel extends Model
     protected $table = 'news_comments_rating';
 
     protected $fillable = [
-       'comment_id',
+        'comment_id',
         'news_topic_id',
         'user_id',
-       'agree',
-       'disagree'
+        'agree',
+        'disagree'
     ];
 }

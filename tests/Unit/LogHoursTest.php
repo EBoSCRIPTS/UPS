@@ -11,6 +11,7 @@ use Tests\TestCase;
 class LogHoursTest extends TestCase
 {
     use WithoutMiddleware;
+
     /**
      * A basic feature test example.
      */

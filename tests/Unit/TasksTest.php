@@ -26,7 +26,7 @@ class TasksTest extends TestCase
         $employee = EmployeeInformationModel::factory()->create(['user_id' => $user->id, 'department_id' => $department->id]);
 
         $response = $this->actingAs($user)->post('/tasks/create_new_project/insert', [
-            'project_name' => 'Test Project'.time(),
+            'project_name' => 'Test Project' . time(),
             'department_id' => $department->id,
             'project_manager_id' => $user->id,
             'counter' => 1,
@@ -34,7 +34,7 @@ class TasksTest extends TestCase
         ]);
 
         $this->assertDatabaseHas('tasks_project', [
-            'name' => 'Test Project'.time(),
+            'name' => 'Test Project' . time(),
             'department_id' => $department->id,
         ]);
     }
@@ -49,6 +49,7 @@ class TasksTest extends TestCase
 
         $response->assertRedirect('/');
     }
+
     public function test_update_project_leader()
     {
         $data = [
@@ -120,7 +121,7 @@ class TasksTest extends TestCase
         TasksParticipantsModel::factory()->create(['project_id' => $project->id, 'employee_id' => $user->id]);
 
         $response = $this->actingAs($user)
-            ->post('/tasks/project_settings/delete/'.$project->id);
+            ->post('/tasks/project_settings/delete/' . $project->id);
 
         $response->assertSessionHasErrors('project');
     }
@@ -132,7 +133,7 @@ class TasksTest extends TestCase
 
 
         $response = $this->actingAs($user)
-            ->post('/tasks/project_settings/delete/'.$project->id);
+            ->post('/tasks/project_settings/delete/' . $project->id);
         $response->assertRedirect('/tasks/projects/');
         $this->assertDatabaseMissing('tasks_project', ['id' => $project->id]);
     }

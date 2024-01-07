@@ -18,23 +18,26 @@
     @include('components.sidebar')
     <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-3">
         <div class="container" style="width: 80%">
-    <p class="h2 text-center">Pick a department</p>
-        <div class="row">
-                    @foreach($departments as $department)
-                        <div class="col-lg-6">
-                            <div class="p-2">
-                                <a href="{{route('accountant_view_department', ['id' => $department->id])}}">
-                                    <div class="card" style="height: 200px" onmouseover="this.style.backgroundColor='#f8f9fa'" onmouseout="this.style.backgroundColor=''">
-                                        <div class="card-body">
-                                            <h5 class="card-title text-center">{{$department->name}}</h5>
-                                            <p class="card-text text-center">{{$department->employeeInformation()->count()}} employees</p>
-                                        </div>
+            <p class="h2 text-center">Pick a department</p>
+            <div class="row">
+                @foreach($departments as $department)
+                    <div class="col-lg-6">
+                        <div class="p-2">
+                            <a href="{{route('accountant_view_department', ['id' => $department->id])}}">
+                                <div class="card" style="height: 200px"
+                                     onmouseover="this.style.backgroundColor='#f8f9fa'"
+                                     onmouseout="this.style.backgroundColor=''">
+                                    <div class="card-body">
+                                        <h5 class="card-title text-center">{{$department->name}}</h5>
+                                        <p class="card-text text-center">{{$department->employeeInformation()->count()}}
+                                            employees</p>
                                     </div>
-                                </a>
-                            </div>
+                                </div>
+                            </a>
                         </div>
-        @endforeach
+                    </div>
+                @endforeach
+            </div>
         </div>
     </div>
-</div>
 </body>

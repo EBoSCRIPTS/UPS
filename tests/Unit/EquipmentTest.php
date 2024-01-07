@@ -13,11 +13,12 @@ use Mockery;
 class EquipmentTest extends TestCase
 {
     use WithoutMiddleware;
+
     public function test_add_equipment_type()
     {
-        $data = ['type' => 'NewEquipmentType'.time()];
+        $data = ['type' => 'NewEquipmentType' . time()];
 
-        $response = $this->post( '/equipment/register/insert', $data);
+        $response = $this->post('/equipment/register/insert', $data);
 
         $response->assertStatus(302);
         $response->assertSessionHas('success', 'Type of equipment added successfully');

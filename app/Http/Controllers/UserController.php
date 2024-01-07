@@ -9,7 +9,7 @@ use App\Models\Equipment\EquipmentAssignmentModel;
 use App\Models\PerformanceReportsModel;
 use App\Models\RolesModel;
 use App\Models\Tasks\TasksParticipantsModel;
-Use App\Models\EmployeeVacationsModel;
+use App\Models\EmployeeVacationsModel;
 use App\Models\VacationPointsModel;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -39,21 +39,16 @@ class UserController extends Controller
 
         if ($request->hasFile('profile_picture')) { //store image in server storage
             $image = $request->file('profile_picture');
-            $imageName = time().'.'.$image->getClientOriginalExtension();
+            $imageName = time() . '.' . $image->getClientOriginalExtension();
             $image->move(public_path('uploads/profile_pictures/'), $imageName);
-            $imageName = public_path('uploads/profile_pictures/'.$imageName);
+            $imageName = public_path('uploads/profile_pictures/' . $imageName);
 
             $uploadFolder = 'uploads/profile_pictures/';
             $imageName = baseName($imageName);
-            $imageName = $uploadFolder.$imageName;
-        }
-        else{
+            $imageName = $uploadFolder . $imageName;
+        } else {
             $imageName = 'uploads/default_pfp.png';
         }
-
-        $role = $request->input('role_id');
-
-        $request->merge(['role_id' => $role]);
 
         $user = new UserModel([
             'first_name' => $request->input('first_name'),
@@ -85,11 +80,9 @@ class UserController extends Controller
             return redirect('/mng/edit')->withErrors('error', 'Cannot delete superadmin!');
         }
 
-        if ($user->created_at > Carbon::now()->subMinutes(3))
-        {
+        if ($user->created_at > Carbon::now()->subMinutes(3)) {
             $user->delete();
-        }
-        //if the user is not 'fresh' we assume that he has most likely made comments or posts and should not be fully wiped to avoid data conflicts
+        } //if the user is not 'fresh' we assume that he has most likely made comments or posts and should not be fully wiped to avoid data conflicts
         else {
             $user->update([
                 'soft_deleted' => 1
@@ -109,16 +102,15 @@ class UserController extends Controller
 
         $user = UserModel::query()->find($request->input('id'));
 
-        if($request->hasFile('profile_picture'))
-        {
+        if ($request->hasFile('profile_picture')) {
             $image = $request->file('profile_picture');
-            $imageName = time().'.'.$image->getClientOriginalExtension();
+            $imageName = time() . '.' . $image->getClientOriginalExtension();
             $image->move(public_path('uploads/profile_pictures/'), $imageName);
-            $imageName = public_path('uploads/profile_pictures/'.$imageName);
+            $imageName = public_path('uploads/profile_pictures/' . $imageName);
 
             $uploadFolder = 'uploads/profile_pictures/';
             $imageName = baseName($imageName);
-            $imageName = $uploadFolder.$imageName;
+            $imageName = $uploadFolder . $imageName;
         }
 
 
@@ -140,7 +132,7 @@ class UserController extends Controller
         $projects = TasksParticipantsModel::query()->where('employee_id', $employeeId)->get();
 
 
-        if($request->id == Auth::user()->id) { //only return this sensitive info if the user profile is user himself
+        if ($request->id == Auth::user()->id) { //only return this sensitive info if the user profile is user himself
             $employeeInformation = EmployeeInformationModel::query()->where('user_id', Auth::user()->id)->first();
             $performanceReport = PerformanceReportsModel::query()
                 ->where('user_id', Auth::user()->id)
@@ -151,7 +143,7 @@ class UserController extends Controller
             $vp = VacationPointsModel::query()->where('user_id', Auth::user()->id)->pluck('vacation_points')->first();
         }
 
-        if($user == null) {
+        if ($user == null) {
             abort(404);
         }
 
@@ -189,7 +181,7 @@ class UserController extends Controller
     {
         $employee = EmployeeInformationModel::query()->where('user_id', Auth::user()->id)->first();
 
-        if($employee == null) { //as we store this in employee table we can't update info if users not registered as an employee yet
+        if ($employee == null) { //as we store this in employee table we can't update info if users not registered as an employee yet
             return back()->withInput()->withErrors([
                 'employee_error' => 'You aren\'t registered as an employee yet!'
             ]);
@@ -202,7 +194,7 @@ class UserController extends Controller
         ]);
 
         $employee->update([
-           'bank_name' => $request->input('bank_name'),
+            'bank_name' => $request->input('bank_name'),
             'bank_account_name' => $request->input('account_name'),
             'bank_account' => $request->input('account_number'),
         ]);

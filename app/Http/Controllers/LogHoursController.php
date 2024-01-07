@@ -70,7 +70,7 @@ class LogHoursController extends Controller
             if ($request->input($date . '_start_time') != null && $request->input($date . '_end_time') != null) {
                 $shiftStartTime = strtotime($request->input($date . '_start_time'));
                 $shiftEndTime = strtotime($request->input($date . '_end_time'));
-                $breakTime = $request->input($date . '_break_time')*60;
+                $breakTime = $request->input($date . '_break_time') * 60;
 
                 $calculated = $this->calculateHours($shiftStartTime, $shiftEndTime, $breakTime);
 
@@ -85,7 +85,7 @@ class LogHoursController extends Controller
 
                 $loggedHours->save();
             }
-    }
+        }
         return redirect('/loghours')->with('success', 'Hours inserted!');
     }
 
@@ -232,7 +232,7 @@ class LogHoursController extends Controller
 
         if ($request->has('Approve')) {
             $employeeVacation = VacationPointsModel::query() //on confirm we automatically add vacation points
-                ->where('user_id', $submittedHours->user_id)
+            ->where('user_id', $submittedHours->user_id)
                 ->first();
             //idea is that one day costs 0.2VP, in the span of 3 worked months averaging 160hours employee will be able to automatically earn 1 month of paid vacation
             $vp = $submittedHours->total_hours * 0.00265;
@@ -272,48 +272,39 @@ class LogHoursController extends Controller
 
         $difference = 0;
 
-        $totalTime = ($shiftEndTime - $shiftStartTime - $breakTime)/3600;
-        if ($totalTime < 0){
+        $totalTime = ($shiftEndTime - $shiftStartTime - $breakTime) / 3600;
+        if ($totalTime < 0) {
             $totalTime = $totalTime + 24;
         }
 
-        if($shiftStartTime > $shiftEndTime){ //if start time is bigger than endtime, we consider that endtime is the next day
+        if ($shiftStartTime > $shiftEndTime) { //if start time is bigger than endtime, we consider that endtime is the next day
             $shiftEndTime += 86400;
         }
 
         //if the employee starts shift after 22:00 and ends the next day //ir 22 - 06
-        if($shiftStartTime >= $nightHoursStart) {
+        if ($shiftStartTime >= $nightHoursStart) {
             $firstPart = $midnight - $shiftStartTime;
             $secondPart = $shiftEndTime - $midnight;
             $nightHoursCalculate = ($firstPart + $secondPart) / 3600;
-        }
-
-        //if starts and ends on the same night(before midnight)
-        else if($shiftStartTime <= $nightHoursStart && $shiftEndTime >= $nightHoursStart)
-        {
+        } //if starts and ends on the same night(before midnight)
+        else if ($shiftStartTime <= $nightHoursStart && $shiftEndTime >= $nightHoursStart) {
             $nightHoursCalculate = ($shiftEndTime - $nightHoursStart) / 3600;
             if ($nightHoursCalculate < 0) {
                 $nightHoursCalculate = 0;
             }
-        }
-        //if the employee starts past midnight and ends any time next day
-        else if($shiftStartTime <= $nightHoursEnd && $shiftEndTime <= $midnight)
-        {
-            if($shiftEndTime > $nightHoursEnd) {
+        } //if the employee starts past midnight and ends any time next day
+        else if ($shiftStartTime <= $nightHoursEnd && $shiftEndTime <= $midnight) {
+            if ($shiftEndTime > $nightHoursEnd) {
                 $nightHoursCalculate = ($nightHoursEnd - $shiftStartTime) / 3600;
+            } else {
+                $nightHoursCalculate = ($shiftEndTime - $shiftStartTime) / 3600;
             }
-            else{
-                $nightHoursCalculate = ($shiftEndTime-$shiftStartTime) / 3600;
-            }
-        }
-
-
-        //if the employee starts earlier than 22:00 and ends before or at 06:00
-        else if($shiftStartTime < $nightHoursStart && $shiftEndTime <= $nightHoursEnd){
+        } //if the employee starts earlier than 22:00 and ends before or at 06:00
+        else if ($shiftStartTime < $nightHoursStart && $shiftEndTime <= $nightHoursEnd) {
             $firstPart = $midnight - $nightHoursStart;
             $secondPart = ($shiftEndTime - $midnight) + 86400;
 
-            if($shiftEndTime > $nightHoursEnd) {
+            if ($shiftEndTime > $nightHoursEnd) {
                 $difference = $shiftEndTime - $nightHoursEnd;
             }
 
@@ -322,24 +313,23 @@ class LogHoursController extends Controller
 
         if (isset($nightHoursCalculate)) {
             $nightHoursCalculate = round($nightHoursCalculate);
-            $nightHoursCalculate = $nightHoursCalculate - $breakTime/3600;
+            $nightHoursCalculate = $nightHoursCalculate - $breakTime / 3600;
             if ($nightHoursCalculate < 0) {
                 $nightHoursCalculate = 0; //if we mysterically get lower than 0(doesn't happen when dealing with normal nighthours)
             }
-        }
-        else{
+        } else {
             $nightHoursCalculate = 0;
         }
 
         $totalTime = round($totalTime, 2);
-        $timeConvert = explode('.',$totalTime);
+        $timeConvert = explode('.', $totalTime);
         if (sizeof($timeConvert) < 2) { //if we technically get a round value we add '0' so it looks better when displayed
             $timeConvert[1] = '0';
         }
 
         $timeConvert[1] = $timeConvert[1] * 0.6;
 
-        if($timeConvert[1] == 0){ //add '00' so it looks better when displayed
+        if ($timeConvert[1] == 0) { //add '00' so it looks better when displayed
             $timeConvert[1] = '00';
         }
 
