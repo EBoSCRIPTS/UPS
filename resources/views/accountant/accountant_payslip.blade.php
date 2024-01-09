@@ -27,11 +27,7 @@
                     <div class="row">
                         <div class="col-md-6">
                             <h3>Payslip preview
-                                @if($isFullfilled == true)
-                                    <span class="badge bg-success" id="status">Fullfilled</span>
-                                @else
                                     <span class="badge bg-danger" id="status">Not fullfilled</span>
-                                @endif
                             </h3>
                         </div>
                         <div class="col-md-6">
@@ -104,7 +100,6 @@
                             <button type="button" class="btn btn-success btn-sm" id="printButton"
                                     onclick="printPayslip()">Print
                             </button>
-                            @if($isFullfilled == false)
                                 <form
                                     action="{{route('accountant.payslip_fulfill', ['department_id' => $employee->department_id,'employee_id' => $employee->id, 'year' => Carbon\Carbon::now()->year, 'month' => $month, 'hours_id' => $hours->id])}}"
                                     method="POST" enctype="multipart/form-data" id="fulfillForm">
@@ -114,7 +109,6 @@
 
                                     <button type="submit" class="btn btn-primary mt-2" id="fulfill">Fulfill</button>
                                 </form>
-                            @endif
                             <br>
                         </div>
                     </div>
@@ -127,6 +121,7 @@
 
 <script>
     function printPayslip() {
+        const body = document.body;
         const sidebar = document.getElementById('sidebar');
         const printButton = document.getElementById('printButton');
         const status = document.getElementById('status');
@@ -148,7 +143,6 @@
     function editPayslip() {
         document.getElementById('editButton').addEventListener('click', function () {
             const payslipCard = document.getElementById('payslipCard');
-            console.log(payslipCard.contentEditable);
             if (payslipCard.contentEditable == true) {
                 payslipCard.contentEditable = false;
             } else {

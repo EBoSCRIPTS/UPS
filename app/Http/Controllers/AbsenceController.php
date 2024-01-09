@@ -101,7 +101,6 @@ class AbsenceController extends Controller
     public function updateAbsence(Request $request): RedirectResponse
     {
         $validated = $request->validate([
-            'approver_id' => 'required|integer|exists:users,id',
             'status' => 'required|string',
             'is_paid' => 'sometimes|integer|in:1,2'
         ]);
@@ -110,7 +109,7 @@ class AbsenceController extends Controller
 
         if ($absence->type == 'Vacation') { //if we approve the vacation lets put it in a separate table for vacations
             $logVacation = new EmployeeVacationsModel([
-                'employee_id' => $absence->user_id,
+                'user_id' => $absence->user_id,
                 'date_from' => $absence->start_date,
                 'date_to' => $absence->end_date,
                 'is_paid' => $request->input('is_paid') ?? 1,

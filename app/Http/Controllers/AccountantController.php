@@ -54,7 +54,6 @@ class AccountantController extends Controller
             $status[$employee->user_id] = $logHours->getSubmittedAndConfirmed($employee->user_id, Carbon::now()->monthName);
         }
 
-
         return view('accountant.accountant_view_department',
             ['department' => $showDept,
                 'allAbsences' => $getAbsences ?? [],
@@ -146,20 +145,20 @@ class AccountantController extends Controller
             ->where('month_name', $request->month)
             ->first();
 
-        if (isset($employee->hour_pay)) { //get calculations if employee gets paid per hour rate
-            $overtimeHours = $getHours->overtime_hours; //find overtime hours
+        if($getHours == null){
+            $getHours = LoggedHoursSubmittedModel::query()
+                ->where('user_id', $request->user_id)
+                ->where('month_name', Carbon::now()->subMonth()->monthName)
+                ->first();
+        }
 
-            $isFullfilled = AccountantFulfilledPayslipsModel::query()
-                ->where('loghours_submitted_id', $getHours->id)
-                ->exists();
+        if (isset($employee->hour_pay)) { //get calculations if employee gets paid per hour rate
+            $overtimeHours = $getHours->overtime_hours ?? 0; //find overtime hours
 
             $baseWithoutNights = $getHours->total_hours - $getHours->night_hours - $overtimeHours;
             $baseSalary = $employee->hour_pay * $baseWithoutNights;
             $nightPay = ($employee->hour_pay * $getHours->night_hours) * 1.5;
         } elseif (isset($employee->salary)) {
-            $isFullfilled = AccountantFulfilledPayslipsModel::query()
-                ->where('loghours_submitted_id', $getHours->id)
-                ->exists();
 
             $baseSalary = $employee->salary;
             $nightPay = 0;
@@ -184,7 +183,6 @@ class AccountantController extends Controller
             'taxes' => $getTaxes,
             'employee' => $employee,
             'hours' => $getHours,
-            'isFullfilled' => $isFullfilled,
             'month' => $request->month,
             'baseSalary' => $baseSalary,
             'nightSalary' => $nightPay,
@@ -226,7 +224,7 @@ class AccountantController extends Controller
 
         $fulfill->save();
 
-        return redirect('/accountant/payslips')->with('success', 'Payslip fulfilled');
+        return redirect('/accountant/')->with('success', 'Payslip fulfilled');
     }
 
     public function downloadPayslip(Request $request)

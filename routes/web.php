@@ -23,7 +23,7 @@ use App\Http\Controllers\TestController;
 
 
 /* Home view */
-Route::get('/', [NewsController::class, 'loadAllTopics']);
+Route::get('/', [NewsController::class, 'loadAllTopics'])->middleware('loggedIn');
 
 /* Manager views */
 Route::middleware('admin')->group(function () {
@@ -46,28 +46,37 @@ Route::middleware('loggedIn')->group(function () {
 });
 
 /* Absence views */
-Route::get('/absence', [AbsenceController::class, 'userAbsences'])->name('absence')->middleware('employee');
-Route::get('/absence/review', [AbsenceController::class, 'showAbsenceReview'])->name('absence.review')->middleware('manager');
-Route::get('/absence/vacation/{absence_id}', [VacationsController::class, 'getUserVacationInfo'])->name('absence.vacation')->middleware('employee');;
-Route::post('/absence/create', [AbsenceController::class, 'addAbsence'])->name('absence.create')->middleware('employee');;
-Route::post('/absence/update', [AbsenceController::class, 'updateAbsence'])->name('absence.update')->middleware('employee');
-Route::post('/absence/delete', [AbsenceController::class, 'deleteAbsence'])->name('absence.delete')->middleware('employee');
-Route::get('/absence/attachment/download/{absence_id}', [AbsenceController::class, 'downloadAttachment'])->name('absence.attachment.download')->middleware('manager');
+Route::middleware('employee')->group(function () {
+    Route::get('/absence', [AbsenceController::class, 'userAbsences'])->name('absence')->middleware('employee');
+    Route::get('/absence/vacation/{absence_id}', [VacationsController::class, 'getUserVacationInfo'])->name('absence.vacation')->middleware('employee');;
+    Route::post('/absence/create', [AbsenceController::class, 'addAbsence'])->name('absence.create')->middleware('employee');;
+    Route::post('/absence/update', [AbsenceController::class, 'updateAbsence'])->name('absence.update')->middleware('employee');
+    Route::post('/absence/delete', [AbsenceController::class, 'deleteAbsence'])->name('absence.delete')->middleware('employee');
+});
+
+Route::middleware('manager')->group(function () {
+    Route::get('/absence/attachment/download/{absence_id}', [AbsenceController::class, 'downloadAttachment'])->name('absence.attachment.download')->middleware('manager');
+    Route::get('/absence/review', [AbsenceController::class, 'showAbsenceReview'])->name('absence.review')->middleware('manager');
+});
 
 /* User create views */
-Route::post('/user/create', [UserController::class, 'register'])->name('user.create')->middleware('admin');
-Route::post('/user/delete', [UserController::class, 'deleteUser'])->name('user.delete')->middleware('admin');
-Route::post('/user/edit', [UserController::class, 'editUser'])->name('user.edit')->middleware('admin');
+Route::middleware('admin')->group(function () {
+    Route::post('/user/create', [UserController::class, 'register'])->name('user.create')->middleware('admin');
+    Route::post('/user/delete', [UserController::class, 'deleteUser'])->name('user.delete')->middleware('admin');
+    Route::post('/user/edit', [UserController::class, 'editUser'])->name('user.edit')->middleware('admin');
+});
 
 /* Log hours */
-Route::get('/loghours', [LogHoursController::class, 'getCurrentMonth'])->name('loghours')->middleware('employee');;
-Route::post('/loghours/create', [LogHoursController::class, 'insertLoggedHours'])->name('loghours.create')->middleware('employee');;
-Route::post('/loghours/previous_month', [LogHoursController::class, 'getPreviousMonth'])->name('loghours.previous_month')->middleware('employee');;
+Route::middleware('employee')->group(function () {
+    Route::get('/loghours', [LogHoursController::class, 'getCurrentMonth'])->name('loghours');
+    Route::post('/loghours/create', [LogHoursController::class, 'insertLoggedHours'])->name('loghours.create');
+    Route::post('/loghours/previous_month', [LogHoursController::class, 'getPreviousMonth'])->name('loghours.previous_month');
+    Route::get('/loghours/view', [ViewLoggedHoursController::class, 'ViewLogged'])->name('loghours.view');
+    Route::get('/loghours/view/{user_id}', [ViewLoggedHoursController::class, 'showUserLoggedHours'])->name('loghours.view.user');
+    Route::post('/loghours/view/delete', [LogHoursController::class, 'deleteLoggedHours'])->name('loghours.view.delete');
+    Route::post('/loghours/close_month', [LoghoursController::class, 'closeMonthlyReport'])->name('loghours.close_month');
+});
 
-Route::get('/loghours/view', [ViewLoggedHoursController::class, 'ViewLogged'])->name('loghours.view')->middleware('employee');;
-Route::get('/loghours/view/{user_id}', [ViewLoggedHoursController::class, 'showUserLoggedHours'])->name('loghours.view.user')->middleware('employee');;
-Route::post('/loghours/view/delete', [LogHoursController::class, 'deleteLoggedHours'])->name('loghours.view.delete')->middleware('employee');;
-Route::post('/loghours/close_month', [LoghoursController::class, 'closeMonthlyReport'])->name('loghours.close_month')->middleware('employee');;
 
 Route::get('/loghours/review', [LogHoursController::class, 'getSubmittedHours'])->middleware('manager');
 Route::post('/loghours/review/update', [LogHoursController::class, 'submitHoursReview'])->name('loghours.review')->middleware('manager');
@@ -82,10 +91,12 @@ Route::get('/departments/my/ticket_register/{ticket_id}', [SubmittedTicketsContr
 
 
 /* Employee information  */
-Route::get('/employee_information', [EmployeeInformationController::class, 'getEmployeeInformationData'])->name('employee_information')->middleware('manager');
-Route::post('/employee_information/create', [EmployeeInformationController::class, 'insertEmployeeInformation'])->name('employee_information.create')->middleware('manager');
-Route::post('/employee_information/delete', [EmployeeInformationController::class, 'deleteEmployee'])->name('employee_information.delete')->middleware('manager');
-Route::post('/employee_information/update', [EmployeeInformationController::class, 'editEmployee'])->name('employee_information.update')->middleware('manager');
+Route::middleware('manager')->group(function () {
+    Route::get('/employee_information', [EmployeeInformationController::class, 'getEmployeeInformationData'])->name('employee_information')->middleware('manager');
+    Route::post('/employee_information/create', [EmployeeInformationController::class, 'insertEmployeeInformation'])->name('employee_information.create')->middleware('manager');
+    Route::post('/employee_information/delete', [EmployeeInformationController::class, 'deleteEmployee'])->name('employee_information.delete')->middleware('manager');
+    Route::post('/employee_information/update', [EmployeeInformationController::class, 'editEmployee'])->name('employee_information.update')->middleware('manager');
+});
 
 
 /* Accountant views */
@@ -111,21 +122,23 @@ Route::middleware('loggedIn')->group(function () {
     Route::post('/tasks/projects/{project_id}/statistics/generate_period', [TasksBoardController::class, 'getStatisticsForPeriod'])->name('tasks.projects.statistics.generate_for_period');
     Route::post('/tasks/projects/{project_id}/statistics/generate_excel', [TasksBoardController::class, 'generateExcelForProjectStatistics'])->name('tasks.project.generate_xlsx');
 });
+
 Route::get('/tasks/create_new_project', [TasksController::class, 'loadNewProjectsPage'])->middleware('manager');
-
-
 Route::get('/tasks/project_settings', [TasksController::class, 'loadAvailableProjects'])->middleware('manager');
-Route::get('/tasks/project_settings/{project_id}', [TasksBoardController::class, 'getProjectSettings'])->name('project_settings');
-Route::post('/tasks/project_settings/add_user', [TasksBoardController::class, 'addUserToProject'])->name('tasks.project_add_user');
-Route::post('/tasks/project_settings/remove_user', [TasksBoardController::class, 'removeUserFromProject'])->name('tasks.project_remove_user');
-Route::post('/tasks/project_settings/project_edit/{project_id}', [TasksBoardController::class, 'editProject'])->name('tasks.project_edit');
-Route::post('/tasks/project_settings/update_leader/{project_id}', [TasksBoardController::class, 'updateProjectLeader'])->name('tasks.change_project_leader');
-Route::post('/tasks/project_settings/delete/{project_id}', [TasksBoardController::class, 'deleteProject'])->name('tasks.project_delete');
 
-Route::get('/tasks/projects/{project_id}/performance_report', [ProjectPerformanceController::class, 'loadProjectPerformance']);
-Route::post('/tasks/projects/{project_id}/performance_report/make', [ProjectPerformanceController::class, 'makeReport'])->name('tasks.performance_report_create');
-Route::get('/tasks/projects/{project_id}/performance_report/generate_xlsx', [ProjectPerformanceController::class, 'generatePerformanceReportXlsx']);
-Route::get('/tasks/projects/{project_id}/performance_report/soft_delete/{report_id}', [ProjectPerformanceController::class, 'softDeleteReport']);
+Route::middleware('loggedIn')->group(function () {
+    Route::get('/tasks/project_settings/{project_id}', [TasksBoardController::class, 'getProjectSettings'])->name('project_settings');
+    Route::post('/tasks/project_settings/add_user', [TasksBoardController::class, 'addUserToProject'])->name('tasks.project_add_user');
+    Route::post('/tasks/project_settings/remove_user', [TasksBoardController::class, 'removeUserFromProject'])->name('tasks.project_remove_user');
+    Route::post('/tasks/project_settings/project_edit/{project_id}', [TasksBoardController::class, 'editProject'])->name('tasks.project_edit');
+    Route::post('/tasks/project_settings/update_leader/{project_id}', [TasksBoardController::class, 'updateProjectLeader'])->name('tasks.change_project_leader');
+    Route::post('/tasks/project_settings/delete/{project_id}', [TasksBoardController::class, 'deleteProject'])->name('tasks.project_delete');
+    Route::get('/tasks/projects/{project_id}/performance_report', [ProjectPerformanceController::class, 'loadProjectPerformance']);
+    Route::post('/tasks/projects/{project_id}/performance_report/make', [ProjectPerformanceController::class, 'makeReport'])->name('tasks.performance_report_create');
+    Route::get('/tasks/projects/{project_id}/performance_report/generate_xlsx', [ProjectPerformanceController::class, 'generatePerformanceReportXlsx']);
+    Route::get('/tasks/projects/{project_id}/performance_report/soft_delete/{report_id}', [ProjectPerformanceController::class, 'softDeleteReport']);
+});
+
 
 Route::post('/tasks/create_new_project/insert', [TasksController::class, 'createNewProject'])->name('create_new_project')->middleware('manager');
 
@@ -149,7 +162,7 @@ Route::middleware('loggedIn')->group(function () {
 });
 
 /* Equipment views */
-Route::middleware('manager')->group(function(){
+Route::middleware('manager')->group(function () {
     Route::get('/equipment/register', [EquipmentController::class, 'showRegistered'])->name('equipment.register');
 
     Route::post('/equipment/register/insert', [EquipmentController::class, 'addEquipmentType'])->name('equipment.add_equipment_type');
@@ -164,7 +177,7 @@ Route::middleware('manager')->group(function(){
 });
 
 /* Topic creation views */
-Route::middleware('writter')->group(function() {
+Route::middleware('writer')->group(function () {
     Route::get('/news/create_topic', [NewsController::class, 'createTopic'])->name('news.create_topic')->middleware('writer');
     Route::post('/news/create_topic/new', [NewsController::class, 'insertNewTopic'])->name('news.create_new_topic')->middleware('writer');
     Route::get('/news/topic/edit/{topic_id}', [NewsController::class, 'loadEditNewsTopic'])->name('news.edit_topic')->middleware('writer');
@@ -172,7 +185,7 @@ Route::middleware('writter')->group(function() {
     Route::post('/news/topic/delete/{topic_id}', [NewsController::class, 'deleteNewsTopic'])->name('news.delete_topic')->middleware('writer');
 });
 
-Route::middleware('loggedIn')->group(function(){
+Route::middleware('loggedIn')->group(function () {
     Route::get('/news/view_topic/{topic_id}', [NewsController::class, 'loadNewsTopic'])->name('news.view_topic');
     Route::post('/news/view_topic/add_comment', [NewsController::class, 'postTopicComment'])->name('news.add_comment');
     Route::get('/news/view_topic/{topic_id}/{comment_id}/{uprate}', [NewsController::class, 'rateTopicComment']);
@@ -191,8 +204,11 @@ Route::post('/equipment/generate_agreement', [PDFController::class, 'generateEqu
 
 
 /* REST API routes */
-Route::get('/api/all_users_json/{name}', [UserSearchController::class, 'userSpecific'])->middleware('loggedIn');
-Route::get('/api/get_all_projects', [TasksController::class, 'projectsApi'])->middleware('loggedIn');
+Route::middleware('loggedIn')->group(function () {
+    Route::get('/api/all_users_json/{name}', [UserSearchController::class, 'userSpecific'])->middleware('loggedIn');
+    Route::get('/api/get_all_projects', [TasksController::class, 'projectsApi'])->middleware('loggedIn');
+});
+
 
 /* TEST PAGES */
 Route::get('/test_page', [TestController::class, 'toastrNot'])->middleware('admin');

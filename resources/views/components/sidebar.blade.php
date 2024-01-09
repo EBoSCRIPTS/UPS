@@ -123,7 +123,7 @@
                             </li>
                         @endif
 
-                        @if(Auth::user()->is_writer == 1)
+                        @if(Auth::user()->is_writer == 1 || Auth::user()->role_id == 1)
                             <li>
                                 <a href="#submenu7" data-bs-toggle="collapse" class="nav-link px-0 align-middle ">
                                     <i class="fs-4 bi-newspaper"></i> <span class="ms-1 ">NEWS</span></a>

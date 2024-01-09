@@ -114,7 +114,7 @@ class LogHoursController extends Controller
     public function getPreviousMonth(): \Illuminate\View\View|RedirectResponse
     {
         if ($this->checkIfClosedMonth(Auth::user()->id, Carbon::now()->subMonth()->monthName)) {
-            return redirect('/');
+            return redirect('/loghours');
         }
 
         $month = Carbon::now()->subMonth()->monthName;
@@ -184,7 +184,7 @@ class LogHoursController extends Controller
 
         $insertHours->save();
 
-        return back()->with('success', 'Monthly report submitted!');
+        return redirect('/loghours')->with('success', 'Monthly report submitted!');
     }
 
     public function checkIfClosedMonth($user_id, $month): bool
@@ -264,12 +264,23 @@ class LogHoursController extends Controller
             ->where('user_id', $user_id)
             ->first();
 
-        if (!AccountantFulfilledPayslipsModel::query()->where('loghours_submitted_id', $hrs->id ?? null)->exists()) {
-            return $hrs;
+        if ($hrs == null) {
+            $hrs = LoggedHoursSubmittedModel::query()
+                ->where('is_confirmed', 2)
+                ->where('month_name', Carbon::now()->subMonth()->monthName)
+                ->where('user_id', $user_id)
+                ->first();;
         }
-        else{
-            return null;
+
+        if($hrs != null){
+            if (AccountantFulfilledPayslipsModel::query()->where('loghours_submitted_id', $hrs->id)->exists()) {
+                return null;
+            } else {
+                return $hrs;
+            }
         }
+
+        return null;
     }
 
     public function calculateHours($shiftStartTime, $shiftEndTime, $breakTime): array
@@ -336,7 +347,7 @@ class LogHoursController extends Controller
             $timeConvert[1] = '0';
         }
 
-        $timeConvert[1] = $timeConvert[1] * 0.6;
+        $timeConvert[1] = round($timeConvert[1] * 0.6);
 
         if ($timeConvert[1] == 0) { //add '00' so it looks better when displayed
             $timeConvert[1] = '00';

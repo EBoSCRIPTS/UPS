@@ -3,8 +3,6 @@ async function getDepartments() {
     const selectField = document.getElementById('department_id');
     let data = await response.json();
 
-    console.log(data);
-
     for (let i = 0; i < data.length; i++) {
         let departmentOption = document.createElement('option');
         departmentOption.value = data[i].id;

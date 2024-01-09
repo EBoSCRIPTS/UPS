@@ -267,7 +267,7 @@
                                         </div>
                                         <div class="modal-body">
                                             @foreach($employeeEquipment as $equipment)
-                                                <p><strong>*) {{$equipment->equipment->name}} | ISSUED
+                                                <p><strong>*) {{$equipment->equipment->name}} ({{$equipment->equipment->serial_number}}) | ISSUED
                                                         ON: {{$equipment->date_given}}</strong></p>
                                             @endforeach
                                         </div>

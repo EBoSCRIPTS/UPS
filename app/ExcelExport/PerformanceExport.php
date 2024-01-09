@@ -22,6 +22,8 @@ class PerformanceExport implements FromCollection, WithHeadings
             'Employee Name',
             'Rating Text',
             'Rating',
+            'Month',
+            'Year'
         ];
     }
     public function collection()
@@ -30,7 +32,7 @@ class PerformanceExport implements FromCollection, WithHeadings
             ->where('soft_deleted', 0)
             ->where('year', Carbon::now()->year)
             ->where('month', Carbon::now()->monthName)
-            ->select('employee_name', 'rating_text', 'rating')
+            ->select('employee_name', 'rating_text', 'rating', 'month', 'year')
             ->get();
     }
 }

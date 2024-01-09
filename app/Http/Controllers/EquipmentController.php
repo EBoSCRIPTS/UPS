@@ -82,18 +82,21 @@ class EquipmentController extends Controller
             'equipment' => 'required|exists:equipment_items,id',
         ]);
 
-        $give = new EquipmentAssignmentModel([
-            'employee_id' => $request->input('employee'),
-            'equipment_id' => $request->input('equipment'),
-            'date_given' => Carbon::now(),
-        ]);
 
-        $givenEquipment = EquipmentItemsModel::query()->where('id', $request->input('equipment'))->first();
-        $givenEquipment->update([
-            'is_assigned' => 1
-        ]);
+        for ($i = 0; $i < sizeof($request->input('equipment')); $i++) {
+            $give = new EquipmentAssignmentModel([
+                'employee_id' => $request->input('employee'),
+                'equipment_id' => $request->input('equipment')[$i],
+                'date_given' => Carbon::now(),
+            ]);
 
-        $give->save();
+            $givenEquipment = EquipmentItemsModel::query()->where('id', $request->input('equipment')[$i])->first();
+            $givenEquipment->update([
+                'is_assigned' => 1
+            ]);
+
+            $give->save();
+        }
 
         return back()->with('success', 'Equipment assigned successfully');
     }
@@ -129,7 +132,7 @@ class EquipmentController extends Controller
             'id' => 'required|exists:equipment_type,id',
         ]);
 
-        if (EquipmentItemsModel::query()->where('type_id', $request->input('id'))->get() != null) {
+        if (EquipmentItemsModel::query()->where('type_id', $request->input('id'))->count() > 0) {
             return back()->withErrors('error', 'Cannot delete type of equipment with assigned equipment');
         }
 

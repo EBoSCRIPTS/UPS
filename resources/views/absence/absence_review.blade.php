@@ -19,6 +19,7 @@
     @include('components.sidebar')
     <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-3">
         <div class="container" style="width: 80%">
+            @include('components.errors')
             <p class="h2 text-center">Absence review page</p>
             @foreach($absences as $absence)
                 <form action="{{route('absence.update')}}" method="POST">

@@ -31,7 +31,7 @@
                 </select>
 
                 <label for="equipment" class="form-label">Equipment</label>
-                <select name="equipment" id="equipment" class="form-select" multiple size="10">
+                <select name="equipment[]" id="equipment" class="form-select" multiple size="10">
                     @foreach($equipments as $equipment)
                         <option value="{{$equipment->id}}">{{$equipment->name}} ({{$equipment->serial_number}})</option>
                     @endforeach
@@ -110,7 +110,7 @@
                 <div class="modal-body">
                     <form action="{{route('equipment.generate_agreement')}}" method="POST">
                         @csrf
-                        <input type="hidden" name="employee" value="{{$employeeFor}}">
+                        <input type="hidden" name="employee" value="{{$assignments[0]->employee->id}}">
                         <label for="equipmentText" class="form-label">Agreement text</label>
                         <textarea name="equipmentText" id="equipmentText" cols="30" rows="10"
                                   class="form-control"></textarea>

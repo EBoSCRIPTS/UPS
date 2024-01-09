@@ -22,6 +22,10 @@ class TasksBoardController extends Controller
 {
     public function editProject(Request $request): RedirectResponse
     {
+        if ($this->checkIfProjectSettingsAccess($request->project_id) == false) { //check if user is either manager/admin project leader
+            return redirect('/');
+        }
+
         $validated = $request->validate([
             'name' => 'sometimes|string|max:100',
             'status' => 'sometimes|array',
@@ -93,6 +97,10 @@ class TasksBoardController extends Controller
 
     public function addUserToProject(Request $request): RedirectResponse
     {
+        if ($this->checkIfProjectSettingsAccess($request->project_id) == false) { //check if user is either manager/admin project leader
+            return redirect('/');
+        }
+
         $validated = $request->validate([
             'project_id' => 'required|integer|exists:tasks_project,id',
             'participants' => 'required|array',
@@ -112,6 +120,10 @@ class TasksBoardController extends Controller
 
     public function removeUserFromProject(Request $request): RedirectResponse
     {
+        if ($this->checkIfProjectSettingsAccess($request->project_id) == false) { //check if user is either manager/admin project leader
+            return redirect('/');
+        }
+
         $validated = $request->validate([
             'user_id' => 'required|integer|exists:tasks_participants,employee_id',
             'project_id' => 'required|integer|exists:tasks_project,id',
@@ -215,6 +227,10 @@ class TasksBoardController extends Controller
 
     public function updateProjectLeader(Request $request): RedirectResponse
     {
+        if ($this->checkIfProjectSettingsAccess($request->project_id) == false) { //check if user is either manager/admin project leader
+            return redirect('/');
+        }
+
         $validated = $request->validate([
             'project_leader' => 'required|integer|exists:employee_information,user_id',
         ]);

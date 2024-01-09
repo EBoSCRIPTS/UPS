@@ -64,8 +64,8 @@
                 <div class="btn-group">
                     <button class="btn btn-primary btn-sm"
                             data-bs-toggle="collapse"
-                            data-bs-target="#collapse{{$department->name}}" aria-expanded="false"
-                            aria-controls="collapse{{$department->name}}">
+                            data-bs-target="#collapse{{$department->id}}" aria-expanded="false"
+                            aria-controls="collapse{{$department->id}}">
                         {{$department->name}}
                     </button>
                 </div>
@@ -73,7 +73,7 @@
 
 
             @foreach($departments as $department)
-                <div id="collapse{{$department->name}}" class="collapse">
+                <div id="collapse{{$department->id}}" class="collapse">
                     <table class="table mt-3">
                         <thead class="thead-light">
                         <tr>

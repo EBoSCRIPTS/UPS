@@ -40,7 +40,7 @@
                             @foreach($submits as $submit)
                                 <tr>
                                     <td><a href="/loghours/view/{{$submit->user->id}}"
-                                           onclick="window.open(this.href, 'window', 'width=800,height=600');">{{$submit->user->first_name}} {{$submit->user->last_name}}</a>
+                                           onclick="window.open(this.href, 'window', 'width=800,height=600'); return false;">{{$submit->user->first_name}} {{$submit->user->last_name}}</a>
                                     </td>
                                     <td>{{$submit->total_hours}}</td>
                                     <td>{{$submit->night_hours}}</td>

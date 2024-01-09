@@ -37,15 +37,16 @@
                         <div class="card-body">
                             <p class="h2 text-center">Previous Vacations</p>
 
-                            @foreach($previous as $prev)
-                                <p>From {{$prev->date_from}} till {{$prev->date_to}} | Status:
-                                    @if($prev->is_paid == '1')
-                                        Paid</p>
-                                @else
-                                    Unpaid
-                                @endif
-                            @endforeach
-
+                            @if($previous != "No previous vacations")
+                                @foreach($previous as $prev)
+                                    <p>From {{$prev->date_from}} till {{$prev->date_to}} | Status:
+                                        @if($prev->is_paid == '1')
+                                            Paid</p>
+                                    @else
+                                        Unpaid
+                                    @endif
+                                @endforeach
+                            @endif
 
                         </div>
                     </div>
@@ -104,7 +105,6 @@
 <script>
     function calculatePoints() {
         const balance = document.getElementById('calculate_balance').value;
-        console.log(parseInt(balance));
         const result = document.getElementById('result_points');
         result.innerText = 'To spend: ' + balance * 0.2 + ' points'
 

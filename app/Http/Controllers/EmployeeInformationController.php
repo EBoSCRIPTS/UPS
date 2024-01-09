@@ -17,7 +17,7 @@ class EmployeeInformationController extends Controller
 {
     public function getEmployeeInformationData(): \Illuminate\View\View
     {
-        $users = UserModel::query()->where('soft_deleted', 0)->where('role_id', '!=', 1)->get();
+        $users = UserModel::query()->where('soft_deleted', 0)->get();
         $departments = DepartmentsModel::all();
         $employees = EmployeeInformationModel::all();
 
@@ -119,8 +119,8 @@ class EmployeeInformationController extends Controller
 
         $employee->update([
             'department_id' => $request->input('dept_name') ?? $employee->department_id,
-            'hour_pay' => $request->input('hour_pay') ?? $employee->hour_pay,
-            'salary' => $request->input('salary') ?? $employee->salary,
+            'hour_pay' => $request->input('hour_pay') ?? null,
+            'salary' => $request->input('salary') ?? null,
             'position' => $request->input('position') ?? $employee->position,
             'weekly_hours' => $request->input('hours') ?? $employee->weekly_hours
         ]);

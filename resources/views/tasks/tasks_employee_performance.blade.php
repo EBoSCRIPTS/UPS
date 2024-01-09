@@ -139,7 +139,6 @@
     document.addEventListener('DOMContentLoaded', function () {
         const checkboxes = document.querySelectorAll('.type-checkbox');
         const rows = document.querySelectorAll('#tableRatings tbody tr');
-        console.log(rows);
 
         checkboxes.forEach(function (checkbox) {
             checkbox.addEventListener('change', function () {

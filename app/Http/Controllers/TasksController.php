@@ -68,7 +68,7 @@ class TasksController extends Controller
             }
         }
 
-        return back('/tasks/')->with('success', 'Project created successfully');
+        return back('/tasks')->with('success', 'Project created successfully');
     }
 
 
