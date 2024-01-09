@@ -4,7 +4,9 @@
 A simple Laravel project built for smaller companies to ease up the work-flow. Simple, yet 
 powerful features. No need to pay large monthly sums for stuff you don't really need.
 
-
+## Built using
+Laravel 10
+Bootstrap 5.0
 
 
 ## Features
