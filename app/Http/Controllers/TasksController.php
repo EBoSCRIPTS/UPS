@@ -44,7 +44,7 @@ class TasksController extends Controller
         $newProject->save();
 
         $statuses = [];
-        for ($i = 1; $i <= $request->input('counter'); $i++) {
+        for ($i = 1; $i <= $request->input('counter'); $i++) { //get all the status fields that we later store in tasks_status table
             $statuses[] = $request->input('project_status_field' . $i);
         }
 
@@ -57,7 +57,7 @@ class TasksController extends Controller
 
         if ($request->input('project_members') == null) return back('/tasks/')->with('success', 'Project created successfully');
 
-        else {
+        else { //if many project members are passed add everyone
             foreach ($request->input('project_members') as $pm) {
                 $projectMember = new TasksParticipantsModel([
                     'project_id' => $newProject->id,
