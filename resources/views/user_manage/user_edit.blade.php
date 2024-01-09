@@ -60,8 +60,8 @@
             </div>
         @endforeach
         <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-3">
-            @include('components.errors')
             <div class="container" style="width: 80%">
+                @include('components.errors')
                 <h1 class="display-3 text-center">Edit user</h1>
                 <table class="table table-striped">
                     <thead>

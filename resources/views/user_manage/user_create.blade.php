@@ -22,7 +22,7 @@
         <div class="container" style="width: 80%">
             @include('components.errors')
             <h1 class="display-2 text-center">Add new user </h1>
-            <form action="{{ route('user.create') }}" method="POST">
+            <form action="{{ route('user.create') }}" method="POST" enctype="multipart/form-data">
                 <div class="form-group">
                     @csrf
                     <label for="first_name">First Name</label>

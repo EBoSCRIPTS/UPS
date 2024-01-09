@@ -15,7 +15,7 @@ class LoggedInMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (auth()->check()) {
+        if (auth()->check() && auth()->user()->soft_deleted == 0) {
             return $next($request);
         }
 

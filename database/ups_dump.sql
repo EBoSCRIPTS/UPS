@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 05, 2024 at 10:18 PM
+-- Generation Time: Jan 09, 2024 at 02:30 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -51,6 +51,7 @@ CREATE TABLE `accountant_fulfilled_payslips` (
   `month` varchar(100) NOT NULL,
   `year` year(4) NOT NULL,
   `fulfilled_by` int(11) NOT NULL COMMENT 'user_id references to user table ',
+  `payslip_file` text NOT NULL,
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
   `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -176,6 +177,7 @@ CREATE TABLE `logged_hours_submitted` (
   `user_id` int(11) NOT NULL COMMENT 'refers to user table id',
   `total_hours` int(11) NOT NULL,
   `night_hours` int(11) DEFAULT NULL,
+  `overtime_hours` int(11) DEFAULT NULL,
   `month_name` varchar(30) NOT NULL,
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
   `is_confirmed` enum('0','1','','') NOT NULL DEFAULT '0'
@@ -281,6 +283,17 @@ CREATE TABLE `roles` (
   `id` int(10) UNSIGNED NOT NULL,
   `name` varchar(255) NOT NULL COMMENT 'name of the role'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `roles`
+--
+
+INSERT INTO `roles` (`id`, `name`) VALUES
+(1, 'Superadmin'),
+(2, 'Employee'),
+(3, 'Manager'),
+(4, 'Accountant'),
+(5, 'User');
 
 -- --------------------------------------------------------
 
@@ -416,13 +429,15 @@ CREATE TABLE `vacation_points` (
 -- Indexes for table `accountant_department_settings`
 --
 ALTER TABLE `accountant_department_settings`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fK_dept_settings_id` (`department_id`);
 
 --
 -- Indexes for table `accountant_fulfilled_payslips`
 --
 ALTER TABLE `accountant_fulfilled_payslips`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_acot_emp_payslip_id` (`employee_id`);
 
 --
 -- Indexes for table `departaments`
@@ -442,13 +457,17 @@ ALTER TABLE `employee_information`
 -- Indexes for table `employee_vacations`
 --
 ALTER TABLE `employee_vacations`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_emp_vac_user_id` (`user_id`),
+  ADD KEY `fk_emp_abs_id` (`absence_req_id`);
 
 --
 -- Indexes for table `equipment_assignment`
 --
 ALTER TABLE `equipment_assignment`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_eq_assignment_equip_item_id` (`equipment_id`),
+  ADD KEY `fk_eq_assignment_employee_id` (`employee_id`);
 
 --
 -- Indexes for table `equipment_items`
@@ -467,13 +486,15 @@ ALTER TABLE `equipment_type`
 -- Indexes for table `logged_hours`
 --
 ALTER TABLE `logged_hours`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_lh_user_id` (`user_id`);
 
 --
 -- Indexes for table `logged_hours_submitted`
 --
 ALTER TABLE `logged_hours_submitted`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_lhs_user_id` (`user_id`);
 
 --
 -- Indexes for table `news_comments`
@@ -486,7 +507,10 @@ ALTER TABLE `news_comments`
 -- Indexes for table `news_comments_rating`
 --
 ALTER TABLE `news_comments_rating`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_news_topic_id` (`news_topic_id`),
+  ADD KEY `fk_news_user_id` (`user_id`),
+  ADD KEY `fk_news_comment_rating_id` (`comment_id`);
 
 --
 -- Indexes for table `news_topic`
@@ -498,14 +522,17 @@ ALTER TABLE `news_topic`
 -- Indexes for table `performance_reports`
 --
 ALTER TABLE `performance_reports`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_perf_user_id` (`user_id`),
+  ADD KEY `fk_perf_proj_id` (`project_id`);
 
 --
 -- Indexes for table `req_absence`
 --
 ALTER TABLE `req_absence`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `fk_users_id` (`user_id`);
+  ADD KEY `fk_users_id` (`user_id`),
+  ADD KEY `fk_absence_approver_id` (`approver_id`);
 
 --
 -- Indexes for table `roles`
@@ -518,26 +545,32 @@ ALTER TABLE `roles`
 --
 ALTER TABLE `submitted_tickets`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `user_id` (`user_id`,`registered_by_user_id`);
+  ADD KEY `user_id` (`user_id`,`registered_by_user_id`),
+  ADD KEY `fk_st_dept_id` (`department_id`),
+  ADD KEY `fk_st_reg_user_id` (`registered_by_user_id`);
 
 --
 -- Indexes for table `tasks_participants`
 --
 ALTER TABLE `tasks_participants`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_tasks_participants_project_id` (`project_id`),
+  ADD KEY `fk_tasks_participants_emp_id` (`employee_id`);
 
 --
 -- Indexes for table `tasks_project`
 --
 ALTER TABLE `tasks_project`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `fk_dept_id` (`department_id`);
+  ADD KEY `fk_dept_id` (`department_id`),
+  ADD KEY `fk_projleaduser_id` (`leader_user_id`);
 
 --
 -- Indexes for table `tasks_status`
 --
 ALTER TABLE `tasks_status`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_status_proj_id` (`project_id`);
 
 --
 -- Indexes for table `tasks_task`
@@ -551,7 +584,9 @@ ALTER TABLE `tasks_task`
 -- Indexes for table `tasks_task_comments`
 --
 ALTER TABLE `tasks_task_comments`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_tasks_comment_author_id` (`comment_author_id`),
+  ADD KEY `fk_tasks_task_comment_id` (`task_id`);
 
 --
 -- Indexes for table `users`
@@ -559,13 +594,15 @@ ALTER TABLE `tasks_task_comments`
 ALTER TABLE `users`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `email` (`email`),
-  ADD UNIQUE KEY `phone_number` (`phone_number`);
+  ADD UNIQUE KEY `phone_number` (`phone_number`),
+  ADD KEY `fk_user_role_id` (`role_id`);
 
 --
 -- Indexes for table `vacation_points`
 --
 ALTER TABLE `vacation_points`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_vp` (`user_id`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -665,7 +702,7 @@ ALTER TABLE `req_absence`
 -- AUTO_INCREMENT for table `roles`
 --
 ALTER TABLE `roles`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `submitted_tickets`
@@ -720,10 +757,48 @@ ALTER TABLE `vacation_points`
 --
 
 --
+-- Constraints for table `accountant_department_settings`
+--
+ALTER TABLE `accountant_department_settings`
+  ADD CONSTRAINT `fK_dept_settings_id` FOREIGN KEY (`department_id`) REFERENCES `departaments` (`id`);
+
+--
+-- Constraints for table `accountant_fulfilled_payslips`
+--
+ALTER TABLE `accountant_fulfilled_payslips`
+  ADD CONSTRAINT `fk_acot_emp_payslip_id` FOREIGN KEY (`employee_id`) REFERENCES `employee_information` (`id`);
+
+--
+-- Constraints for table `employee_vacations`
+--
+ALTER TABLE `employee_vacations`
+  ADD CONSTRAINT `fk_emp_abs_id` FOREIGN KEY (`absence_req_id`) REFERENCES `req_absence` (`id`),
+  ADD CONSTRAINT `fk_emp_vac_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
+
+--
+-- Constraints for table `equipment_assignment`
+--
+ALTER TABLE `equipment_assignment`
+  ADD CONSTRAINT `fk_eq_assignment_employee_id` FOREIGN KEY (`employee_id`) REFERENCES `employee_information` (`id`),
+  ADD CONSTRAINT `fk_eq_assignment_equip_item_id` FOREIGN KEY (`equipment_id`) REFERENCES `equipment_items` (`id`);
+
+--
 -- Constraints for table `equipment_items`
 --
 ALTER TABLE `equipment_items`
   ADD CONSTRAINT `fk_type_id` FOREIGN KEY (`type_id`) REFERENCES `equipment_type` (`id`);
+
+--
+-- Constraints for table `logged_hours`
+--
+ALTER TABLE `logged_hours`
+  ADD CONSTRAINT `fk_lh_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
+
+--
+-- Constraints for table `logged_hours_submitted`
+--
+ALTER TABLE `logged_hours_submitted`
+  ADD CONSTRAINT `fk_lhs_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
 
 --
 -- Constraints for table `news_comments`
@@ -732,10 +807,80 @@ ALTER TABLE `news_comments`
   ADD CONSTRAINT `fk_topic_id` FOREIGN KEY (`topic_id`) REFERENCES `news_topic` (`id`);
 
 --
+-- Constraints for table `news_comments_rating`
+--
+ALTER TABLE `news_comments_rating`
+  ADD CONSTRAINT `fk_news_comment_rating_id` FOREIGN KEY (`comment_id`) REFERENCES `news_comments` (`id`),
+  ADD CONSTRAINT `fk_news_topic_id` FOREIGN KEY (`news_topic_id`) REFERENCES `news_topic` (`id`),
+  ADD CONSTRAINT `fk_news_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
+
+--
+-- Constraints for table `performance_reports`
+--
+ALTER TABLE `performance_reports`
+  ADD CONSTRAINT `fk_perf_proj_id` FOREIGN KEY (`project_id`) REFERENCES `tasks_project` (`id`),
+  ADD CONSTRAINT `fk_perf_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
+
+--
 -- Constraints for table `req_absence`
 --
 ALTER TABLE `req_absence`
+  ADD CONSTRAINT `fk_absence_approver_id` FOREIGN KEY (`approver_id`) REFERENCES `users` (`id`),
   ADD CONSTRAINT `fk_users_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `submitted_tickets`
+--
+ALTER TABLE `submitted_tickets`
+  ADD CONSTRAINT `fk_st_dept_id` FOREIGN KEY (`department_id`) REFERENCES `departaments` (`id`),
+  ADD CONSTRAINT `fk_st_reg_user_id` FOREIGN KEY (`registered_by_user_id`) REFERENCES `users` (`id`),
+  ADD CONSTRAINT `fk_st_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
+
+--
+-- Constraints for table `tasks_participants`
+--
+ALTER TABLE `tasks_participants`
+  ADD CONSTRAINT `fk_tasks_participants_emp_id` FOREIGN KEY (`employee_id`) REFERENCES `employee_information` (`id`),
+  ADD CONSTRAINT `fk_tasks_participants_project_id` FOREIGN KEY (`project_id`) REFERENCES `tasks_project` (`id`);
+
+--
+-- Constraints for table `tasks_project`
+--
+ALTER TABLE `tasks_project`
+  ADD CONSTRAINT `fk_proj_dept_id` FOREIGN KEY (`department_id`) REFERENCES `departaments` (`id`),
+  ADD CONSTRAINT `fk_projleaduser_id` FOREIGN KEY (`leader_user_id`) REFERENCES `users` (`id`);
+
+--
+-- Constraints for table `tasks_status`
+--
+ALTER TABLE `tasks_status`
+  ADD CONSTRAINT `fk_status_proj_id` FOREIGN KEY (`project_id`) REFERENCES `tasks_project` (`id`);
+
+--
+-- Constraints for table `tasks_task`
+--
+ALTER TABLE `tasks_task`
+  ADD CONSTRAINT `fk_task_made_by` FOREIGN KEY (`made_by`) REFERENCES `users` (`id`),
+  ADD CONSTRAINT `fk_task_proj_id` FOREIGN KEY (`project_id`) REFERENCES `tasks_project` (`id`);
+
+--
+-- Constraints for table `tasks_task_comments`
+--
+ALTER TABLE `tasks_task_comments`
+  ADD CONSTRAINT `fk_tasks_comment_author_id` FOREIGN KEY (`comment_author_id`) REFERENCES `users` (`id`),
+  ADD CONSTRAINT `fk_tasks_task_comment_id` FOREIGN KEY (`task_id`) REFERENCES `tasks_task` (`id`);
+
+--
+-- Constraints for table `users`
+--
+ALTER TABLE `users`
+  ADD CONSTRAINT `fk_user_role_id` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`);
+
+--
+-- Constraints for table `vacation_points`
+--
+ALTER TABLE `vacation_points`
+  ADD CONSTRAINT `fk_vp` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

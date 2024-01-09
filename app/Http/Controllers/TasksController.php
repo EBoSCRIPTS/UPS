@@ -280,6 +280,14 @@ class TasksController extends Controller
     public function deleteTicket(Request $request): RedirectResponse
     {
         $ticket = TasksTaskModel::query()->where('id', $request->ticket_id)->first();
+
+        $getComments = TasksTaskCommentsModel::query()->where('task_id', $ticket->id)->get(); //delete all made comments under the task
+        if ($getComments->count() > 0){
+            foreach($getComments as $comment){
+                $comment->delete();
+            }
+        }
+
         $ticket->delete();
 
         return redirect('/tasks');

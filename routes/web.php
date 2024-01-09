@@ -164,17 +164,21 @@ Route::middleware('manager')->group(function(){
 });
 
 /* Topic creation views */
-Route::get('/news/create_topic', [NewsController::class, 'createTopic'])->name('news.create_topic')->middleware('writer');
-Route::post('/news/create_topic/new', [NewsController::class, 'insertNewTopic'])->name('news.create_new_topic')->middleware('writer');
+Route::middleware('writter')->group(function() {
+    Route::get('/news/create_topic', [NewsController::class, 'createTopic'])->name('news.create_topic')->middleware('writer');
+    Route::post('/news/create_topic/new', [NewsController::class, 'insertNewTopic'])->name('news.create_new_topic')->middleware('writer');
+    Route::get('/news/topic/edit/{topic_id}', [NewsController::class, 'loadEditNewsTopic'])->name('news.edit_topic')->middleware('writer');
+    Route::post('/news/topic/edit/update/', [NewsController::class, 'updateTopic'])->name('news.edit_save')->middleware('writer');
+    Route::post('/news/topic/delete/{topic_id}', [NewsController::class, 'deleteNewsTopic'])->name('news.delete_topic')->middleware('writer');
+});
 
-Route::get('/news/view_topic/{topic_id}', [NewsController::class, 'loadNewsTopic'])->name('news.view_topic');
-Route::post('/news/view_topic/add_comment', [NewsController::class, 'postTopicComment'])->name('news.add_comment');
-Route::get('/news/view_topic/{topic_id}/{comment_id}/{uprate}', [NewsController::class, 'rateTopicComment']);
-Route::get('/news/view_topic/{topic_id}/{comment_id}/{downrate}', [NewsController::class, 'rateTopicComment']);
-Route::get('/news/topics', [NewsController::class, 'loadNewsPageTopics'])->name('news.topics');
-Route::get('/news/topic/edit/{topic_id}', [NewsController::class, 'loadEditNewsTopic'])->name('news.edit_topic')->middleware('writer');
-Route::post('/news/topic/edit/update/', [NewsController::class, 'updateTopic'])->name('news.edit_save')->middleware('writer');
-Route::post('/news/topic/delete/{topic_id}', [NewsController::class, 'deleteNewsTopic'])->name('news.delete_topic')->middleware('writer');
+Route::middleware('loggedIn')->group(function(){
+    Route::get('/news/view_topic/{topic_id}', [NewsController::class, 'loadNewsTopic'])->name('news.view_topic');
+    Route::post('/news/view_topic/add_comment', [NewsController::class, 'postTopicComment'])->name('news.add_comment');
+    Route::get('/news/view_topic/{topic_id}/{comment_id}/{uprate}', [NewsController::class, 'rateTopicComment']);
+    Route::get('/news/view_topic/{topic_id}/{comment_id}/{downrate}', [NewsController::class, 'rateTopicComment']);
+    Route::get('/news/topics', [NewsController::class, 'loadNewsPageTopics'])->name('news.topics');
+});
 
 /* MAIL Related views */
 Route::get('/send_mail', function () {
@@ -183,7 +187,7 @@ Route::get('/send_mail', function () {
 Route::post('/send_mail/submit', [MailController::class, 'sendMailToAll'])->name('send_mail')->middleware('manager');
 
 /* PDF creation views */
-Route::post('/equipment/generate_agreement', [PDFController::class, 'generateEquipmentAgreement'])->name('equipment.generate_agreement');
+Route::post('/equipment/generate_agreement', [PDFController::class, 'generateEquipmentAgreement'])->name('equipment.generate_agreement')->middleware('manager');
 
 
 /* REST API routes */
@@ -191,4 +195,4 @@ Route::get('/api/all_users_json/{name}', [UserSearchController::class, 'userSpec
 Route::get('/api/get_all_projects', [TasksController::class, 'projectsApi'])->middleware('loggedIn');
 
 /* TEST PAGES */
-Route::get('/test_page', [TestController::class, 'toastrNot']);
+Route::get('/test_page', [TestController::class, 'toastrNot'])->middleware('admin');
