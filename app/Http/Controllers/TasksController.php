@@ -68,7 +68,7 @@ class TasksController extends Controller
             }
         }
 
-        return back('/tasks')->with('success', 'Project created successfully');
+        return redirect('/tasks')->with('success', 'Project created successfully');
     }
 
 
@@ -112,13 +112,16 @@ class TasksController extends Controller
         } elseif ($request->input('task_label') == 'ticket') {
             $label = '<span class="badge bg-info">Ticket</span>';
         }
+        if (preg_match('/^\d+/', $request->input('assign_to'), $matches)) { //regex to get the id value of the user
+            $assign_id = $matches[0];
+        }
 
         $newTask = new TasksTaskModel([
             'title' => $request->input('task_name'),
             'description' => $request->input('description'),
             'project_id' => $request->input('project'),
             'made_by' => Auth::user()->id,
-            'assigned_to' => substr($request->input('assign_to'), 0, 1) ?? null, //get the ID value from input field
+            'assigned_to' => $assign_id ?? null, //get the ID value from input field
             'status_id' => $getTaskStatusesForProject[0]['id'],
             'status_key' => 0,
             'priority' => $request->input('priority'),
