@@ -232,7 +232,7 @@ class TasksBoardController extends Controller
         }
 
         $validated = $request->validate([
-            'project_leader' => 'required|integer|exists:employee_information,user_id',
+            'project_leader' => 'required|integer|exists:users,id',
         ]);
 
         $project = TasksProjectModel::query()->where('id', $request->project_id)->first();

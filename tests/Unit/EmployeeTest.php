@@ -47,13 +47,8 @@ class EmployeeTest extends TestCase
         $equipmentAssign = EquipmentAssignmentModel::factory()->create(['equipment_id' => $equipmentItem->id, 'employee_id' => $employee->id]);
 
         $response = $this->actingAs($user)
-            ->post('/employee_information/delete/', ['id' => $employee->id]);
+            ->post('/employee_information/delete/', ['employee_id' => $employee->id]);
 
         $response->assertSessionHasErrors('equipment', 'This employee has equipment assigned. Please remove it before deleting');
-
-        $equipmentAssign->delete();
-        $equipmentItem->delete();
-        $equipmentType->delete();
-        $employee->delete();
     }
 }

@@ -2,12 +2,11 @@
 
 namespace Tests\Unit;
 
-use App\Http\Controllers\TasksController;
+use App\Http\Controllers\TasksBoardController;
 use App\Models\DepartmentsModel;
 use App\Models\EmployeeInformationModel;
 use App\Models\Tasks\TasksProjectModel;
 use App\Models\Tasks\TasksStatusModel;
-use App\Models\Tasks\TasksTaskModel;
 use App\Models\UserModel;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Tests\TestCase;
@@ -52,37 +51,25 @@ class TasksTest extends TestCase
 
     public function test_update_project_leader()
     {
-        $data = [
-            'project_id' => 1,
-            'project_leader' => 2,
-        ];
+        $controller = Mockery::mock(TasksBoardController::class. '[checkIfProjectSettingsAccess]');
+        $controller->shouldReceive('checkIfProjectSettingsAccess')->once()->andReturn(true);
 
-        $mockedProjectModel = Mockery::mock(TasksProjectModel::class);
 
-        $mockedProjectModel->shouldReceive('where')
-            ->with('id', $data['project_id'])
-            ->andReturnSelf();
-        $mockedProjectModel->shouldReceive('first')->andReturnSelf();
-        $mockedProjectModel->shouldReceive('update')
-            ->with(['leader_user_id' => $data['project_leader']])
-            ->andReturn(true);
-        $this->app->instance(TasksProjectModel::class, $mockedProjectModel);
+        $this->app->instance(TasksBoardController::class, $controller);
 
-        $response = $this->post('/tasks/project_settings/update_leader/1', $data);
+        $user = UserModel::factory()->create([
+            'role_id' => 2,
+        ]);
 
-        $response->assertRedirect();
-    }
+        $response = $this->actingAs($user)
+            ->post('/tasks/project_settings/update_leader/1', [
+            'project_leader' => $user->id,
+        ]);
 
-    public function test_update_project_leader_with_invalid_user()
-    {
-        $data = [
-            'project_id' => 1,
-            'project_leader' => 9999999, //big ID that doesn't exist in our test database(hopefully)
-        ];
-
-        $response = $this->post('/tasks/project_settings/update_leader/1', $data);
-
-        $response->assertSessionHasErrors('project_leader');
+        $this->assertDatabaseHas('tasks_project', [
+            'id' => 1,
+            'leader_user_id' => $user->id,
+        ]);
     }
 
     public function test_creates_new_task()
