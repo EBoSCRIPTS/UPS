@@ -106,7 +106,7 @@
                                 <td>{{$employee->user->first_name}} {{$employee->user->last_name}}</td>
                                 <td>
                                     <a href="/accountant/payslip/{{$department->id}}/{{$employee->user_id}}/{{\Carbon\Carbon::now()->year}}/{{$month}}"
-                                       class="btn btn-primary btn-sm">Generate</a>
+                                       class="btn btn-primary btn-sm">Create</a>
                                 </td>
                             </tr>
                         @endif

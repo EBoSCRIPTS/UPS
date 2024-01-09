@@ -23,7 +23,7 @@
                 @foreach($departments as $department)
                     <div class="col-lg-6">
                         <div class="p-2">
-                            <a href="{{route('accountant_view_department', ['id' => $department->id])}}">
+                            <a href="/accountant/{{$department->id}}">
                                 <div class="card" style="height: 200px"
                                      onmouseover="this.style.backgroundColor='#f8f9fa'"
                                      onmouseout="this.style.backgroundColor=''">

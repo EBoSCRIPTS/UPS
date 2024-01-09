@@ -34,7 +34,7 @@ class AccountantController extends Controller
         $getFulfilled = AccountantFulfilledPayslipsModel::query()->where('department_id', $request->id)->get();
 
 
-        foreach ($showEmployees as $employee) {
+        foreach ($showEmployees as $employee) { //get employee requested absences
             $absences = AbsenceModel::query()->where('user_id', $employee->user_id)
                 ->where('status', '=', 'APPROVE')
                 ->where('start_date', '>=', Carbon::now()->submonths(2)->startOfMonth())
@@ -46,22 +46,20 @@ class AccountantController extends Controller
             }
         }
 
-        $employeeReports = [];
         $status = [];
         $expectedSalary = 0;
         $realSalary = 0;
 
         foreach ($showEmployees as $employee) {
             $status[$employee->user_id] = $logHours->getSubmittedAndConfirmed($employee->user_id, Carbon::now()->monthName);
-            $employeeReports[$employee->user_id] = $this->getEmployeeWorkedHoursThisMonth($employee->user_id);
         }
+
 
         return view('accountant.accountant_view_department',
             ['department' => $showDept,
                 'allAbsences' => $getAbsences ?? [],
                 'allFulfilled' => $getFulfilled,
                 'employees' => $showEmployees,
-                'employeeReports' => $employeeReports,
                 'month' => Carbon::now()->monthName,
                 'status' => $status,
                 'expectedPay' => $expectedSalary,
@@ -135,7 +133,7 @@ class AccountantController extends Controller
         $tax = AccountantDepartmentSettingsModel::query()->find($request->tax_id);
         $tax->delete();
 
-        return back()->with('success', 'Deleted successfully');
+        return back()->with('success', 'Tax deleted');
     }
 
 
@@ -228,7 +226,7 @@ class AccountantController extends Controller
 
         $fulfill->save();
 
-        return back()->with('success', 'Fulfilled successfully');
+        return redirect('/accountant/payslips')->with('success', 'Payslip fulfilled');
     }
 
     public function downloadPayslip(Request $request)

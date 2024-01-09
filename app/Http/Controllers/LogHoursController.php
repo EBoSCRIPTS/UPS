@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AbsenceModel;
+use App\Models\AccountantFulfilledPayslipsModel;
 use App\Models\EmployeeInformationModel;
 use App\Models\VacationPointsModel;
 use Illuminate\Database\Eloquent\Collection;
@@ -256,11 +258,18 @@ class LogHoursController extends Controller
     //returns confirmed hours that accountant can review
     public function getSubmittedAndConfirmed($user_id, $month): object|null //for accountant view
     {
-        return LoggedHoursSubmittedModel::query()
+        $hrs = LoggedHoursSubmittedModel::query()
             ->where('is_confirmed', 2)
             ->where('month_name', $month)
             ->where('user_id', $user_id)
             ->first();
+
+        if (!AccountantFulfilledPayslipsModel::query()->where('loghours_submitted_id', $hrs->id ?? null)->exists()) {
+            return $hrs;
+        }
+        else{
+            return null;
+        }
     }
 
     public function calculateHours($shiftStartTime, $shiftEndTime, $breakTime): array

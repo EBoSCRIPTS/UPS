@@ -74,13 +74,18 @@ class UserController extends Controller
     public function deleteUser(Request $request): RedirectResponse
     {
         $user = UserModel::query()->find($request->input('id'));
+        $isEmployee = EmployeeInformationModel::query()->where('user_id', $user->id)->first();
+
+        if ($isEmployee) {
+            return redirect('/mng/edit')->withErrors('error', 'Cannot delete, user is still as an employee!');
+        }
 
         if ($user->role_id == 1) //admins cant delete admins
         {
             return redirect('/mng/edit')->withErrors('error', 'Cannot delete superadmin!');
         }
 
-        if ($user->created_at > Carbon::now()->subMinutes(3)) {
+        if ($user->created_at > Carbon::now()->subMinutes(1)) {
             $user->delete();
         } //if the user is not 'fresh' we assume that he has most likely made comments or posts and should not be fully wiped to avoid data conflicts
         else {

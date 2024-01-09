@@ -52,7 +52,7 @@
             |
             <a href="{{route('tasks.projects.statistics', ['project_id' => $project_name->id])}}">See statistics</a>
             |
-            @if(Auth::user()->id == $project_name->leader_employee_id || Auth::user()->role_id == 1 || Auth::user()->role_id == 3)
+            @if(Auth::user()->id == $project_name->leader_user_id || Auth::user()->role_id == 1 || Auth::user()->role_id == 3)
                 <a href="/tasks/project_settings/{{$project_name->id}}">Settings</a>
                 |
                 <a href="/tasks/projects/{{$project_name->id}}/performance_report">Performance Report</a>

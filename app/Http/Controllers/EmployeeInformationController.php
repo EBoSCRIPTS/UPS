@@ -60,7 +60,7 @@ class EmployeeInformationController extends Controller
         if ($userRoleUpdate->role_id == 5) //if it's a user without advanced perms, change it to employee role
         {
             $userRoleUpdate->update([
-                'role_id' => 3
+                'role_id' => 2
             ]);
         }
 
@@ -76,7 +76,7 @@ class EmployeeInformationController extends Controller
 
     public function deleteEmployee(Request $request): RedirectResponse
     {
-        if (EquipmentAssignmentModel::query()->where('employee_id', $request->input('employee_id'))->get() != null) //dont delete employee if we still have equipment assigned to him
+        if (EquipmentAssignmentModel::query()->where('employee_id', $request->input('employee_id'))->count() > 0) //dont delete employee if we still have equipment assigned to him
         {
             return back()->withInput()->withErrors([
                 'equipment' => 'This employee has equipment assigned. Please remove it before deleting.'
