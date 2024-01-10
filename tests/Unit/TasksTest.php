@@ -23,9 +23,11 @@ class TasksTest extends TestCase
         $user = UserModel::factory()->create(['role_id' => 2]);
         $department = DepartmentsModel::factory()->create();
         $employee = EmployeeInformationModel::factory()->create(['user_id' => $user->id, 'department_id' => $department->id]);
+        $setTime = time();
+        $setTime = strval($setTime);
 
         $response = $this->actingAs($user)->post('/tasks/create_new_project/insert', [
-            'project_name' => 'Test Project' . time(),
+            'project_name' => 'Test Project' . $setTime,
             'department_id' => $department->id,
             'project_manager_id' => $user->id,
             'counter' => 1,
@@ -33,7 +35,7 @@ class TasksTest extends TestCase
         ]);
 
         $this->assertDatabaseHas('tasks_project', [
-            'name' => 'Test Project' . time(),
+            'name' => 'Test Project' . $setTime,
             'department_id' => $department->id,
         ]);
     }
@@ -121,7 +123,7 @@ class TasksTest extends TestCase
 
         $response = $this->actingAs($user)
             ->post('/tasks/project_settings/delete/' . $project->id);
-        $response->assertRedirect('/tasks/projects/');
+        $response->assertRedirect('/tasks');
         $this->assertDatabaseMissing('tasks_project', ['id' => $project->id]);
     }
 }

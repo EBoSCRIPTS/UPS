@@ -267,9 +267,14 @@ class TasksBoardController extends Controller
             ]);
         }
 
+        $getStatus = TasksStatusModel::query()->where('project_id', $request->project_id)->first();
+        if ($getStatus != null) {
+            $getStatus->delete();
+        }
+
         $project->delete();
 
-        return redirect('/tasks/projects/');
+        return redirect('/tasks/');
     }
 
     public function generateExcelForProjectStatistics(Request $request): BinaryFileResponse|RedirectResponse

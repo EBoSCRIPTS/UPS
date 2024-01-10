@@ -21,6 +21,7 @@
     <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-3">
         <p class="h2">Department: {{$department->name}} summary | <a href="/accountant/settings/{{$department->id}}">Tax
                 Settings</a></p>
+        @include('components.errors')
         <div class="row" style="margin-top: 50px">
             <div class="col-sm-6">
                 <p class="h3 text-center">Department Employees</p>
