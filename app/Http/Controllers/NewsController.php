@@ -129,6 +129,12 @@ class NewsController extends Controller
         $topicComments = NewsCommentsModel::query()->where('topic_id', $request->topic_id)->get();
 
         foreach ($topicComments as $topicComment) {
+            $commentRating = NewsCommentsRatingModel::query()->where('id', $topicComment->id);
+
+            foreach($commentRating as $cr){
+                $cr->delete();
+            }
+
             $topicComment->delete();
         }
 
