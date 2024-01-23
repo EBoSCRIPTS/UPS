@@ -110,7 +110,7 @@
                 <div class="modal-body">
                     <form action="{{route('equipment.generate_agreement')}}" method="POST">
                         @csrf
-                        <input type="hidden" name="employee" value="{{$assignments[0]->employee->id}}">
+                        <input type="hidden" name="employee" value="{{$assignments[0]->employee->id ?? null}}">
                         <label for="equipmentText" class="form-label">Agreement text</label>
                         <textarea name="equipmentText" id="equipmentText" cols="30" rows="10"
                                   class="form-control"></textarea>

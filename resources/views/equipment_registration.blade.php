@@ -143,12 +143,27 @@
             <div class="modal-body">
                 <form action="{{route('equipment.delete_equipment_type')}}" method="POST">
                     @csrf
-                    @foreach($types as $type)
-                        <input type="hidden" name="id" value="{{$type->id}}">
-                        {{$type->name}}
-                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                        <br>
-                    @endforeach
+                    <table>
+                        <thead>
+                            <tr>
+                                <th scope="col">Name</th>
+                                <th scope="col">Delete</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($types as $type)
+                                <tr>
+                                    <td>
+                                        <input type="hidden" name="id" value="{{$type->id}}">
+                                        {{$type->name}}
+                                    </td>
+                                    <td>
+                                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
                 </form>
             </div>
         </div>

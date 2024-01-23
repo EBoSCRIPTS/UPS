@@ -52,6 +52,14 @@
                                 <label for="profile_picture" class="form-label">Profile Picture</label>
                                 <input type="file" id="profile_picture" name="profile_picture" class="form-control">
 
+                                @if($user->is_writer == 1)
+                                    <input type="checkbox" name="writer" class="form-check-input" checked>
+                                    <label for="form-check-label">Writer</label>
+                                @else
+                                    <input type="checkbox" name="writer" class="form-check-input">
+                                    <label for="form-check-label">Writer</label>
+                                @endif
+
                                 <button type="submit" class="btn btn-primary float-end mt-3">Submit</button>
                             </form>
                         </div>

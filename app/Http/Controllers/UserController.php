@@ -37,6 +37,8 @@ class UserController extends Controller
             'role_id' => 'required',
         ]);
 
+        $isWriter = $this->changeWriter($request->input('writer') ?? 'off');
+
         if ($request->hasFile('profile_picture')) { //store image in server storage
             $image = $request->file('profile_picture');
             $imageName = time() . '.' . $image->getClientOriginalExtension();
@@ -58,6 +60,7 @@ class UserController extends Controller
             'profile_picture' => $imageName,
             'password' => bcrypt($request->input('password')),
             'role_id' => $request->input('role_id'),
+            'is_writer' => $isWriter,
         ]);
 
         $user->save();
@@ -122,6 +125,7 @@ class UserController extends Controller
             $imageName = $uploadFolder . $imageName;
         }
 
+        $isWriter = $this->changeWriter($request->input('writer') ?? 'off');
 
         $user->update([
             'first_name' => $request->input('first_name') ?? $user->first_name, //we POST everything so its important to keep fallbacks
@@ -129,9 +133,10 @@ class UserController extends Controller
             'email' => $request->input('email') ?? $user->email,
             'phone_number' => $request->input('phone_number') ?? $user->phone_number,
             'profile_picture' => $imageName ?? $user->profile_picture,
+            'is_writer' => $isWriter ?? $user->is_writer,
         ]);
 
-        return redirect('/mng/edit')->with('success', 'User edited!');
+        return back()->with('success', 'User edited!');
     }
 
     public function getUserInfo(Request $request): View
@@ -209,5 +214,9 @@ class UserController extends Controller
         ]);
 
         return back()->with('success', 'Banking details updated!');
+    }
+
+    private function changeWriter($value){
+        return $value == 'on' ? 2 : 3; //due to enum, 3 would be considered as off
     }
 }

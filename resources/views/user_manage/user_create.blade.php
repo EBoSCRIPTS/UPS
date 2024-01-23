@@ -44,7 +44,7 @@
                     <input type="password" name="password" id="password" class="form-control width" required>
 
                     <label for="role_id">Role</label>
-                    <select name="role_id" id="role_id" class="form-control">
+                    <select name="role_id" id="role_id" class="form-control" required>
                         <option selected disabled>Pick a role..</option>
                         @foreach($roles as $role)
                             @if($role->id == 2)
@@ -53,6 +53,10 @@
                             @endif
                         @endforeach
                     </select>
+
+                    <input type="checkbox" name="writer" class="form-check-input">
+                    <label for="form-check-label">Writer</label>
+                    <br>
 
                     <button type="submit" class="btn btn-primary" style="margin-top: 10px">Submit</button>
                 </div>
