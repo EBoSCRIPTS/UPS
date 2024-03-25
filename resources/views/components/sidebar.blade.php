@@ -181,6 +181,17 @@
                                     </li>
                                 </ul>
                             </li>
+                            <li>
+                                <a href="#submenuSettings" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
+                                    <i class="fs-4 bi-gear"></i> <span
+                                        class="ms-1 ">SETTINGS</span> </a>
+                                <ul class="collapse nav flex-column ms-1" id="submenuSettings" data-bs-parent="#menu">
+                                    <li class="w-100">
+                                        <a href="/settings/night_hours" class="nav-link px-0"> <span
+                                                class="">Night Hours</span></a>
+                                    </li>
+                                </ul>
+                            </li>
                         @endif
                     </ul>
                     <hr>

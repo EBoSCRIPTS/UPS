@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\AbsenceModel;
 use App\Models\AccountantFulfilledPayslipsModel;
 use App\Models\EmployeeInformationModel;
+use App\Models\NightHoursModel;
 use App\Models\VacationPointsModel;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\RedirectResponse;
@@ -285,8 +286,8 @@ class LogHoursController extends Controller
 
     public function calculateHours($shiftStartTime, $shiftEndTime, $breakTime): array
     {
-        $nightHoursStart = strtotime('22:00');
-        $nightHoursEnd = strtotime('06:00');
+        $nightHoursStart = strtotime(NightHoursModel::query()->pluck('start')->first() ?? '22:00');
+        $nightHoursEnd = strtotime(NightHoursModel::query()->pluck('end')->first() ?? '06:00');
         $midnight = strtotime('24:00'); //get the midnight ("next day") time
 
         $difference = 0;

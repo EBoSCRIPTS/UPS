@@ -19,6 +19,7 @@ use App\Http\Controllers\NewsController;
 use App\Http\Controllers\ProjectPerformanceController;
 use App\Http\Controllers\VacationsController;
 use App\Http\Controllers\SubmittedTicketsController;
+use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\TestController;
 
 
@@ -191,6 +192,11 @@ Route::middleware('loggedIn')->group(function () {
     Route::get('/news/view_topic/{topic_id}/{comment_id}/{uprate}', [NewsController::class, 'rateTopicComment']);
     Route::get('/news/view_topic/{topic_id}/{comment_id}/{downrate}', [NewsController::class, 'rateTopicComment']);
     Route::get('/news/topics', [NewsController::class, 'loadNewsPageTopics'])->name('news.topics');
+});
+
+Route::middleware('admin')->group(function(){
+   Route::get('/settings/night_hours', [SettingsController::class, 'nightHours']);
+   Route::post('/settings/night_hours/update', [SettingsController::class, 'nightHoursUpdate'])->name('settings.night_hours_update');
 });
 
 /* MAIL Related views */
